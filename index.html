@@ -3,297 +3,273 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Sweet Maszaa - Financial Assistant</title>
+  <title>Home Sweet Maszaa - Financial System</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
-      --primary: #1e293b;
+      --primary: #0f172a;
       --accent: #2563eb;
-      --accent-light: #eff6ff;
+      --pink: #ec4899;
       --success: #10b981;
       --danger: #ef4444;
-      --warning: #f59e0b;
       --bg: #f8fafc;
       --card-bg: #ffffff;
-      --text: #0f172a;
+      --text: #1e293b;
       --text-sub: #64748b;
       --border: #e2e8f0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding-bottom: 75px; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 90px; }
 
-    /* Layout Wrapper */
-    .app-layout { display: flex; min-height: 100vh; }
+    .app-container { max-width: 900px; margin: 0 auto; padding: 20px; }
 
-    /* Sidebar Laptop */
-    .sidebar { width: 260px; background: var(--primary); color: white; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
-    .sidebar-brand h2 { font-size: 20px; font-weight: 800; color: #fff; }
-    .sidebar-brand p { font-size: 12px; color: #94a3b8; margin-top: 4px; }
-    .sidebar-menu { margin-top: 30px; display: flex; flex-direction: column; gap: 8px; }
-    .sidebar-btn { background: none; border: none; color: #94a3b8; padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; width: 100%; transition: 0.2s; }
-    .sidebar-btn.active, .sidebar-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+    /* Elegant Top Header */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .top-bar h1 { font-size: 20px; font-weight: 800; }
+    .badge-mode { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #e2e8f0; color: var(--text); }
+    .badge-mode.love { background: #fce7f3; color: var(--pink); }
 
-    /* Main Area */
-    .main-content { flex: 1; padding: 24px; max-width: 1000px; margin: 0 auto; width: 100%; }
-
-    /* Header Bar */
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .app-title h1 { font-size: 22px; font-weight: 800; color: var(--text); }
-    .app-title p { font-size: 13px; color: var(--text-sub); }
-
-    /* Grid Dashboard Layout */
-    .dashboard-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
-
-    /* Base Card Style */
-    .card { background: var(--card-bg); border-radius: 18px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    /* Grid Layouts */
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
     .col-12 { grid-column: span 12; }
     .col-6 { grid-column: span 6; }
     .col-4 { grid-column: span 4; }
 
-    /* 1. Target Savings Hero Box */
-    .hero-target { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; border: none; position: relative; overflow: hidden; }
-    .hero-target::before { content: ""; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: rgba(37,99,235,0.25); border-radius: 50%; blur: 40px; }
-    .target-top-bar { display: flex; justify-content: space-between; align-items: center; }
-    .target-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #93c5fd; }
-    .last-update { font-size: 11px; color: #94a3b8; font-weight: 500; }
-    
-    .target-amount-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 16px 0 10px 0; }
-    .target-val { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-    .target-pct { font-size: 24px; font-weight: 800; color: #60a5fa; }
+    /* Cards Styling */
+    .card { background: var(--card-bg); border-radius: 16px; padding: 18px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
-    .target-input-edit { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-    .target-input-edit input { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; outline: none; width: 140px; text-align: right; }
+    /* Target Box Hero */
+    .hero-box { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; }
+    .hero-box.love { background: linear-gradient(135deg, #831843 0%, #be185d 100%); }
+    .hero-title { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 0.5px; }
+    .hero-val { font-size: 26px; font-weight: 800; margin: 8px 0; }
+    .progress-bar-bg { background: rgba(255,255,255,0.2); height: 8px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+    .progress-bar-fill { background: var(--accent); height: 100%; width: 0%; transition: width 0.4s; }
+    .hero-box.love .progress-bar-fill { background: #f472b6; }
 
-    .progress-bar-bg { background: rgba(255,255,255,0.15); height: 12px; border-radius: 10px; overflow: hidden; margin-top: 8px; }
-    .progress-bar-fill { background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%); height: 100%; width: 0%; transition: width 0.5s ease; }
+    /* Elegant Compact Summary Cards */
+    .stat-card { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; }
+    .stat-info .title { font-size: 11px; color: var(--text-sub); font-weight: 700; text-transform: uppercase; }
+    .stat-info .value { font-size: 17px; font-weight: 800; margin-top: 2px; }
 
-    /* 2. Balance Summary Cards */
-    .stat-title { font-size: 12px; color: var(--text-sub); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
-    .stat-amount { font-size: 22px; font-weight: 800; margin-top: 6px; color: var(--text); }
+    /* AI Section */
+    .ai-card { background: #f0f9ff; border: 1px solid #bae6fd; }
+    .ai-box { font-size: 13px; line-height: 1.5; color: #0369a1; background: white; padding: 12px; border-radius: 10px; border: 1px solid #e0f2fe; margin-top: 10px; }
+    .ai-input-group { display: flex; gap: 8px; margin-top: 10px; }
+    .ai-input-group input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; }
+    .ai-input-group button { background: var(--accent); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; }
 
-    /* 3. Financial Charts */
-    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .chart-container { position: relative; height: 230px; width: 100%; }
-
-    /* 4. AI Financial Advisor Section */
-    .ai-card { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; }
-    .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .ai-chip { background: var(--accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
-    
-    .ai-prompt-box { display: flex; gap: 8px; margin-top: 14px; }
-    .ai-prompt-box input { flex: 1; padding: 10px 14px; border: 1px solid #93c5fd; border-radius: 10px; font-size: 13px; outline: none; background: white; }
-    .ai-prompt-box button { background: var(--accent); color: white; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-    .ai-response-content { font-size: 13px; line-height: 1.6; color: #1e3a8a; background: rgba(255,255,255,0.7); padding: 14px; border-radius: 12px; border: 1px solid #bfdbfe; margin-top: 10px; }
-
-    /* Action Lapor Button */
-    .btn-lapor-main { background: var(--accent); color: white; border: none; padding: 14px 24px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 16px rgba(37,99,235,0.3); width: 100%; transition: transform 0.1s; }
-    .btn-lapor-main:active { transform: scale(0.98); }
-
-    /* Bottom Nav Bar (Dashboard & Laporan ONLY) */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 10px 0; display: flex; justify-content: space-around; z-index: 99; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
-    .nav-btn { border: none; background: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); font-size: 11px; font-weight: 700; width: 50%; cursor: pointer; }
-    .nav-btn.active { color: var(--accent); }
-
-    /* Modal Form */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+    /* Modals & Popups */
+    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
     .modal-overlay.active { display: flex; }
-    .modal-content { background: white; width: 100%; max-width: 480px; border-radius: 20px; padding: 24px; max-height: 90vh; overflow-y: auto; }
+    .modal-card { background: white; width: 100%; max-width: 440px; border-radius: 20px; padding: 24px; max-height: 90vh; overflow-y: auto; }
     
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-sub); margin-bottom: 5px; }
-    .form-group input, .form-group select { width: 100%; padding: 11px 13px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; }
-    .form-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .btn-submit { flex: 2; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-    .btn-cancel { flex: 1; background: #e2e8f0; color: var(--text-sub); border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-sub); margin-bottom: 4px; text-transform: uppercase; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+    
+    .btn-primary { width: 100%; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+    .btn-love { background: var(--pink); }
 
-    /* Table Styles */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--border); }
-    th { color: var(--text-sub); font-weight: 700; font-size: 11px; text-transform: uppercase; }
+    /* Floating Action Button (FAB) Bottom Right */
+    .fab-container { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .fab-menu { display: none; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .fab-menu.active { display: flex; }
+    .fab-item { background: white; color: var(--text); border: 1px solid var(--border); padding: 10px 16px; border-radius: 30px; font-weight: 700; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .fab-main { background: var(--accent); color: white; width: 52px; height: 52px; border-radius: 50%; border: none; box-shadow: 0 6px 16px rgba(37,99,235,0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; }
 
-    /* Desktop Hide Bottom Nav */
-    @media (min-width: 769px) {
-      .bottom-nav { display: none; }
-    }
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { color: var(--text-sub); font-weight: 700; }
 
-    /* Mobile Responsive Adjustments */
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .main-content { padding: 16px; padding-bottom: 85px; }
+    @media (max-width: 600px) {
       .col-6, .col-4 { grid-column: span 12; }
-      .modal-overlay { align-items: flex-end; padding: 0; }
-      .modal-content { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; }
     }
   </style>
 </head>
 <body>
 
-<div class="app-layout">
-  <!-- Sidebar untuk Tampilan Laptop / Desktop -->
-  <aside class="sidebar">
+<div class="app-container">
+  <!-- Top Bar -->
+  <div class="top-bar">
     <div>
-      <div class="sidebar-brand">
-        <h2>Home Sweet Maszaa</h2>
-        <p>Financial Intelligence System</p>
-      </div>
-      <div class="sidebar-menu">
-        <button class="sidebar-btn active" onclick="switchView('dashboard', this)">
-          <i data-lucide="layout-dashboard"></i> Dashboard Utama
-        </button>
-        <button class="sidebar-btn" onclick="switchView('laporan', this)">
-          <i data-lucide="receipt"></i> Detail Laporan
-        </button>
-      </div>
+      <h1 id="appTitle">Home Sweet Maszaa</h1>
+      <p style="font-size: 12px; color: var(--text-sub);" id="appSubtitle">System Keuangan</p>
     </div>
-  </aside>
+    <div class="badge-mode" id="modeBadge">
+      <i data-lucide="user" style="width:14px;"></i> <span id="modeName">Pribadi</span>
+    </div>
+  </div>
 
-  <!-- Content Area Main -->
-  <main class="main-content">
-    <div class="top-header">
-      <div class="app-title">
-        <h1>Home Sweet Maszaa</h1>
-        <p>Ringkasan Laporan & Rekomendasi AI</p>
+  <!-- VIEW: DASHBOARD KEUANGAN PRIBADI -->
+  <div id="viewPribadi" class="grid">
+    <!-- Hero Box Target Tabungan -->
+    <div class="card hero-box col-12">
+      <div style="display:flex; justify-content:space-between;">
+        <span class="hero-title">Target Tabungan Pribadi</span>
+        <span style="font-size: 11px; opacity:0.8;" id="lastUpdatePribadi">Diupdate: -</span>
       </div>
+      <div class="hero-val" id="targetBalanceVal">Rp 0</div>
+      <div style="font-size: 12px; opacity:0.9;" id="targetPctText">0% dari Target Rp 0</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="targetProgressBar"></div></div>
     </div>
 
-    <!-- VIEW 1: DASHBOARD UTAMA -->
-    <div id="view-dashboard" class="dashboard-grid">
-      
-      <!-- 1. Hero Box: Target Tabungan + Last Update -->
-      <div class="card hero-target col-12">
-        <div class="target-top-bar">
-          <div class="target-badge"><i data-lucide="target" style="width:14px; height:14px;"></i> Target Tabungan</div>
-          <div class="last-update" id="lblLastUpdate">Terakhir Diupdate: -</div>
-        </div>
-
-        <div class="target-amount-row">
-          <div>
-            <div style="font-size: 12px; color: #94a3b8; font-weight: 600;">Sisa Capaian Saldo Kas</div>
-            <div class="target-val" id="valCurrentBalance">Rp 0</div>
-          </div>
-          <div class="target-pct" id="valTargetPct">0%</div>
-        </div>
-
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="valTargetProgress"></div>
-        </div>
-
-        <div class="target-input-edit">
-          <span style="font-size: 12px; color: #94a3b8;">Target Anda: Rp</span>
-          <input type="number" id="targetInput" placeholder="10000000" onchange="updateTargetValue(this.value)">
-        </div>
+    <!-- Elegant Compact Balance Summary Cards -->
+    <div class="card stat-card col-4">
+      <div class="stat-info">
+        <div class="title">Total Saldo Kas</div>
+        <div class="value" id="valTotalSaldo">Rp 0</div>
       </div>
-
-      <!-- 2. Ringkasan Informasi Saldo, Pemasukan & Pengeluaran -->
-      <div class="card col-4">
-        <div class="stat-title"><i data-lucide="wallet" style="width:14px; color:var(--accent);"></i> Total Saldo Kas</div>
-        <div class="stat-amount" id="valBalanceSummary">Rp 0</div>
+      <i data-lucide="wallet" style="color:var(--accent); width:20px;"></i>
+    </div>
+    <div class="card stat-card col-4">
+      <div class="stat-info">
+        <div class="title">Pemasukan</div>
+        <div class="value" style="color:var(--success);" id="valTotalIncome">Rp 0</div>
       </div>
-      <div class="card col-4">
-        <div class="stat-title"><i data-lucide="arrow-down-left" style="width:14px; color:var(--success);"></i> Total Pemasukan</div>
-        <div class="stat-amount" style="color:var(--success);" id="valIncomeSummary">Rp 0</div>
+      <i data-lucide="arrow-down-left" style="color:var(--success); width:20px;"></i>
+    </div>
+    <div class="card stat-card col-4">
+      <div class="stat-info">
+        <div class="title">Pengeluaran</div>
+        <div class="value" style="color:var(--danger);" id="valTotalExpense">Rp 0</div>
       </div>
-      <div class="card col-4">
-        <div class="stat-title"><i data-lucide="arrow-up-right" style="width:14px; color:var(--danger);"></i> Total Pengeluaran</div>
-        <div class="stat-amount" style="color:var(--danger);" id="valExpenseSummary">Rp 0</div>
-      </div>
-
-      <!-- 3. Grafik Keuangan Informatif & Menarik -->
-      <div class="card col-6">
-        <div class="chart-header">
-          <div class="stat-title"><i data-lucide="pie-chart" style="width:14px;"></i> Komposisi Expenses (Pengeluaran)</div>
-        </div>
-        <div class="chart-container">
-          <canvas id="chartExpenses"></canvas>
-        </div>
-      </div>
-
-      <div class="card col-6">
-        <div class="chart-header">
-          <div class="stat-title"><i data-lucide="bar-chart-3" style="width:14px;"></i> Arus Kas Pemasukan vs Pengeluaran</div>
-        </div>
-        <div class="chart-container">
-          <canvas id="chartCashflow"></canvas>
-        </div>
-      </div>
-
-      <!-- 4. Fitur AI Advisor & Keinginan Target Konsultasi -->
-      <div class="card ai-card col-12">
-        <div class="ai-header">
-          <span class="ai-chip"><i data-lucide="sparkles" style="width:12px; display:inline;"></i> MASZAA AI FINANCIAL ADVISOR</span>
-        </div>
-        
-        <div id="aiAnalysisResult" class="ai-response-content">
-          Memuat analisa otomatis...
-        </div>
-
-        <div class="ai-prompt-box">
-          <input type="text" id="aiUserWish" placeholder="Contoh: Saya pengen tgl 30 bulan depan kumpul Rp 5 Juta, bisa direkomendasikan?">
-          <button onclick="sendWishToAI()"><i data-lucide="send" style="width:14px;"></i> Kirim Ke AI</button>
-        </div>
-      </div>
-
-      <!-- 5. Tombol Lapor (Input Transaksi) -->
-      <div class="col-12" style="margin-top: 5px;">
-        <button class="btn-lapor-main" onclick="openModal()">
-          <i data-lucide="plus-circle"></i> + TOMBOL LAPOR TRANSAKSI BARU
-        </button>
-      </div>
+      <i data-lucide="arrow-up-right" style="color:var(--danger); width:20px;"></i>
     </div>
 
-    <!-- VIEW 2: DETAIL LAPORAN KEUANGAN -->
-    <div id="view-laporan" class="dashboard-grid" style="display: none;">
-      <div class="card col-12">
-        <div class="stat-title" style="margin-bottom: 16px; font-size:14px;">Detail Laporan Transaksi Keuangan</div>
-        <div style="overflow-x: auto;">
-          <table>
-            <thead>
-              <tr>
-                <th>Tanggal</th>
-                <th>Jenis</th>
-                <th>Akun / Assets</th>
-                <th>Kategori Expenses</th>
-                <th>Keterangan</th>
-                <th>Nominal</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="laporanTableBody">
-              <!-- Content Filled Dynamically -->
-            </tbody>
-          </table>
-        </div>
+    <!-- Charts Section -->
+    <div class="card col-6">
+      <div class="hero-title" style="color:var(--text-sub); margin-bottom:10px;">Pengeluaran Per Kategori</div>
+      <div style="height:200px;"><canvas id="chartExpenses"></canvas></div>
+    </div>
+    <div class="card col-6">
+      <div class="hero-title" style="color:var(--text-sub); margin-bottom:10px;">Arus Kas Pemasukan vs Pengeluaran</div>
+      <div style="height:200px;"><canvas id="chartCashflow"></canvas></div>
+    </div>
+
+    <!-- AI Advisor Card -->
+    <div class="card ai-card col-12">
+      <div style="font-size:11px; font-weight:800; color:var(--accent); display:flex; align-items:center; gap:5px;">
+        <i data-lucide="sparkles" style="width:14px;"></i> MASZAA FINANCIAL AI ADVISOR
+      </div>
+      <div class="ai-box" id="aiResponse">Memuat rekomendasi keuangan...</div>
+      <div class="ai-input-group">
+        <input type="text" id="aiWishInput" placeholder="Ketik target/keinginanmu (misal: pgn kumpul 5jt tgl 30)...">
+        <button onclick="submitAIWish()">Kirim AI</button>
       </div>
     </div>
-  </main>
+  </div>
+
+  <!-- VIEW: DASHBOARD WITH MY LOVE -->
+  <div id="viewLove" class="grid" style="display:none;">
+    <!-- Hero Box Target Love -->
+    <div class="card hero-box love col-12">
+      <div style="display:flex; justify-content:space-between;">
+        <span class="hero-title" style="color:#fbcfe8;">❤️ Target Tabungan Bersama</span>
+        <span style="font-size: 11px; opacity:0.8;" id="loveTargetPct">0%</span>
+      </div>
+      <div class="hero-val" id="loveTotalBalance">Rp 0</div>
+      <div style="font-size: 12px; opacity:0.9;" id="loveTargetStatus">Target: Rp 0</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="loveProgressBar"></div></div>
+    </div>
+
+    <!-- Stat Status Iuran Bulanan -->
+    <div class="card col-6">
+      <div class="hero-title" style="color:var(--text-sub);">Komitmen Iuran Maszaa</div>
+      <div style="font-size:18px; font-weight:800; margin-top:5px;" id="loveMyCommitment">Rp 0 / bln</div>
+    </div>
+    <div class="card col-6">
+      <div class="hero-title" style="color:var(--pink);">Komitmen Iuran Ceweku</div>
+      <div style="font-size:18px; font-weight:800; margin-top:5px; color:var(--pink);" id="loveHerCommitment">Rp 0 / bln</div>
+    </div>
+
+    <!-- Riwayat Setoran Iuran -->
+    <div class="card col-12">
+      <div class="hero-title" style="color:var(--text-sub); margin-bottom:10px;">Log Setoran Tabungan Bersama</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Penyetor</th>
+            <th>Metode Transfer</th>
+            <th>Jumlah</th>
+          </tr>
+        </thead>
+        <tbody id="loveTableLog"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<!-- Bottom Navigation Bar (KHUSUS: Hanya Tombol Dashboard & Laporan) -->
-<nav class="bottom-nav">
-  <button class="nav-btn active" id="btnNavDashboard" onclick="switchView('dashboard', this)">
-    <i data-lucide="layout-dashboard"></i> Dashboard
-  </button>
-  <button class="nav-btn" id="btnNavLaporan" onclick="switchView('laporan', this)">
-    <i data-lucide="receipt"></i> Laporan
-  </button>
-</nav>
+<!-- FLOATING ACTION BUTTON POJOK BAWAH -->
+<div class="fab-container">
+  <div class="fab-menu" id="fabMenu">
+    <div class="fab-item" onclick="openLaporModal()"><i data-lucide="edit-3" style="width:14px;"></i> + Lapor Transaksi</div>
+    <div class="fab-item" onclick="openReportDetailModal()"><i data-lucide="file-text" style="width:14px;"></i> Detail Laporan</div>
+    <div class="fab-item" onclick="openLoginModal()"><i data-lucide="refresh-cw" style="width:14px;"></i> Ganti Akun / Mode</div>
+  </div>
+  <button class="fab-main" onclick="toggleFabMenu()"><i data-lucide="menu" style="width:24px;"></i></button>
+</div>
 
-<!-- Modal Form Lapor Keuangan -->
-<div class="modal-overlay" id="modalForm">
-  <div class="modal-content">
-    <h3 style="margin-bottom: 15px; font-size: 17px; font-weight: 800;">Form Lapor Transaksi</h3>
-    <form id="financialForm">
+<!-- POPUP 1: MODAL PILIHAN LOGIN SYSTEM -->
+<div class="modal-overlay" id="modalLogin">
+  <div class="modal-card" style="text-align: center;">
+    <h3 style="font-size:18px; font-weight:800; margin-bottom:6px;">Pilih Akun Sistem</h3>
+    <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px;">Silakan pilih portal laporan keuangan yang ingin Anda akses:</p>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <button class="btn-primary" onclick="selectSystemMode('pribadi')"><i data-lucide="user" style="width:14px; display:inline;"></i> Keuangan Pribadi</button>
+      <button class="btn-primary btn-love" onclick="selectSystemMode('love')"><i data-lucide="heart" style="width:14px; display:inline;"></i> Keuangan With My Love</button>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP 2: ONBOARDING SETUP SALDO AWAL PRIBADI -->
+<div class="modal-overlay" id="modalSetupPribadi">
+  <div class="modal-card">
+    <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">Setup Saldo Awal Keuangan</h3>
+    <p style="font-size:12px; color:var(--text-sub); margin-bottom:15px;">Form rinci kondisi keuangan awal Anda (Hanya diisi sekali):</p>
+    <form id="formSetupPribadi">
+      <div class="form-group"><label>Saldo Cash (Tunai)</label><input type="number" id="initCash" value="0" required></div>
+      <div class="form-group"><label>Saldo Bank BRIMO</label><input type="number" id="initBrimo" value="0" required></div>
+      <div class="form-group"><label>Saldo CAT BANK</label><input type="number" id="initCatBank" value="0" required></div>
+      <div class="form-group"><label>Saldo QRIS / E-Wallet</label><input type="number" id="initEWallet" value="0" required></div>
+      <div class="form-group"><label>Target Tabungan Pribadi (Rp)</label><input type="number" id="initTargetPribadi" value="10000000" required></div>
+      <button type="submit" class="btn-primary">Simpan & Masuk Dashboard</button>
+    </form>
+  </div>
+</div>
+
+<!-- POPUP 3: ONBOARDING SETUP WITH MY LOVE -->
+<div class="modal-overlay" id="modalSetupLove">
+  <div class="modal-card">
+    <h3 style="font-size:16px; font-weight:800; color:var(--pink); margin-bottom:6px;">❤️ Setup Tabungan Bersama</h3>
+    <p style="font-size:12px; color:var(--text-sub); margin-bottom:15px;">Atur target & komitmen iuran impian bersama cewemu:</p>
+    <form id="formSetupLove">
+      <div class="form-group"><label>Target Tabungan Bersama (Rp)</label><input type="number" id="initLoveTarget" value="20000000" required></div>
+      <div class="form-group"><label>Komitmen Iuran Maszaa / Bulan (Rp)</label><input type="number" id="initLoveMyCommit" value="500000" required></div>
+      <div class="form-group"><label>Komitmen Iuran Ceweku / Bulan (Rp)</label><input type="number" id="initLoveHerCommit" value="500000" required></div>
+      <button type="submit" class="btn-primary btn-love">Simpan & Masuk Dashboard</button>
+    </form>
+  </div>
+</div>
+
+<!-- POPUP 4: MODAL LAPOR TRANSAKSI -->
+<div class="modal-overlay" id="modalLapor">
+  <div class="modal-card">
+    <h3 style="font-size:16px; font-weight:800; margin-bottom:15px;">Form Lapor Transaksi</h3>
+    <form id="formLapor">
       <div class="form-group">
         <label>Jenis Transaksi</label>
         <select id="txType" onchange="toggleCategoryField()">
           <option value="expense">Pengeluaran (Expenses)</option>
           <option value="income">Pemasukan</option>
           <option value="transfer">Tarik Tunai / Transfer Antar Akun</option>
+          <option value="love_iuran">Iuran Tabungan Bersama (Love)</option>
         </select>
       </div>
-
       <div class="form-group" id="groupCategory">
         <label>Kategori Expenses</label>
         <select id="txCategory">
@@ -304,273 +280,321 @@
           <option value="Needs">Needs</option>
         </select>
       </div>
-
+      <div class="form-group" id="groupPenyetor" style="display:none;">
+        <label>Penyetor Iuran</label>
+        <select id="txPenyetor">
+          <option value="Maszaa">Maszaa (Aku)</option>
+          <option value="Ceweku">Ceweku</option>
+        </select>
+      </div>
       <div class="form-group">
-        <label id="lblAccount">Akun / Metode Pembayaran (Account/Assets)</label>
+        <label>Metode Pembayaran / Akun</label>
         <select id="txAccount">
           <option value="BRIMO">BRIMO</option>
           <option value="CAT BANK">CAT BANK</option>
           <option value="CASH">CASH</option>
           <option value="QRIS">QRIS</option>
-          <option value="Dompet Digital">Dompet Digital (E-Wallet)</option>
+          <option value="E-Wallet">E-Wallet</option>
         </select>
       </div>
-
-      <div class="form-group" id="groupToAccount" style="display: none;">
-        <label>Ke Akun Tujuan (Khusus Tarik Tunai/Transfer)</label>
-        <select id="txToAccount">
-          <option value="CASH">CASH (Tarik Tunai)</option>
-          <option value="BRIMO">BRIMO</option>
-          <option value="CAT BANK">CAT BANK</option>
-          <option value="Dompet Digital">Dompet Digital</option>
-        </select>
-      </div>
-
       <div class="form-group">
         <label>Nominal (Rp)</label>
-        <input type="number" id="txAmount" placeholder="Contoh: 50000" required>
+        <input type="number" id="txAmount" placeholder="50000" required>
       </div>
-
       <div class="form-group">
-        <label>Keterangan Tambahan (Boleh Kosong / Opsional)</label>
-        <input type="text" id="txDesc" placeholder="Contoh: Beli kopi / Beli beras">
+        <label>Keterangan Tambahan (Opsional)</label>
+        <input type="text" id="txDesc" placeholder="Keterangan singkat...">
       </div>
-
       <div class="form-group">
-        <label>Tanggal Transaksi</label>
+        <label>Tanggal</label>
         <input type="date" id="txDate" required>
       </div>
-
-      <div class="form-actions">
-        <button type="button" class="btn-cancel" onclick="closeModal()">Batal</button>
-        <button type="submit" class="btn-submit">Simpan Laporan</button>
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button type="button" class="btn-primary" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLapor')">Batal</button>
+        <button type="submit" class="btn-primary">Simpan Transaksi</button>
       </div>
     </form>
   </div>
 </div>
 
-<script>
-  // Application Data States
-  let transactions = JSON.parse(localStorage.getItem('hsm_v3_transactions')) || [];
-  let targetSavings = parseFloat(localStorage.getItem('hsm_v3_target')) || 10000000;
-  let lastUpdateDate = localStorage.getItem('hsm_v3_last_update') || '-';
-  let customWishText = localStorage.getItem('hsm_v3_user_wish') || '';
+<!-- POPUP 5: MODAL DETAIL LAPORAN TRANSAKSI -->
+<div class="modal-overlay" id="modalReportDetail">
+  <div class="modal-card" style="max-width:650px;">
+    <h3 style="font-size:16px; font-weight:800; margin-bottom:12px;">Detail Histori Laporan Transaksi</h3>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Jenis</th>
+            <th>Akun</th>
+            <th>Kategori</th>
+            <th>Keterangan</th>
+            <th>Nominal</th>
+          </tr>
+        </thead>
+        <tbody id="reportTableBody"></tbody>
+      </table>
+    </div>
+    <button class="btn-primary" onclick="closeModal('modalReportDetail')" style="margin-top:15px;">Tutup</button>
+  </div>
+</div>
 
-  let chartExpensesInstance = null;
-  let chartCashflowInstance = null;
+<script>
+  // Global States
+  let activeMode = localStorage.getItem('hsm_active_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_setup_pribadi_done') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_setup_love_done') === 'true';
+
+  let transactionsPribadi = JSON.parse(localStorage.getItem('hsm_tx_pribadi')) || [];
+  let transactionsLove = JSON.parse(localStorage.getItem('hsm_tx_love')) || [];
+
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_target_love')) || 20000000;
+  let commitMyLove = parseFloat(localStorage.getItem('hsm_commit_my_love')) || 500000;
+  let commitHerLove = parseFloat(localStorage.getItem('hsm_commit_her_love')) || 500000;
+
+  let chartExpInstance = null;
+  let chartCashInstance = null;
 
   lucide.createIcons();
   document.getElementById('txDate').valueAsDate = new Date();
-  document.getElementById('targetInput').value = targetSavings;
-  if(customWishText) document.getElementById('aiUserWish').value = customWishText;
-
-  // Navigation Controller
-  function switchView(viewName, el) {
-    document.getElementById('view-dashboard').style.display = viewName === 'dashboard' ? 'grid' : 'none';
-    document.getElementById('view-laporan').style.display = viewName === 'laporan' ? 'grid' : 'none';
-
-    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-    if (viewName === 'dashboard') {
-      document.getElementById('btnNavDashboard').classList.add('active');
-    } else {
-      document.getElementById('btnNavLaporan').classList.add('active');
-    }
-
-    if(el && el.classList.contains('sidebar-btn')) el.classList.add('active');
-  }
-
-  // Modal Handling
-  function openModal() { document.getElementById('modalForm').classList.add('active'); }
-  function closeModal() { document.getElementById('modalForm').classList.remove('active'); }
-
-  function toggleCategoryField() {
-    const type = document.getElementById('txType').value;
-    const catGroup = document.getElementById('groupCategory');
-    const toAccGroup = document.getElementById('groupToAccount');
-    const lblAcc = document.getElementById('lblAccount');
-
-    if (type === 'expense') {
-      catGroup.style.display = 'block';
-      toAccGroup.style.display = 'none';
-      lblAcc.innerText = 'Sumber Akun / Assets';
-    } else if (type === 'income') {
-      catGroup.style.display = 'none';
-      toAccGroup.style.display = 'none';
-      lblAcc.innerText = 'Masuk Ke Akun / Assets';
-    } else if (type === 'transfer') {
-      catGroup.style.display = 'none';
-      toAccGroup.style.display = 'block';
-      lblAcc.innerText = 'Dari Akun (Sumber)';
-    }
-  }
 
   const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 
-  function updateTargetValue(val) {
-    targetSavings = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v3_target', targetSavings);
-    renderApp();
+  function toggleFabMenu() {
+    document.getElementById('fabMenu').classList.toggle('active');
   }
 
-  // Main Render Logic
-  function renderApp() {
-    let totalIn = 0;
-    let totalOut = 0;
+  function openLoginModal() {
+    document.getElementById('fabMenu').classList.remove('active');
+    document.getElementById('modalLogin').classList.add('active');
+  }
 
-    transactions.forEach(t => {
-      if (t.type === 'income') totalIn += t.amount;
-      if (t.type === 'expense') totalOut += t.amount;
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  function openLaporModal() { 
+    document.getElementById('fabMenu').classList.remove('active');
+    document.getElementById('modalLapor').classList.add('active'); 
+  }
+  function openReportDetailModal() {
+    document.getElementById('fabMenu').classList.remove('active');
+    renderReportDetailTable();
+    document.getElementById('modalReportDetail').classList.add('active');
+  }
+
+  function selectSystemMode(mode) {
+    activeMode = mode;
+    localStorage.setItem('hsm_active_mode', mode);
+    closeModal('modalLogin');
+
+    if (mode === 'pribadi') {
+      if (!setupPribadiDone) {
+        document.getElementById('modalSetupPribadi').classList.add('active');
+      } else {
+        initDashboard();
+      }
+    } else {
+      if (!setupLoveDone) {
+        document.getElementById('modalSetupLove').classList.add('active');
+      } else {
+        initDashboard();
+      }
+    }
+  }
+
+  // Setup Handlers
+  document.getElementById('formSetupPribadi').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const c = parseFloat(document.getElementById('initCash').value) || 0;
+    const b = parseFloat(document.getElementById('initBrimo').value) || 0;
+    const cb = parseFloat(document.getElementById('initCatBank').value) || 0;
+    const ew = parseFloat(document.getElementById('initEWallet').value) || 0;
+    targetPribadi = parseFloat(document.getElementById('initTargetPribadi').value) || 10000000;
+
+    const totalInit = c + b + cb + ew;
+    transactionsPribadi = [{ type: 'income', category: 'Saldo Awal', account: 'CASH', amount: totalInit, desc: 'Saldo Awal Terbuka', date: new Date().toISOString().split('T')[0] }];
+    
+    localStorage.setItem('hsm_tx_pribadi', JSON.stringify(transactionsPribadi));
+    localStorage.setItem('hsm_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_setup_pribadi_done', 'true');
+    setupPribadiDone = true;
+
+    closeModal('modalSetupPribadi');
+    initDashboard();
+  });
+
+  document.getElementById('formSetupLove').addEventListener('submit', (e) => {
+    e.preventDefault();
+    targetLove = parseFloat(document.getElementById('initLoveTarget').value) || 20000000;
+    commitMyLove = parseFloat(document.getElementById('initLoveMyCommit').value) || 500000;
+    commitHerLove = parseFloat(document.getElementById('initLoveHerCommit').value) || 500000;
+
+    localStorage.setItem('hsm_target_love', targetLove);
+    localStorage.setItem('hsm_commit_my_love', commitMyLove);
+    localStorage.setItem('hsm_commit_her_love', commitHerLove);
+    localStorage.setItem('hsm_setup_love_done', 'true');
+    setupLoveDone = true;
+
+    closeModal('modalSetupLove');
+    initDashboard();
+  });
+
+  function toggleCategoryField() {
+    const type = document.getElementById('txType').value;
+    document.getElementById('groupCategory').style.display = type === 'expense' ? 'block' : 'none';
+    document.getElementById('groupPenyetor').style.display = type === 'love_iuran' ? 'block' : 'none';
+  }
+
+  // Form Lapor Submit
+  document.getElementById('formLapor').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const type = document.getElementById('txType').value;
+    const amount = parseFloat(document.getElementById('txAmount').value);
+    const desc = document.getElementById('txDesc').value;
+    const date = document.getElementById('txDate').value;
+    const account = document.getElementById('txAccount').value;
+
+    if (type === 'love_iuran' || activeMode === 'love') {
+      const penyetor = document.getElementById('txPenyetor').value;
+      transactionsLove.push({ type: 'love_iuran', penyetor: penyetor, account: account, amount: amount, desc: desc, date: date });
+      localStorage.setItem('hsm_tx_love', JSON.stringify(transactionsLove));
+    } else {
+      const category = document.getElementById('txCategory').value;
+      transactionsPribadi.push({ type: type, category: category, account: account, amount: amount, desc: desc, date: date });
+      localStorage.setItem('hsm_tx_pribadi', JSON.stringify(transactionsPribadi));
+    }
+
+    closeModal('modalLapor');
+    initDashboard();
+  });
+
+  // Render Engine
+  function initDashboard() {
+    if (!activeMode) {
+      openLoginModal();
+      return;
+    }
+
+    const badge = document.getElementById('modeBadge');
+    const badgeName = document.getElementById('modeName');
+
+    if (activeMode === 'pribadi') {
+      badge.className = 'badge-mode';
+      badgeName.innerText = 'Pribadi';
+      document.getElementById('viewPribadi').style.display = 'grid';
+      document.getElementById('viewLove').style.display = 'none';
+      renderPribadi();
+    } else {
+      badge.className = 'badge-mode love';
+      badgeName.innerText = 'With My Love ❤️';
+      document.getElementById('viewPribadi').style.display = 'none';
+      document.getElementById('viewLove').style.display = 'grid';
+      renderLove();
+    }
+  }
+
+  function renderPribadi() {
+    let inTotal = 0, outTotal = 0;
+    transactionsPribadi.forEach(t => {
+      if (t.type === 'income') inTotal += t.amount;
+      if (t.type === 'expense') outTotal += t.amount;
     });
 
-    const netBalance = totalIn - totalOut;
+    const net = inTotal - outTotal;
+    document.getElementById('valTotalSaldo').innerText = formatIDR(net);
+    document.getElementById('valTotalIncome').innerText = formatIDR(inTotal);
+    document.getElementById('valTotalExpense').innerText = formatIDR(outTotal);
+    document.getElementById('targetBalanceVal').innerText = formatIDR(net);
 
-    // Set Header & Summary Stats
-    document.getElementById('lblLastUpdate').innerText = `Terakhir Diupdate: ${lastUpdateDate}`;
-    document.getElementById('valCurrentBalance').innerText = formatIDR(netBalance);
-    document.getElementById('valBalanceSummary').innerText = formatIDR(netBalance);
-    document.getElementById('valIncomeSummary').innerText = formatIDR(totalIn);
-    document.getElementById('valExpenseSummary').innerText = formatIDR(totalOut);
+    const pct = targetPribadi > 0 ? Math.min((net / targetPribadi) * 100, 100) : 0;
+    document.getElementById('targetPctText').innerText = `${pct.toFixed(1)}% dari Target ${formatIDR(targetPribadi)}`;
+    document.getElementById('targetProgressBar').style.width = `${pct}%`;
 
-    // Target Calculation & Progress Bar
-    const pct = targetSavings > 0 ? Math.min(Math.max((netBalance / targetSavings) * 100, 0), 100) : 0;
-    document.getElementById('valTargetPct').innerText = `${pct.toFixed(1)}%`;
-    document.getElementById('valTargetProgress').style.width = `${pct}%`;
+    renderChartsPribadi(inTotal, outTotal);
+    generateAIPribadi(inTotal, outTotal, net);
+  }
 
-    // Render Detailed Laporan Table
-    const tbody = document.getElementById('laporanTableBody');
-    tbody.innerHTML = transactions.length === 0 ? '<tr><td colspan="7" style="text-align:center; color:#94a3b8;">Belum ada laporan transaksi.</td></tr>' : '';
+  function renderLove() {
+    let totalCollected = transactionsLove.reduce((acc, t) => acc + t.amount, 0);
+    document.getElementById('loveTotalBalance').innerText = formatIDR(totalCollected);
 
-    transactions.slice().reverse().forEach((t, idx) => {
-      const realIdx = transactions.length - 1 - idx;
-      let badgeColor = t.type === 'income' ? 'var(--success)' : (t.type === 'expense' ? 'var(--danger)' : 'var(--accent)');
-      let typeLabel = t.type === 'income' ? 'Pemasukan' : (t.type === 'expense' ? 'Pengeluaran' : 'Transfer/Tarik Tunai');
-      let accountDetail = t.type === 'transfer' ? `${t.account} ➔ ${t.toAccount}` : t.account;
+    const pct = targetLove > 0 ? Math.min((totalCollected / targetLove) * 100, 100) : 0;
+    document.getElementById('loveTargetPct').innerText = `${pct.toFixed(1)}%`;
+    document.getElementById('loveTargetStatus').innerText = `Target Impian: ${formatIDR(targetLove)}`;
+    document.getElementById('loveProgressBar').style.width = `${pct}%`;
 
+    document.getElementById('loveMyCommitment').innerText = `${formatIDR(commitMyLove)} / bln`;
+    document.getElementById('loveHerCommitment').innerText = `${formatIDR(commitHerLove)} / bln`;
+
+    const logBody = document.getElementById('loveTableLog');
+    logBody.innerHTML = transactionsLove.length === 0 ? '<tr><td colspan="4" style="text-align:center;">Belum ada setoran.</td></tr>' : '';
+    transactionsLove.slice().reverse().forEach(t => {
+      logBody.innerHTML += `<tr><td>${t.date}</td><td><b>${t.penyetor}</b></td><td>${t.account}</td><td style="color:var(--success); font-weight:700;">${formatIDR(t.amount)}</td></tr>`;
+    });
+  }
+
+  function renderReportDetailTable() {
+    const tbody = document.getElementById('reportTableBody');
+    const txs = activeMode === 'pribadi' ? transactionsPribadi : transactionsLove;
+    tbody.innerHTML = txs.length === 0 ? '<tr><td colspan="6" style="text-align:center;">Belum ada transaksi.</td></tr>' : '';
+
+    txs.slice().reverse().forEach(t => {
       tbody.innerHTML += `
         <tr>
           <td>${t.date}</td>
-          <td><span style="color:${badgeColor}; font-weight:700;">${typeLabel}</span></td>
-          <td>${accountDetail}</td>
-          <td>${t.category || '-'}</td>
+          <td>${t.type}</td>
+          <td>${t.account}</td>
+          <td>${t.category || t.penyetor || '-'}</td>
           <td>${t.desc || '-'}</td>
           <td style="font-weight:700;">${formatIDR(t.amount)}</td>
-          <td><button onclick="deleteTx(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
         </tr>
       `;
     });
-
-    lucide.createIcons();
-    renderCharts(totalIn, totalOut);
-    generateAIAdvisor(totalIn, totalOut, netBalance);
   }
 
-  function deleteTx(index) {
-    transactions.splice(index, 1);
-    lastUpdateDate = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-    localStorage.setItem('hsm_v3_last_update', lastUpdateDate);
-    localStorage.setItem('hsm_v3_transactions', JSON.stringify(transactions));
-    renderApp();
-  }
-
-  // Submit Laporan Form
-  document.getElementById('financialForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const type = document.getElementById('txType').value;
-
-    const newTx = {
-      type: type,
-      category: type === 'expense' ? document.getElementById('txCategory').value : null,
-      account: document.getElementById('txAccount').value,
-      toAccount: type === 'transfer' ? document.getElementById('txToAccount').value : null,
-      amount: parseFloat(document.getElementById('txAmount').value),
-      desc: document.getElementById('txDesc').value,
-      date: document.getElementById('txDate').value
-    };
-
-    transactions.push(newTx);
-    lastUpdateDate = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-    
-    localStorage.setItem('hsm_v3_last_update', lastUpdateDate);
-    localStorage.setItem('hsm_v3_transactions', JSON.stringify(transactions));
-
-    document.getElementById('txAmount').value = '';
-    document.getElementById('txDesc').value = '';
-    closeModal();
-    renderApp();
-  });
-
-  // Render Graphical Charts
-  function renderCharts(totalIn, totalOut) {
-    // 1. Chart Expenses Breakdown by Category
+  function renderChartsPribadi(inTotal, outTotal) {
     const expCategories = ['Belanja Bulanan', 'Makan dan Minum', 'Jajan', 'Wants', 'Needs'];
-    const expTotals = expCategories.map(cat => {
-      return transactions.filter(t => t.type === 'expense' && t.category === cat)
-                         .reduce((sum, t) => sum + t.amount, 0);
-    });
+    const expData = expCategories.map(cat => transactionsPribadi.filter(t => t.type === 'expense' && t.category === cat).reduce((s, t) => s + t.amount, 0));
 
-    const ctxExp = document.getElementById('chartExpenses').getContext('2d');
-    if (chartExpensesInstance) chartExpensesInstance.destroy();
-    chartExpensesInstance = new Chart(ctxExp, {
+    const ctxE = document.getElementById('chartExpenses').getContext('2d');
+    if (chartExpInstance) chartExpInstance.destroy();
+    chartExpInstance = new Chart(ctxE, {
       type: 'doughnut',
-      data: {
-        labels: expCategories,
-        datasets: [{
-          data: expTotals,
-          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6']
-        }]
-      },
+      data: { labels: expCategories, datasets: [{ data: expData, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'] }] },
       options: { responsive: true, maintainAspectRatio: false }
     });
 
-    // 2. Chart Cashflow Bar Chart
-    const ctxCash = document.getElementById('chartCashflow').getContext('2d');
-    if (chartCashflowInstance) chartCashflowInstance.destroy();
-    chartCashflowInstance = new Chart(ctxCash, {
+    const ctxC = document.getElementById('chartCashflow').getContext('2d');
+    if (chartCashInstance) chartCashInstance.destroy();
+    chartCashInstance = new Chart(ctxC, {
       type: 'bar',
-      data: {
-        labels: ['Pemasukan', 'Pengeluaran'],
-        datasets: [{
-          label: 'Total Rupiah',
-          data: [totalIn, totalOut],
-          backgroundColor: ['#10b981', '#ef4444']
-        }]
-      },
+      data: { labels: ['Pemasukan', 'Pengeluaran'], datasets: [{ data: [inTotal, outTotal], backgroundColor: ['#10b981', '#ef4444'] }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
     });
   }
 
-  // AI Advice Engine with Goal / Wish Integration
-  function sendWishToAI() {
-    const wish = document.getElementById('aiUserWish').value;
-    if(!wish) return;
-    customWishText = wish;
-    localStorage.setItem('hsm_v3_user_wish', customWishText);
-    renderApp();
+  function submitAIWish() {
+    const wish = document.getElementById('aiWishInput').value;
+    if (wish) {
+      localStorage.setItem('hsm_wish', wish);
+      renderPribadi();
+    }
   }
 
-  function generateAIAdvisor(totalIn, totalOut, netBalance) {
-    const box = document.getElementById('aiAnalysisResult');
-    const remainingTarget = Math.max(targetSavings - netBalance, 0);
-    const burnRate = totalIn > 0 ? ((totalOut / totalIn) * 100).toFixed(1) : 0;
-
-    let text = `<b>Halo Maszaa!</b> Berikut analisis keuangan dari sistem AI:<br>`;
-    text += `• Rasio Pengeluaran Anda berada di angka <b>${burnRate}%</b> dari total pemasukan.<br>`;
-    text += `• Kekurangan untuk mencapai target tabungan Anda adalah <b>${formatIDR(remainingTarget)}</b>.<br>`;
-
-    if (customWishText) {
-      text += `<br><b>💡 Rekomendasi Berdasarkan Keinginan Anda ("${customWishText}"):</b><br>`;
-      text += `Untuk mencapai target impian tersebut, Anda disarankan mengalokasikan minimal <b>${formatIDR(Math.ceil(remainingTarget / 2))}</b> per periode pembayaran dan menekan pos pengeluaran <i>Wants & Jajan</i>.`;
+  function generateAIPribadi(inTotal, outTotal, net) {
+    const wish = localStorage.getItem('hsm_wish') || '';
+    const remTarget = Math.max(targetPribadi - net, 0);
+    let html = `Sisa target tabungan pribadi Anda adalah <b>${formatIDR(remTarget)}</b>.<br>`;
+    if (wish) {
+      html += `<b>💡 Analisis Keinginan ("${wish}"):</b> Alokasikan sisa kas harian Anda secara disiplin agar target terkejar sesuai waktu.`;
     } else {
-      text += `<br><i>Silakan ketik target atau keinginan Anda di kolom bawah untuk mendapatkan alokasi rekomendasi khusus dari AI.</i>`;
+      html += `<i>Ketik target/keinginan spesifikmu di bawah untuk mendapatkan saran alokasi otomatis dari AI.</i>`;
     }
-
-    box.innerHTML = text;
+    document.getElementById('aiResponse').innerHTML = html;
   }
 
   // App Initialization
-  renderApp();
+  initDashboard();
 </script>
 </body>
 </html>
