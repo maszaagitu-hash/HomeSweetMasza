@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <!-- Viewport di-set 1024px agar di HP otomatis pakai Mode Desktop -->
+  <!-- Set Viewport agar siap untuk mode desktop -->
   <meta name="viewport" content="width=1024, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Home Sweet Maszaa - Finance System</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,12 +39,12 @@
     /* Card Base Styling */
     .card { background: var(--card-bg); border-radius: 24px; padding: 24px; box-shadow: var(--shadow); border: 2px solid #f8fafc; margin-bottom: 20px; position: relative; overflow: hidden; }
     
-    /* Target Hero Box (Total Saldo Paling Utama & Gede) */
+    /* Target Hero Box (Total Saldo Utama & Persentase) */
     .target-card { background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); color: white; border: none; }
     .target-card.love { background: linear-gradient(135deg, #f472b6 0%, #db2777 100%); }
     .target-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; opacity: 0.95; text-transform: uppercase; letter-spacing: 0.5px; }
     
-    /* TOTAL SALDO UTAMA (UKURAN BESAR) */
+    /* TOTAL SALDO UTAMA GEDE */
     .saldo-main-title { font-size: 13px; text-transform: uppercase; font-weight: 800; opacity: 0.85; margin-top: 12px; }
     .saldo-main-val { font-size: 42px; font-weight: 900; line-height: 1.1; margin: 4px 0 10px 0; letter-spacing: -1px; }
     
@@ -55,7 +55,7 @@
     .progress-bar-bg { background: rgba(255, 255, 255, 0.25); height: 12px; border-radius: 10px; overflow: hidden; margin-top: 14px; }
     .progress-bar-fill { background: white; height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; }
 
-    /* Inline Edit Inputs Flexible Grid (Tidak keluar kotak) */
+    /* Inline Edit Inputs Flexible Grid */
     .inline-edit-grid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(255, 255, 255, 0.3); font-size: 12px; font-weight: 700; align-items: center; }
     .inline-item { display: flex; align-items: center; gap: 6px; }
     .inline-input { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; outline: none; width: 110px; text-align: center; }
@@ -82,7 +82,7 @@
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 700; }
     th { color: var(--text-sub); font-size: 11px; text-transform: uppercase; font-weight: 800; }
 
-    /* Floating Action Button (FAB Popup Melayang) */
+    /* Floating Action Button */
     .fab-wrapper { position: fixed; bottom: 24px; right: 24px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
     .fab-popup-menu { display: none; flex-direction: column; gap: 8px; align-items: flex-end; }
     .fab-popup-menu.active { display: flex; }
@@ -94,6 +94,10 @@
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
     .modal-overlay.active { display: flex; }
     
+    /* POPUP PERINGATAN MODAL MOBILE DEKSTOP (POPUP WAJIB DEKSTOP) */
+    .modal-desktop-alert { background: white; border-radius: 28px; padding: 28px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 3px solid #f43f5e; }
+    .alert-steps { text-align: left; background: #fff1f2; border-radius: 16px; padding: 14px; font-size: 12px; font-weight: 700; color: #9f1239; margin: 14px 0; line-height: 1.6; }
+
     /* POPUP AWAL MINI & LUCU (TOMBOL KANAN KIRI) */
     .modal-mini-card { background: white; border-radius: 28px; padding: 28px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.15); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -110,7 +114,7 @@
     .btn-submit-form { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 16px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 12px; }
     .btn-submit-form.love { background: var(--love-pink); }
 
-    /* Bottom Navigation Bar (Dashboard & Detail Laporan) */
+    /* Bottom Navigation Bar */
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #f1f5f9; display: flex; justify-content: space-around; padding: 12px 0; z-index: 90; }
     .nav-btn { border: none; background: none; color: var(--text-sub); font-size: 12px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 50%; }
     .nav-btn.active { color: var(--primary); }
@@ -130,7 +134,7 @@
 
   <!-- DASHBOARD PRIBADI -->
   <main id="dashboardPribadi">
-    <!-- Hero Target Tabungan (Total Saldo Utama & Persentase) -->
+    <!-- Hero Target Tabungan -->
     <div class="card target-card">
       <div class="target-header">
         <span>✨ Laporan Kas & Target Tabungan</span>
@@ -188,7 +192,7 @@
 
   <!-- DASHBOARD WITH MY LOVE (NO DETAIL LAPORAN TAB) -->
   <main id="dashboardLove" style="display:none;">
-    <!-- Hero Target Love (Total Tabungan Gede + Persentase) -->
+    <!-- Hero Target Love -->
     <div class="card target-card love">
       <div class="target-header">
         <span>❤️ Target Tabungan Bersama</span>
@@ -281,7 +285,7 @@
   </main>
 </div>
 
-<!-- FLOATING ACTION BUTTON (POPUP MENU POJOK BAWAH) -->
+<!-- FLOATING ACTION BUTTON -->
 <div class="fab-wrapper">
   <div class="fab-popup-menu" id="fabMenu">
     <div class="fab-btn-option" onclick="triggerLaporModal()"><i data-lucide="plus-circle" style="width:18px;"></i> + Lapor Transaksi</div>
@@ -299,6 +303,24 @@
     <i data-lucide="file-text" style="width:20px;"></i> Detail Laporan
   </button>
 </nav>
+
+<!-- POPUP PERINGATAN WAJIB DEKSTOP MODE DI HP -->
+<div class="modal-overlay" id="modalDesktopRequired">
+  <div class="modal-desktop-alert">
+    <div style="font-size:36px;">📱⚠️</div>
+    <h3 style="font-size:16px; font-weight:900; color:#e11d48; margin-top:6px;">Wajib Aktifkan Mode Desktop!</h3>
+    <p style="font-size:12px; color:#475569; font-weight:700; margin-top:4px;">
+      Untuk tampilan paling rapi & maksimal, silakan buka dalam <b>Mode Desktop / Situs Desktop</b> di HP Anda.
+    </p>
+    <div class="alert-steps">
+      <b>Cara Mengaktifkan di Browser HP:</b><br>
+      1. Klik titik tiga (<b>⋮</b> / <b>⋯</b>) di pojok atas browser.<br>
+      2. Centang pilihan <b>"Situs Desktop" / "Desktop Site"</b>.<br>
+      3. Halaman akan otomatis terkonfigurasi rapi!
+    </div>
+    <button class="btn-submit-form" style="background:#e11d48;" onclick="closeModal('modalDesktopRequired')">Saya Mengerti & Mengaktifkan</button>
+  </div>
+</div>
 
 <!-- POPUP AWAL MINI & LUCU (TOMBOL KANAN KIRI) -->
 <div class="modal-overlay" id="modalMiniLogin">
@@ -424,21 +446,32 @@
 </div>
 
 <script>
+  // DETEKSI MOBILE DEKSTOP MODE AUTOMATIC SYSTEM
+  function checkDesktopModeRequirement() {
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isDesktopViewport = window.innerWidth >= 1000;
+
+    // Jika perangkat HP tetapi tidak mengaktifkan Centang Mode Desktop
+    if (isMobileDevice && !isDesktopViewport) {
+      document.getElementById('modalDesktopRequired').classList.add('active');
+    }
+  }
+
   // App States
-  let activeMode = localStorage.getItem('hsm_v6_mode') || '';
-  let setupPribadiDone = localStorage.getItem('hsm_v6_setup_pribadi') === 'true';
-  let setupLoveDone = localStorage.getItem('hsm_v6_setup_love') === 'true';
+  let activeMode = localStorage.getItem('hsm_v7_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_v7_setup_pribadi') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_v7_setup_love') === 'true';
 
-  let txPribadi = JSON.parse(localStorage.getItem('hsm_v6_tx_pribadi')) || [];
-  let txLove = JSON.parse(localStorage.getItem('hsm_v6_tx_love')) || [];
+  let txPribadi = JSON.parse(localStorage.getItem('hsm_v7_tx_pribadi')) || [];
+  let txLove = JSON.parse(localStorage.getItem('hsm_v7_tx_love')) || [];
 
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v6_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v6_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v6_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v6_commit_kekoo')) || 500000;
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v7_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v7_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v7_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v7_commit_kekoo')) || 500000;
 
-  let lastUpdatePribadi = localStorage.getItem('hsm_v6_update_pribadi') || '-';
-  let lastUpdateLove = localStorage.getItem('hsm_v6_update_love') || '-';
+  let lastUpdatePribadi = localStorage.getItem('hsm_v7_update_pribadi') || '-';
+  let lastUpdateLove = localStorage.getItem('hsm_v7_update_love') || '-';
 
   let chartExpInstance = null;
   let chartMonthlyLoveInstance = null;
@@ -484,7 +517,7 @@
 
   function selectSystemMode(mode) {
     activeMode = mode;
-    localStorage.setItem('hsm_v6_mode', mode);
+    localStorage.setItem('hsm_v7_mode', mode);
     closeModal('modalMiniLogin');
 
     if (mode === 'pribadi') {
@@ -517,10 +550,10 @@
     txPribadi = [{ type: 'income', category: 'Saldo Awal', account: 'Bank', amount: totalInit, desc: 'Saldo Awal Terbuka', date: new Date().toISOString().split('T')[0] }];
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v6_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v6_target_pribadi', targetPribadi);
-    localStorage.setItem('hsm_v6_update_pribadi', lastUpdatePribadi);
-    localStorage.setItem('hsm_v6_setup_pribadi', 'true');
+    localStorage.setItem('hsm_v7_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v7_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v7_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v7_setup_pribadi', 'true');
     setupPribadiDone = true;
 
     closeModal('modalSetupPribadi');
@@ -538,12 +571,12 @@
     txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v6_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v6_target_love', targetLove);
-    localStorage.setItem('hsm_v6_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v6_commit_kekoo', commitKekoo);
-    localStorage.setItem('hsm_v6_update_love', lastUpdateLove);
-    localStorage.setItem('hsm_v6_setup_love', 'true');
+    localStorage.setItem('hsm_v7_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v7_target_love', targetLove);
+    localStorage.setItem('hsm_v7_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v7_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v7_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v7_setup_love', 'true');
     setupLoveDone = true;
 
     closeModal('modalSetupLove');
@@ -552,6 +585,8 @@
 
   // Main App Init
   function initApp() {
+    checkDesktopModeRequirement();
+
     if (!activeMode) {
       openLoginModal();
       return;
@@ -588,7 +623,7 @@
 
   function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v6_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v7_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -597,9 +632,9 @@
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
 
-    localStorage.setItem('hsm_v6_target_love', targetLove);
-    localStorage.setItem('hsm_v6_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v6_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v7_target_love', targetLove);
+    localStorage.setItem('hsm_v7_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v7_commit_kekoo', commitKekoo);
     renderLove();
   }
 
@@ -678,8 +713,8 @@
     txPribadi.push({ type, category, account, amount, desc, date });
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v6_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v6_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v7_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v7_update_pribadi', lastUpdatePribadi);
 
     document.getElementById('txPribadiAmount').value = '';
     document.getElementById('txPribadiDesc').value = '';
@@ -699,8 +734,8 @@
     txLove.push({ penyetor, account, amount, desc, date });
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v6_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v6_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v7_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v7_update_love', lastUpdateLove);
 
     document.getElementById('txLoveAmount').value = '';
     document.getElementById('txLoveDesc').value = '';
@@ -765,7 +800,7 @@
 
   function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
-    localStorage.setItem('hsm_v6_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v7_tx_pribadi', JSON.stringify(txPribadi));
     renderPribadi();
     renderLaporanDetailTable();
   }
@@ -795,7 +830,7 @@
     box.innerHTML = `<b>AI Advisor Love ("${input}"):</b><br>Sisa target bersama Ijaa & Kekoo adalah <b>${formatIDR(rem)}</b>. Dengan iuran rutin <b>${formatIDR(jointCommit)}/bulan</b>, target diproyeksikan tercapai dalam <b>${est} bulan</b>! 💖`;
   }
 
-  // Run App
+  // Run App & Check Requirement
   initApp();
 </script>
 </body>
