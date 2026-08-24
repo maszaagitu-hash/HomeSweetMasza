@@ -23,7 +23,6 @@
       --shadow: 0 8px 20px -4px rgba(139, 92, 246, 0.08);
     }
 
-    /* MENCEGAH SCROLL KANAN KIRI / OVERFLOW MOBILE */
     html, body {
       width: 100%;
       max-width: 100%;
@@ -43,10 +42,9 @@
       word-break: break-word;
     }
 
-    /* Layout Container HP */
     .app-container {
       width: 100%;
-      max-width: 500px; /* Lebar maksimal seukuran layar HP */
+      max-width: 500px;
       margin: 0 auto;
       padding: 16px;
     }
@@ -82,7 +80,7 @@
       color: var(--love-pink);
     }
 
-    /* Cards */
+    /* Card Base */
     .card {
       background: var(--card-bg);
       border-radius: 20px;
@@ -95,7 +93,7 @@
       overflow: hidden;
     }
 
-    /* Target Hero Card */
+    /* Hero Target Cards */
     .target-card {
       background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
       color: white;
@@ -121,7 +119,6 @@
       opacity: 0.85;
       margin-top: 10px;
     }
-    /* TOTAL SALDO PALING GEDE */
     .saldo-main-val {
       font-size: 32px;
       font-weight: 900;
@@ -130,7 +127,6 @@
       letter-spacing: -0.5px;
     }
 
-    /* PERSENTASE DIBAWAH SALDO */
     .target-pct-val {
       font-size: 18px;
       font-weight: 800;
@@ -159,7 +155,6 @@
       transition: width 0.5s ease;
     }
 
-    /* Inline Settings Grid */
     .inline-edit-grid {
       display: flex;
       flex-wrap: wrap;
@@ -184,11 +179,11 @@
       font-size: 11px;
       font-weight: 800;
       outline: none;
-      width: 80px;
+      width: 90px;
       text-align: center;
     }
 
-    /* Pemasukan & Pengeluaran Sejajar (Kanan Kiri) */
+    /* Stat Box Parallel (Kanan-Kiri) */
     .stat-row-parallel {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -210,9 +205,21 @@
       text-transform: uppercase;
     }
     .stat-amount {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
       margin-top: 2px;
+    }
+    .input-box-commit {
+      width: 100%;
+      border: 1px solid #f1f5f9;
+      background: #faf5ff;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--love-pink);
+      outline: none;
+      margin-top: 4px;
     }
 
     /* AI Card */
@@ -253,13 +260,46 @@
     }
     .ai-input-group button.love { background: var(--love-pink); }
 
-    /* Tables */
-    .table-wrapper { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
-    th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 700; }
-    th { color: var(--text-sub); font-size: 9px; text-transform: uppercase; font-weight: 800; }
+    /* STICKY / FREEZE COLUMN TABLE SCROLL CSS */
+    .freeze-table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .freeze-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .freeze-table th, .freeze-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      background: white;
+    }
+    .freeze-table th {
+      color: var(--text-sub);
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 800;
+      background: #f8fafc;
+    }
+    /* Sticky Freeze Column Tanggal */
+    .freeze-col {
+      position: sticky;
+      left: 0;
+      z-index: 10;
+      border-right: 2px solid #f1f5f9 !important;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.02);
+    }
+    .freeze-table th.freeze-col {
+      background: #f1f5f9;
+    }
 
-    /* Floating Action Button (FAB Melayang) */
+    /* Floating Action Button */
     .fab-wrapper { position: fixed; bottom: 18px; right: 18px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .fab-popup-menu { display: none; flex-direction: column; gap: 6px; align-items: flex-end; }
     .fab-popup-menu.active { display: flex; }
@@ -306,7 +346,7 @@
     }
     .modal-overlay.active { display: flex; }
 
-    /* POPUP MINI KECIL & LUCU (PILIHAN KANAN KIRI) */
+    /* POPUP MINI KECIL & LUCU */
     .modal-mini-card {
       background: white;
       border-radius: 24px;
@@ -424,7 +464,7 @@
       <div class="saldo-main-title">TOTAL SALDO KAS SAAT INI</div>
       <div class="saldo-main-val" id="valTotalSaldoPribadi">Rp 0</div>
 
-      <!-- PERSENTASE DIBAWAH SALDO -->
+      <!-- PERSENTASE -->
       <div class="target-pct-val">
         <span id="valTargetPctPribadi">0%</span>
         <span class="target-sub-text" id="valTargetSubPribadi">Tercapai dari Target Rp 0</span>
@@ -469,7 +509,7 @@
     </div>
   </main>
 
-  <!-- DASHBOARD WITH MY LOVE (NO DETAIL LAPORAN TAB) -->
+  <!-- DASHBOARD WITH MY LOVE -->
   <main id="dashboardLove" style="display:none;">
     <!-- Target Hero Box Love -->
     <div class="card target-card love">
@@ -492,17 +532,21 @@
       
       <div class="inline-edit-grid">
         <div class="inline-item">
-          <span>Target: Rp</span>
-          <input type="number" id="inputTargetLove" class="inline-input" style="width:75px;" onchange="updateLoveSettings()">
+          <span>Target Tabungan: Rp</span>
+          <input type="number" id="inputTargetLove" class="inline-input" style="width:90px;" onchange="updateLoveSettings()">
         </div>
-        <div class="inline-item">
-          <span>Ijaa/bln: Rp</span>
-          <input type="number" id="inputCommitIjaa" class="inline-input" style="width:65px;" onchange="updateLoveSettings()">
-        </div>
-        <div class="inline-item">
-          <span>Kekoo/bln: Rp</span>
-          <input type="number" id="inputCommitKekoo" class="inline-input" style="width:65px;" onchange="updateLoveSettings()">
-        </div>
+      </div>
+    </div>
+
+    <!-- KOMITMEN IJAA & KEKOO DIBAWAH CARD BERSAMA (SEJAJAR KANAN KIRI) -->
+    <div class="stat-row-parallel">
+      <div class="stat-box" style="border-color:#fbcfe8;">
+        <div class="stat-label" style="color:var(--love-pink);">Iuran Ijaa / bln</div>
+        <input type="number" id="inputCommitIjaa" class="input-box-commit" onchange="updateLoveSettings()">
+      </div>
+      <div class="stat-box" style="border-color:#fbcfe8;">
+        <div class="stat-label" style="color:var(--love-pink);">Iuran Kekoo / bln</div>
+        <input type="number" id="inputCommitKekoo" class="input-box-commit" onchange="updateLoveSettings()">
       </div>
     </div>
 
@@ -515,11 +559,11 @@
     <!-- Log Setoran Tabungan Love -->
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:8px;">LOG SETORAN TABUNGAN CINTA</div>
-      <div class="table-wrapper">
-        <table>
+      <div class="freeze-table-wrapper">
+        <table class="freeze-table">
           <thead>
             <tr>
-              <th>Tanggal</th>
+              <th class="freeze-col">Tanggal</th>
               <th>Penyetor</th>
               <th>Metode</th>
               <th>Keterangan</th>
@@ -542,15 +586,17 @@
     </div>
   </main>
 
-  <!-- TAB DETAIL LAPORAN (KHUSUS PRIBADI) -->
+  <!-- TAB DETAIL LAPORAN (KHUSUS PRIBADI - STICKY FREEZE COLUMN TANGGAL) -->
   <main id="viewDetailLaporan" style="display:none;">
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">DETAIL HISTORI LAPORAN TRANSAKSI</div>
-      <div class="table-wrapper">
-        <table>
+      
+      <!-- FREEZE TABLE CONTAINER (KOLOM TANGGAL BEKU DI KIRI) -->
+      <div class="freeze-table-wrapper">
+        <table class="freeze-table">
           <thead>
             <tr>
-              <th>Tanggal</th>
+              <th class="freeze-col">Tanggal</th>
               <th>Jenis</th>
               <th>Akun</th>
               <th>Kategori</th>
@@ -710,20 +756,20 @@
 
 <script>
   // App State Storage
-  let activeMode = localStorage.getItem('hsm_v8_mode') || '';
-  let setupPribadiDone = localStorage.getItem('hsm_v8_setup_pribadi') === 'true';
-  let setupLoveDone = localStorage.getItem('hsm_v8_setup_love') === 'true';
+  let activeMode = localStorage.getItem('hsm_v9_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_v9_setup_pribadi') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_v9_setup_love') === 'true';
 
-  let txPribadi = JSON.parse(localStorage.getItem('hsm_v8_tx_pribadi')) || [];
-  let txLove = JSON.parse(localStorage.getItem('hsm_v8_tx_love')) || [];
+  let txPribadi = JSON.parse(localStorage.getItem('hsm_v9_tx_pribadi')) || [];
+  let txLove = JSON.parse(localStorage.getItem('hsm_v9_tx_love')) || [];
 
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v8_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v8_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v8_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v8_commit_kekoo')) || 500000;
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v9_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v9_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v9_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v9_commit_kekoo')) || 500000;
 
-  let lastUpdatePribadi = localStorage.getItem('hsm_v8_update_pribadi') || '-';
-  let lastUpdateLove = localStorage.getItem('hsm_v8_update_love') || '-';
+  let lastUpdatePribadi = localStorage.getItem('hsm_v9_update_pribadi') || '-';
+  let lastUpdateLove = localStorage.getItem('hsm_v9_update_love') || '-';
 
   let chartExpInstance = null;
   let chartMonthlyLoveInstance = null;
@@ -769,7 +815,7 @@
 
   function selectSystemMode(mode) {
     activeMode = mode;
-    localStorage.setItem('hsm_v8_mode', mode);
+    localStorage.setItem('hsm_v9_mode', mode);
     closeModal('modalMiniLogin');
 
     if (mode === 'pribadi') {
@@ -802,10 +848,10 @@
     txPribadi = [{ type: 'income', category: 'Saldo Awal', account: 'Bank', amount: totalInit, desc: 'Saldo Awal Terbuka', date: new Date().toISOString().split('T')[0] }];
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v8_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v8_target_pribadi', targetPribadi);
-    localStorage.setItem('hsm_v8_update_pribadi', lastUpdatePribadi);
-    localStorage.setItem('hsm_v8_setup_pribadi', 'true');
+    localStorage.setItem('hsm_v9_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v9_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v9_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v9_setup_pribadi', 'true');
     setupPribadiDone = true;
 
     closeModal('modalSetupPribadi');
@@ -823,12 +869,12 @@
     txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v8_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v8_target_love', targetLove);
-    localStorage.setItem('hsm_v8_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v8_commit_kekoo', commitKekoo);
-    localStorage.setItem('hsm_v8_update_love', lastUpdateLove);
-    localStorage.setItem('hsm_v8_setup_love', 'true');
+    localStorage.setItem('hsm_v9_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v9_target_love', targetLove);
+    localStorage.setItem('hsm_v9_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v9_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v9_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v9_setup_love', 'true');
     setupLoveDone = true;
 
     closeModal('modalSetupLove');
@@ -873,7 +919,7 @@
 
   function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v8_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v9_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -882,9 +928,9 @@
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
 
-    localStorage.setItem('hsm_v8_target_love', targetLove);
-    localStorage.setItem('hsm_v8_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v8_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v9_target_love', targetLove);
+    localStorage.setItem('hsm_v9_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v9_commit_kekoo', commitKekoo);
     renderLove();
   }
 
@@ -932,7 +978,7 @@
     txLove.slice().reverse().forEach(t => {
       tbody.innerHTML += `
         <tr>
-          <td>${t.date}</td>
+          <td class="freeze-col">${t.date}</td>
           <td><b>${t.penyetor}</b></td>
           <td>${t.account}</td>
           <td>${t.desc || '-'}</td>
@@ -963,8 +1009,8 @@
     txPribadi.push({ type, category, account, amount, desc, date });
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v8_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v8_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v9_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v9_update_pribadi', lastUpdatePribadi);
 
     document.getElementById('txPribadiAmount').value = '';
     document.getElementById('txPribadiDesc').value = '';
@@ -984,8 +1030,8 @@
     txLove.push({ penyetor, account, amount, desc, date });
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v8_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v8_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v9_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v9_update_love', lastUpdateLove);
 
     document.getElementById('txLoveAmount').value = '';
     document.getElementById('txLoveDesc').value = '';
@@ -1035,7 +1081,7 @@
       let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
       tbody.innerHTML += `
         <tr>
-          <td>${t.date}</td>
+          <td class="freeze-col">${t.date}</td>
           <td><span style="color:${labelColor}; font-weight:800;">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
           <td>${t.account}</td>
           <td>${t.category || '-'}</td>
@@ -1050,7 +1096,7 @@
 
   function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
-    localStorage.setItem('hsm_v8_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v9_tx_pribadi', JSON.stringify(txPribadi));
     renderPribadi();
     renderLaporanDetailTable();
   }
@@ -1080,7 +1126,6 @@
     box.innerHTML = `<b>AI Advisor Love ("${input}"):</b><br>Sisa target bersama Ijaa & Kekoo adalah <b>${formatIDR(rem)}</b>. Dengan iuran rutin <b>${formatIDR(jointCommit)}/bulan</b>, target diproyeksikan tercapai dalam <b>${est} bulan</b>! 💖`;
   }
 
-  // Run App
   initApp();
 </script>
 </body>
