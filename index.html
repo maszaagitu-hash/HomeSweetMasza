@@ -3,268 +3,238 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Sweet Maszaa - Financial Assistant</title>
+  <title>Home Sweet Maszaa - Cute & Aesthetic Finance</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface-light: #334155;
-      --accent-blue: #3b82f6;
-      --accent-pink: #ec4899;
-      --text: #f8fafc;
+      --bg: #faf5ff;
+      --card-bg: #ffffff;
+      --primary: #8b5cf6;
+      --primary-light: #f3e8ff;
+      --love-pink: #ec4899;
+      --love-bg: #fce7f3;
+      --text: #334155;
       --text-sub: #94a3b8;
-      --border: rgba(255, 255, 255, 0.1);
       --success: #10b981;
-      --danger: #ef4444;
+      --danger: #f43f5e;
+      --border: #f1f5f9;
+      --shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.08);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 90px; }
 
-    /* Container Minimalis */
-    .app-container { max-width: 900px; margin: 0 auto; padding: 24px; }
+    /* Layout Container */
+    .app-container { max-width: 600px; margin: 0 auto; padding: 20px; }
 
-    /* Header Navbar Elegan */
-    .nav-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
-    .brand-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .mode-chip { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
-    .mode-chip:hover { background: var(--surface-light); }
-    .mode-chip.love { border-color: rgba(236, 72, 153, 0.4); color: #f472b6; }
+    /* Cute Top Navbar */
+    .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .brand-title { font-size: 20px; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; }
+    .mode-badge { background: white; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 800; border: 2px solid var(--primary-light); color: var(--primary); display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow); }
+    .mode-badge.love { border-color: #fbcfe8; color: var(--love-pink); }
 
-    /* Card Base Design */
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
-    .col-12 { grid-column: span 12; }
-    .col-6 { grid-column: span 6; }
+    /* Cards Styling */
+    .card { background: var(--card-bg); border-radius: 24px; padding: 20px; box-shadow: var(--shadow); border: 2px solid #f8fafc; margin-bottom: 16px; position: relative; }
+    
+    /* Target Hero Box */
+    .target-card { background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); color: white; border: none; }
+    .target-card.love { background: linear-gradient(135deg, #f472b6 0%, #db2777 100%); }
+    .target-header { display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; opacity: 0.9; text-transform: uppercase; }
+    
+    .target-main-val { font-size: 38px; font-weight: 900; line-height: 1; margin: 8px 0; }
+    .target-sub { font-size: 12px; opacity: 0.9; font-weight: 700; }
+    
+    .progress-bar-bg { background: rgba(255, 255, 255, 0.25); height: 12px; border-radius: 10px; overflow: hidden; margin-top: 12px; }
+    .progress-bar-fill { background: white; height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; }
 
-    /* Target Hero Card */
-    .hero-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--border); position: relative; overflow: hidden; }
-    .hero-card.love { background: linear-gradient(135deg, #831843 0%, #310e21 100%); border-color: rgba(236, 72, 153, 0.3); }
-    .hero-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .hero-subtitle { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); font-weight: 700; }
-    .hero-val { font-size: 32px; font-weight: 800; margin: 6px 0; }
-    .progress-bar { background: rgba(255,255,255,0.1); height: 10px; border-radius: 10px; overflow: hidden; margin: 12px 0; }
-    .progress-fill { background: var(--accent-blue); height: 100%; width: 0%; transition: width 0.5s ease; }
-    .progress-fill.love { background: var(--accent-pink); }
+    /* Inline Edit Inputs */
+    .inline-edit-row { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(255, 255, 255, 0.3); font-size: 11px; font-weight: 700; align-items: center; flex-wrap: wrap; }
+    .inline-input { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 800; outline: none; width: 100px; text-align: center; }
 
-    /* Editable Inline Goal Box */
-    .edit-goal-box { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-    .input-inline { background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 8px; font-size: 12px; outline: none; }
+    /* Sejajar Kanan Kiri (Pemasukan & Pengeluaran) */
+    .stat-row-parallel { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+    .stat-box { background: white; border-radius: 20px; padding: 16px; box-shadow: var(--shadow); border: 2px solid #f8fafc; }
+    .stat-label { font-size: 11px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; }
+    .stat-amount { font-size: 18px; font-weight: 900; margin-top: 4px; }
 
-    /* Stat Cards Sejajar Kanan Kiri (Pemasukan & Pengeluaran) */
-    .stat-row { display: flex; gap: 16px; margin-top: 8px; }
-    .stat-box { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
-    .stat-label { font-size: 11px; color: var(--text-sub); font-weight: 700; text-transform: uppercase; }
-    .stat-val { font-size: 20px; font-weight: 800; margin-top: 4px; }
-
-    /* AI Financial Assistant Section */
-    .ai-card { background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 41, 59, 0.5) 100%); border: 1px solid rgba(59, 130, 246, 0.3); }
-    .ai-card.love { background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(49, 14, 33, 0.5) 100%); border-color: rgba(236, 72, 153, 0.3); }
-    .ai-chat-box { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 16px; font-size: 13px; line-height: 1.6; color: #e2e8f0; margin-top: 12px; max-height: 200px; overflow-y: auto; }
-    .ai-input-row { display: flex; gap: 8px; margin-top: 12px; }
-    .ai-input-row input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: white; padding: 10px 14px; font-size: 13px; outline: none; }
-    .ai-input-row button { background: var(--accent-blue); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-    .ai-input-row button.love { background: var(--accent-pink); }
-
-    /* Action Buttons */
-    .btn-lapor { background: var(--accent-blue); color: white; border: none; padding: 14px; border-radius: 14px; font-size: 14px; font-weight: 700; width: 100%; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3); }
-    .btn-lapor.love { background: var(--accent-pink); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3); }
-
-    /* Bottom Navigation Bar (Dashboard & Detail Laporan) */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 90; }
-    .nav-item { border: none; background: none; color: var(--text-sub); font-size: 11px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 50%; }
-    .nav-item.active { color: var(--accent-blue); }
-    .nav-item.active.love { color: var(--accent-pink); }
-
-    /* Onboarding Selection Popup Layout (Kanan Kiri) */
-    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
-    .modal-overlay.active { display: flex; }
-    .selection-container { display: flex; gap: 20px; max-width: 700px; width: 100%; }
-    .select-card { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; transition: transform 0.3s, border-color 0.3s; }
-    .select-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
-    .select-card.love:hover { border-color: var(--accent-pink); }
-
-    /* Modal Form Standard */
-    .modal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; margin-bottom: 6px; }
-    .form-group input, .form-group select { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: white; font-size: 13px; outline: none; }
-    .btn-submit { width: 100%; background: var(--accent-blue); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-    .btn-submit.love { background: var(--accent-pink); }
+    /* AI Box Estetik */
+    .ai-card { background: #f5f3ff; border: 2px dashed #ddd6fe; }
+    .ai-card.love { background: #fdf2f8; border-color: #fbcfe8; }
+    .ai-title { font-size: 12px; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+    .ai-title.love { color: var(--love-pink); }
+    .ai-chat-bubble { background: white; border-radius: 16px; padding: 12px 14px; font-size: 12px; font-weight: 700; color: #475569; margin-top: 10px; line-height: 1.5; border: 1px solid #edf2f7; }
+    .ai-input-group { display: flex; gap: 8px; margin-top: 10px; }
+    .ai-input-group input { flex: 1; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; outline: none; }
+    .ai-input-group button { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 12px; font-weight: 800; font-size: 12px; cursor: pointer; }
+    .ai-input-group button.love { background: var(--love-pink); }
 
     /* Tables */
-    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
-    th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); }
-    th { color: var(--text-sub); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 700; }
+    th { color: var(--text-sub); font-size: 10px; text-transform: uppercase; font-weight: 800; }
 
-    @media (max-width: 650px) {
-      .selection-container { flex-direction: column; }
-      .col-6 { grid-column: span 12; }
-      .stat-row { flex-direction: column; }
-    }
+    /* Floating Action Button (FAB Popup Melayang) */
+    .fab-wrapper { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .fab-popup-menu { display: none; flex-direction: column; gap: 8px; align-items: flex-end; }
+    .fab-popup-menu.active { display: flex; }
+    .fab-btn-option { background: white; color: var(--text); border: 2px solid var(--primary-light); padding: 10px 16px; border-radius: 20px; font-weight: 800; font-size: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .fab-trigger { background: var(--primary); color: white; width: 54px; height: 54px; border-radius: 50%; border: none; box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 20px; }
+    .fab-trigger.love { background: var(--love-pink); box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4); }
+
+    /* Modals Layouts */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    
+    /* POPUP AWAL MINI & LUCU (TOMBOL KANAN KIRI) */
+    .modal-mini-card { background: white; border-radius: 28px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.15); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .mini-button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+    .btn-mini-select { background: var(--primary-light); color: var(--primary); border: none; padding: 14px 10px; border-radius: 16px; font-weight: 800; font-size: 12px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .btn-mini-select.love { background: var(--love-bg); color: var(--love-pink); }
+
+    /* Standard Form Modals */
+    .modal-form-card { background: white; border-radius: 28px; padding: 24px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin-bottom: 4px; }
+    .form-group input, .form-group select { width: 100%; border: 2px solid #f1f5f9; background: #f8fafc; padding: 10px 12px; border-radius: 12px; font-size: 13px; font-weight: 700; outline: none; }
+    .btn-submit-form { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 14px; font-weight: 800; font-size: 13px; cursor: pointer; margin-top: 10px; }
+    .btn-submit-form.love { background: var(--love-pink); }
+
+    /* Bottom Navigation Bar (Dashboard & Detail Laporan) */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #f1f5f9; display: flex; justify-content: space-around; padding: 10px 0; z-index: 90; }
+    .nav-btn { border: none; background: none; color: var(--text-sub); font-size: 11px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; width: 50%; }
+    .nav-btn.active { color: var(--primary); }
+    .nav-btn.active.love { color: var(--love-pink); }
   </style>
 </head>
 <body>
 
 <div class="app-container">
-  <!-- Navbar Header -->
+  <!-- Header App -->
   <header class="nav-header">
-    <div class="brand-title">Home Sweet Maszaa</div>
-    <div class="mode-chip" id="modeChip" onclick="openModeSelection()">
+    <div class="brand-title">Home Sweet Maszaa 🌸</div>
+    <div class="mode-badge" id="modeBadge" onclick="openLoginModal()">
       <i data-lucide="user" style="width:14px;" id="modeIcon"></i>
-      <span id="modeName">Keuangan Pribadi</span>
-      <i data-lucide="chevron-down" style="width:14px;"></i>
+      <span id="modeName">Pribadi</span>
     </div>
   </header>
 
-  <!-- DASHBOARD VIEW -->
-  <main id="viewDashboard" class="grid">
-    <!-- PRIBADI DASHBOARD -->
-    <div id="pribadiContent" class="col-12 grid" style="gap:20px; display:none;">
-      <!-- Hero Target Pribadi -->
-      <div class="card hero-card col-12">
-        <div class="hero-header">
-          <span class="hero-subtitle"><i data-lucide="target" style="width:12px; display:inline;"></i> Target Tabungan Pribadi</span>
-          <span class="hero-subtitle" id="lastUpdatePribadi">Terakhir Diupdate: -</span>
-        </div>
-        <div class="hero-val" id="valSaldoPribadi">Rp 0</div>
-        <div style="font-size:12px; color:var(--text-sub);" id="valTargetTextPribadi">0% dari Target Rp 0</div>
-        <div class="progress-bar"><div class="progress-fill" id="progressPribadi"></div></div>
-        
-        <!-- Setting Inline Target -->
-        <div class="edit-goal-box">
-          <span style="font-size:12px; color:var(--text-sub);">Ubah Target Tabungan: Rp</span>
-          <input type="number" id="inputTargetPribadi" class="input-inline" placeholder="10000000" onchange="updateTargetPribadi(this.value)">
-        </div>
+  <!-- DASHBOARD PRIBADI -->
+  <main id="dashboardPribadi">
+    <!-- Hero Target Tabungan -->
+    <div class="card target-card">
+      <div class="target-header">
+        <span>✨ Progress Target Tabungan</span>
+        <span id="lblLastUpdatePribadi">Diupdate: -</span>
       </div>
-
-      <!-- Stat Cards Sejajar Kanan Kiri (Pemasukan & Pengeluaran) -->
-      <div class="col-12 stat-row">
-        <div class="stat-box">
-          <div>
-            <div class="stat-label">Total Pemasukan</div>
-            <div class="stat-val" style="color:var(--success);" id="valIncomePribadi">Rp 0</div>
-          </div>
-          <i data-lucide="arrow-down-left" style="color:var(--success); width:24px;"></i>
-        </div>
-        <div class="stat-box">
-          <div>
-            <div class="stat-label">Total Pengeluaran</div>
-            <div class="stat-val" style="color:var(--danger);" id="valExpensePribadi">Rp 0</div>
-          </div>
-          <i data-lucide="arrow-up-right" style="color:var(--danger); width:24px;"></i>
-        </div>
-      </div>
-
-      <!-- Grafik Per Bulan -->
-      <div class="card col-6">
-        <div class="hero-subtitle" style="margin-bottom:12px;">Pengeluaran Per Kategori</div>
-        <div style="height:200px;"><canvas id="chartExpensesPribadi"></canvas></div>
-      </div>
-      <div class="card col-6">
-        <div class="hero-subtitle" style="margin-bottom:12px;">Arus Kas Pemasukan vs Pengeluaran</div>
-        <div style="height:200px;"><canvas id="chartCashflowPribadi"></canvas></div>
-      </div>
-
-      <!-- AI Financial Assistant -->
-      <div class="card ai-card col-12">
-        <div class="hero-subtitle" style="color:var(--accent-blue);"><i data-lucide="bot" style="width:14px; display:inline;"></i> MASZAA FINANCIAL AI ASSISTANT</div>
-        <div class="ai-chat-box" id="aiBoxPribadi">AI siap membantu merekap, memberikan rekomendasi, atau analisis keuangan Anda...</div>
-        <div class="ai-input-row">
-          <input type="text" id="aiInputPribadi" placeholder="Tanyakan saran atau rekap keuangan ke AI...">
-          <button onclick="askAIPribadi()">Konsultasi</button>
-        </div>
-      </div>
-
-      <!-- Tombol Lapor Transaksi -->
-      <div class="col-12">
-        <button class="btn-lapor" onclick="openLaporPribadiModal()"><i data-lucide="plus-circle" style="width:18px;"></i> Lapor Transaksi Pribadi Baru</button>
+      <div class="target-main-val" id="valTargetPctPribadi">0%</div>
+      <div class="target-sub" id="valSaldoPribadi">Saldo Kas: Rp 0 / Target Rp 0</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressPribadi"></div></div>
+      <div class="inline-edit-row">
+        <span>Ubah Target Tabungan: Rp</span>
+        <input type="number" id="inputTargetPribadi" class="inline-input" onchange="updateTargetPribadiVal(this.value)">
       </div>
     </div>
 
-    <!-- WITH MY LOVE DASHBOARD -->
-    <div id="loveContent" class="col-12 grid" style="gap:20px; display:none;">
-      <!-- Hero Target Love -->
-      <div class="card hero-card love col-12">
-        <div class="hero-header">
-          <span class="hero-subtitle" style="color:#f472b6;"><i data-lucide="heart" style="width:12px; display:inline;"></i> Target Tabungan With My Love</span>
-          <span class="hero-subtitle" id="lastUpdateLove">Terakhir Diupdate: -</span>
-        </div>
-        <div class="hero-val" id="valTotalLove">Rp 0</div>
-        <div style="font-size:12px; color:var(--text-sub);" id="valTargetTextLove">0% dari Target Rp 0</div>
-        <div class="progress-bar"><div class="progress-fill love" id="progressLove"></div></div>
-
-        <!-- Inline Editable Goal & Commitments -->
-        <div class="edit-goal-box">
-          <div>
-            <span style="font-size:11px; color:var(--text-sub);">Target Bersama: Rp </span>
-            <input type="number" id="inputTargetLove" class="input-inline" style="width:110px;" onchange="updateLoveSettings()">
-          </div>
-          <div>
-            <span style="font-size:11px; color:var(--text-sub);">Iuran Ijaa/bln: Rp </span>
-            <input type="number" id="inputCommitIjaa" class="input-inline" style="width:100px;" onchange="updateLoveSettings()">
-          </div>
-          <div>
-            <span style="font-size:11px; color:var(--text-sub);">Iuran Kekoo/bln: Rp </span>
-            <input type="number" id="inputCommitKekoo" class="input-inline" style="width:100px;" onchange="updateLoveSettings()">
-          </div>
-        </div>
+    <!-- Informasi Pemasukan & Pengeluaran Sejajar (Kanan-Kiri) -->
+    <div class="stat-row-parallel">
+      <div class="stat-box">
+        <div class="stat-label">Pemasukan</div>
+        <div class="stat-amount" style="color:var(--success);" id="valIncomePribadi">Rp 0</div>
       </div>
-
-      <!-- Grafik Bulanan Tabungan Love -->
-      <div class="card col-12">
-        <div class="hero-subtitle" style="margin-bottom:12px;">Grafik Setoran Tabungan Per Bulan</div>
-        <div style="height:220px;"><canvas id="chartMonthlyLove"></canvas></div>
+      <div class="stat-box">
+        <div class="stat-label">Pengeluaran</div>
+        <div class="stat-amount" style="color:var(--danger);" id="valExpensePribadi">Rp 0</div>
       </div>
+    </div>
 
-      <!-- Log Setoran Tabungan Love -->
-      <div class="card col-12">
-        <div class="hero-subtitle" style="margin-bottom:12px;">Log Setoran Tabungan</div>
-        <table>
-          <thead>
-            <tr>
-              <th>Tanggal</th>
-              <th>Penyetor</th>
-              <th>Metode Setoran</th>
-              <th>Keterangan</th>
-              <th>Nominal Setoran</th>
-            </tr>
-          </thead>
-          <tbody id="tableLoveLog"></tbody>
-        </table>
-      </div>
+    <!-- Grafik Keuangan -->
+    <div class="card">
+      <div style="font-size:12px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">PROPORSI EXPENSES KATEGORI</div>
+      <div style="height:180px;"><canvas id="chartExpensesPribadi"></canvas></div>
+    </div>
 
-      <!-- AI Assistant Love -->
-      <div class="card ai-card love col-12">
-        <div class="hero-subtitle" style="color:var(--accent-pink);"><i data-lucide="sparkles" style="width:14px; display:inline;"></i> LOVE FINANCIAL AI ADVISOR</div>
-        <div class="ai-chat-box" id="aiBoxLove">AI siap menghitung perkiraan bulan capai target iuran Ijaa & Kekoo...</div>
-        <div class="ai-input-row">
-          <input type="text" id="aiInputLove" placeholder="Tanyakan target waktu atau konsultasikan tabungan bersama...">
-          <button class="love" onclick="askAILove()">Konsultasi AI</button>
-        </div>
-      </div>
-
-      <!-- Tombol Lapor Khusus Love -->
-      <div class="col-12">
-        <button class="btn-lapor love" onclick="openLaporLoveModal()"><i data-lucide="heart-handshake" style="width:18px;"></i> Lapor Setoran Tabungan With My Love</button>
+    <!-- AI Advisor -->
+    <div class="card ai-card">
+      <div class="ai-title"><i data-lucide="bot" style="width:16px;"></i> MASZAA AI FINANCIAL ASSISTANT</div>
+      <div class="ai-chat-bubble" id="aiBubblePribadi">AI siap membantu merekap & memberikan analisis strategi keuangan Anda...</div>
+      <div class="ai-input-group">
+        <input type="text" id="aiInputPribadi" placeholder="Tanyakan saran atau rekap keuangan...">
+        <button onclick="askAIPribadi()">Konsultasi</button>
       </div>
     </div>
   </main>
 
-  <!-- DETAIL LAPORAN VIEW (SEPARATE VIEW) -->
-  <main id="viewLaporan" class="grid" style="display:none;">
-    <div class="card col-12">
-      <div class="hero-subtitle" style="margin-bottom:16px; font-size:14px;">Detail Laporan Histori Transaksi</div>
+  <!-- DASHBOARD WITH MY LOVE (NO DETAIL LAPORAN TAB) -->
+  <main id="dashboardLove" style="display:none;">
+    <!-- Hero Target Love -->
+    <div class="card target-card love">
+      <div class="target-header">
+        <span>❤️ Target Tabungan Bersama</span>
+        <span id="lblLastUpdateLove">Diupdate: -</span>
+      </div>
+      <div class="target-main-val" id="valTargetPctLove">0%</div>
+      <div class="target-sub" id="valSaldoLove">Terkumpul: Rp 0 / Target Rp 0</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressLove"></div></div>
+      <div class="inline-edit-row">
+        <span>Target: Rp</span>
+        <input type="number" id="inputTargetLove" class="inline-input" style="width:85px;" onchange="updateLoveSettings()">
+        <span>Ijaa: Rp</span>
+        <input type="number" id="inputCommitIjaa" class="inline-input" style="width:75px;" onchange="updateLoveSettings()">
+        <span>Kekoo: Rp</span>
+        <input type="number" id="inputCommitKekoo" class="inline-input" style="width:75px;" onchange="updateLoveSettings()">
+      </div>
+    </div>
+
+    <!-- Grafik Setoran Per Bulan -->
+    <div class="card">
+      <div style="font-size:12px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">GRAFIK SETORAN BULANAN IJAA & KEKOO</div>
+      <div style="height:180px;"><canvas id="chartMonthlyLove"></canvas></div>
+    </div>
+
+    <!-- Log Setoran Tabungan Love (Estetik) -->
+    <div class="card">
+      <div style="font-size:12px; font-weight:800; color:var(--text-sub); margin-bottom:8px;">LOG SETORAN TABUNGAN CINTA</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Penyetor</th>
+            <th>Metode</th>
+            <th>Keterangan</th>
+            <th>Setoran</th>
+          </tr>
+        </thead>
+        <tbody id="tableLoveLog"></tbody>
+      </table>
+    </div>
+
+    <!-- AI Advisor Love -->
+    <div class="card ai-card love">
+      <div class="ai-title love"><i data-lucide="sparkles" style="width:16px;"></i> LOVE AI FINANCIAL ASSISTANT</div>
+      <div class="ai-chat-bubble" id="aiBubbleLove">AI siap menghitung waktu pencapaian target iuran Ijaa & Kekoo!</div>
+      <div class="ai-input-group">
+        <input type="text" id="aiInputLove" placeholder="Konsultasikan target waktu impian bersama...">
+        <button class="love" onclick="askAILove()">Konsultasi AI</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- TAB DETAIL LAPORAN (KHUSUS MODE PRIBADI) -->
+  <main id="viewDetailLaporan" style="display:none;">
+    <div class="card">
+      <div style="font-size:12px; font-weight:800; color:var(--text-sub); margin-bottom:12px;">DETAIL HISTORI LAPORAN TRANSAKSI</div>
       <div style="overflow-x:auto;">
         <table>
           <thead>
             <tr>
               <th>Tanggal</th>
               <th>Jenis</th>
-              <th>Akun / Assets</th>
-              <th>Kategori Expenses</th>
+              <th>Akun</th>
+              <th>Kategori</th>
               <th>Keterangan</th>
               <th>Nominal</th>
               <th>Aksi</th>
@@ -277,71 +247,81 @@
   </main>
 </div>
 
+<!-- FLOATING ACTION BUTTON (POPUP MENU POJOK BAWAH) -->
+<div class="fab-wrapper">
+  <div class="fab-popup-menu" id="fabMenu">
+    <div class="fab-btn-option" onclick="triggerLaporModal()"><i data-lucide="plus-circle" style="width:16px;"></i> + Lapor Transaksi</div>
+    <div class="fab-btn-option" onclick="openLoginModal()"><i data-lucide="refresh-cw" style="width:16px;"></i> Ganti Akun / System</div>
+  </div>
+  <button class="fab-trigger" id="fabMainBtn" onclick="toggleFabMenu()"><i data-lucide="sparkles" style="width:24px;"></i></button>
+</div>
+
 <!-- BOTTOM NAVIGATION BAR -->
-<nav class="bottom-nav">
-  <button class="nav-item active" id="btnNavDashboard" onclick="switchMainTab('dashboard')">
-    <i data-lucide="layout-dashboard" style="width:20px;"></i> Dashboard
+<nav class="bottom-nav" id="bottomNavBar">
+  <button class="nav-btn active" id="btnNavDashboard" onclick="switchMainTab('dashboard')">
+    <i data-lucide="layout-dashboard" style="width:18px;"></i> Dashboard
   </button>
-  <button class="nav-item" id="btnNavLaporan" onclick="switchMainTab('laporan')">
-    <i data-lucide="file-text" style="width:20px;"></i> Detail Laporan
+  <button class="nav-btn" id="btnNavLaporan" onclick="switchMainTab('laporan')">
+    <i data-lucide="file-text" style="width:18px;"></i> Detail Laporan
   </button>
 </nav>
 
-<!-- MODAL 1: ONBOARDING SELECTION (KANAN KIRI ELEGAN) -->
-<div class="modal-overlay" id="modalSelection">
-  <div class="selection-container">
-    <div class="select-card" onclick="startSetup('pribadi')">
-      <i data-lucide="user" style="width:40px; height:40px; color:var(--accent-blue); margin-bottom:12px;"></i>
-      <h3 style="font-size:18px; font-weight:800; margin-bottom:6px;">Keuangan Pribadi</h3>
-      <p style="font-size:12px; color:var(--text-sub);">Kelola kas harian, bank, celengan, dan pengeluaran pribadi Anda.</p>
-    </div>
-    <div class="select-card love" onclick="startSetup('love')">
-      <i data-lucide="heart" style="width:40px; height:40px; color:var(--accent-pink); margin-bottom:12px;"></i>
-      <h3 style="font-size:18px; font-weight:800; margin-bottom:6px;">With My Love</h3>
-      <p style="font-size:12px; color:var(--text-sub);">Pantau target tabungan impian bersama Ijaa & Kekoo secara simpel.</p>
+<!-- POPUP AWAL MINI & LUCU (GANTI AKUN / ONBOARDING SELECTION) -->
+<div class="modal-overlay" id="modalMiniLogin">
+  <div class="modal-mini-card">
+    <div style="font-size:28px;">🌸</div>
+    <h3 style="font-size:16px; font-weight:900; color:var(--text); margin-top:4px;">Home Sweet Maszaa</h3>
+    <p style="font-size:12px; color:var(--text-sub); font-weight:700; margin-top:2px;">Pilih akun laporan keuangan:</p>
+    <div class="mini-button-group">
+      <button class="btn-mini-select" onclick="selectSystemMode('pribadi')">
+        <i data-lucide="user" style="width:20px;"></i> Pribadi
+      </button>
+      <button class="btn-mini-select love" onclick="selectSystemMode('love')">
+        <i data-lucide="heart" style="width:20px;"></i> With My Love
+      </button>
     </div>
   </div>
 </div>
 
-<!-- MODAL 2: FORM ONBOARDING SALDO AWAL PRIBADI -->
+<!-- MODAL FORM SETUP ONBOARDING PRIBADI -->
 <div class="modal-overlay" id="modalSetupPribadi">
-  <div class="modal-card">
-    <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">Kondisi Keuangan Saat Ini</h3>
-    <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">Isi saldo awal per akun (Hanya sekali di awal):</p>
+  <div class="modal-form-card">
+    <h3 style="font-size:16px; font-weight:900; margin-bottom:4px;">Kondisi Keuangan Saat Ini</h3>
+    <p style="font-size:12px; color:var(--text-sub); font-weight:700; margin-bottom:14px;">Isi saldo awal per akun (Diisi sekali saja):</p>
     <form id="formSetupPribadi">
       <div class="form-group"><label>Saldo Bank (Transfer)</label><input type="number" id="initBank" value="0" required></div>
       <div class="form-group"><label>Saldo Cash (Tunai)</label><input type="number" id="initCash" value="0" required></div>
       <div class="form-group"><label>Saldo Celengan</label><input type="number" id="initCelengan" value="0" required></div>
       <div class="form-group"><label>Saldo QRIS / E-Wallet</label><input type="number" id="initEwallet" value="0" required></div>
       <div class="form-group"><label>Target Tabungan Pribadi (Rp)</label><input type="number" id="initTargetPribadi" value="10000000" required></div>
-      <button type="submit" class="btn-submit">Simpan & Buka Dashboard</button>
+      <button type="submit" class="btn-submit-form">Simpan & Masuk</button>
     </form>
   </div>
 </div>
 
-<!-- MODAL 3: FORM ONBOARDING SETUP WITH MY LOVE -->
+<!-- MODAL FORM SETUP ONBOARDING WITH MY LOVE -->
 <div class="modal-overlay" id="modalSetupLove">
-  <div class="modal-card">
-    <h3 style="font-size:16px; font-weight:800; color:var(--accent-pink); margin-bottom:6px;">Setup With My Love</h3>
-    <p style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">Atur target bersama & iuran bulanan Ijaa & Kekoo:</p>
+  <div class="modal-form-card">
+    <h3 style="font-size:16px; font-weight:900; color:var(--love-pink); margin-bottom:4px;">❤️ Setup With My Love</h3>
+    <p style="font-size:12px; color:var(--text-sub); font-weight:700; margin-bottom:14px;">Atur target bersama & iuran bulanan Ijaa & Kekoo:</p>
     <form id="formSetupLove">
       <div class="form-group"><label>Target Tabungan Bersama (Rp)</label><input type="number" id="initTargetLove" value="20000000" required></div>
-      <div class="form-group"><label>Total Uang Tabungan Saat Ini (Rp)</label><input type="number" id="initCurrentLove" value="0" required></div>
+      <div class="form-group"><label>Total Tabungan Terkumpul Saat Ini (Rp)</label><input type="number" id="initCurrentLove" value="0" required></div>
       <div class="form-group"><label>Komitmen Iuran Ijaa / Bulan (Rp)</label><input type="number" id="initCommitIjaa" value="500000" required></div>
       <div class="form-group"><label>Komitmen Iuran Kekoo / Bulan (Rp)</label><input type="number" id="initCommitKekoo" value="500000" required></div>
-      <button type="submit" class="btn-submit love">Simpan & Buka Dashboard</button>
+      <button type="submit" class="btn-submit-form love">Simpan & Masuk</button>
     </form>
   </div>
 </div>
 
-<!-- MODAL 4: FORM LAPOR TRANSAKSI PRIBADI -->
+<!-- MODAL LAPOR TRANSAKSI PRIBADI -->
 <div class="modal-overlay" id="modalLaporPribadi">
-  <div class="modal-card">
-    <h3 style="font-size:16px; font-weight:800; margin-bottom:14px;">Lapor Transaksi Pribadi</h3>
+  <div class="modal-form-card">
+    <h3 style="font-size:16px; font-weight:900; margin-bottom:12px;">Lapor Transaksi Pribadi</h3>
     <form id="formLaporPribadi">
       <div class="form-group">
         <label>Jenis Transaksi</label>
-        <select id="txPribadiType" onchange="toggleCategoryPribadi()">
+        <select id="txPribadiType" onchange="toggleCatPribadi()">
           <option value="expense">Pengeluaran (Expenses)</option>
           <option value="income">Pemasukan</option>
           <option value="transfer">Tarik Tunai / Transfer Antar Akun</option>
@@ -366,30 +346,21 @@
           <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Nominal (Rp)</label>
-        <input type="number" id="txPribadiAmount" placeholder="50000" required>
-      </div>
-      <div class="form-group">
-        <label>Keterangan Tambahan (Opsional)</label>
-        <input type="text" id="txPribadiDesc" placeholder="Beli beras / Kopi...">
-      </div>
-      <div class="form-group">
-        <label>Tanggal</label>
-        <input type="date" id="txPribadiDate" required>
-      </div>
-      <div style="display:flex; gap:10px; margin-top:16px;">
-        <button type="button" class="btn-submit" style="background:var(--surface-light);" onclick="closeModal('modalLaporPribadi')">Batal</button>
-        <button type="submit" class="btn-submit">Simpan Laporan</button>
+      <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="txPribadiAmount" placeholder="50000" required></div>
+      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Beli beras / Kopi..."></div>
+      <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
+      <div style="display:flex; gap:10px; margin-top:14px;">
+        <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporPribadi')">Batal</button>
+        <button type="submit" class="btn-submit-form">Simpan</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- MODAL 5: FORM LAPOR KHUSUS WITH MY LOVE -->
+<!-- MODAL LAPOR SETORAN WITH MY LOVE -->
 <div class="modal-overlay" id="modalLaporLove">
-  <div class="modal-card">
-    <h3 style="font-size:16px; font-weight:800; color:var(--accent-pink); margin-bottom:14px;">❤️ Lapor Setoran Tabungan Love</h3>
+  <div class="modal-form-card">
+    <h3 style="font-size:16px; font-weight:900; color:var(--love-pink); margin-bottom:12px;">❤️ Setoran Tabungan Love</h3>
     <form id="formLaporLove">
       <div class="form-group">
         <label>Penyetor</label>
@@ -407,45 +378,35 @@
           <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Nominal Setoran (Rp)</label>
-        <input type="number" id="txLoveAmount" placeholder="500000" required>
-      </div>
-      <div class="form-group">
-        <label>Keterangan Setoran (Opsional)</label>
-        <input type="text" id="txLoveDesc" placeholder="Setoran bulanan...">
-      </div>
-      <div class="form-group">
-        <label>Tanggal Setoran</label>
-        <input type="date" id="txLoveDate" required>
-      </div>
-      <div style="display:flex; gap:10px; margin-top:16px;">
-        <button type="button" class="btn-submit" style="background:var(--surface-light);" onclick="closeModal('modalLaporLove')">Batal</button>
-        <button type="submit" class="btn-submit love">Simpan Setoran</button>
+      <div class="form-group"><label>Nominal Setoran (Rp)</label><input type="number" id="txLoveAmount" placeholder="500000" required></div>
+      <div class="form-group"><label>Keterangan Setoran (Opsional)</label><input type="text" id="txLoveDesc" placeholder="Iuran bulan ini..."></div>
+      <div class="form-group"><label>Tanggal Setoran</label><input type="date" id="txLoveDate" required></div>
+      <div style="display:flex; gap:10px; margin-top:14px;">
+        <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporLove')">Batal</button>
+        <button type="submit" class="btn-submit-form love">Simpan Setoran</button>
       </div>
     </form>
   </div>
 </div>
 
 <script>
-  // State Storage Variables
-  let currentMode = localStorage.getItem('hsm_v4_mode') || '';
-  let setupPribadiDone = localStorage.getItem('hsm_v4_setup_pribadi') === 'true';
-  let setupLoveDone = localStorage.getItem('hsm_v4_setup_love') === 'true';
+  // App States
+  let activeMode = localStorage.getItem('hsm_v5_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_v5_setup_pribadi') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_v5_setup_love') === 'true';
 
-  let txPribadi = JSON.parse(localStorage.getItem('hsm_v4_tx_pribadi')) || [];
-  let txLove = JSON.parse(localStorage.getItem('hsm_v4_tx_love')) || [];
+  let txPribadi = JSON.parse(localStorage.getItem('hsm_v5_tx_pribadi')) || [];
+  let txLove = JSON.parse(localStorage.getItem('hsm_v5_tx_love')) || [];
 
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v4_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v4_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v4_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v4_commit_kekoo')) || 500000;
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v5_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v5_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v5_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v5_commit_kekoo')) || 500000;
 
-  let lastUpdatePribadi = localStorage.getItem('hsm_v4_update_pribadi') || '-';
-  let lastUpdateLove = localStorage.getItem('hsm_v4_update_love') || '-';
+  let lastUpdatePribadi = localStorage.getItem('hsm_v5_update_pribadi') || '-';
+  let lastUpdateLove = localStorage.getItem('hsm_v5_update_love') || '-';
 
-  let chartExpPribadiInstance = null;
-  let chartCashPribadiInstance = null;
+  let chartExpInstance = null;
   let chartMonthlyLoveInstance = null;
 
   lucide.createIcons();
@@ -455,22 +416,43 @@
   const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-  function openModeSelection() { document.getElementById('modalSelection').classList.add('active'); }
+  function openLoginModal() { 
+    document.getElementById('fabMenu').classList.remove('active');
+    document.getElementById('modalMiniLogin').classList.add('active'); 
+  }
+
+  function toggleFabMenu() { document.getElementById('fabMenu').classList.toggle('active'); }
+
+  function triggerLaporModal() {
+    document.getElementById('fabMenu').classList.remove('active');
+    if (activeMode === 'pribadi') {
+      document.getElementById('modalLaporPribadi').classList.add('active');
+    } else {
+      document.getElementById('modalLaporLove').classList.add('active');
+    }
+  }
 
   function switchMainTab(tab) {
-    document.getElementById('viewDashboard').style.display = tab === 'dashboard' ? 'grid' : 'none';
-    document.getElementById('viewLaporan').style.display = tab === 'laporan' ? 'grid' : 'none';
+    if (activeMode === 'love') {
+      // With My Love gada tab detail laporan
+      document.getElementById('dashboardLove').style.display = 'block';
+      document.getElementById('viewDetailLaporan').style.display = 'none';
+      return;
+    }
 
-    document.getElementById('btnNavDashboard').className = `nav-item ${tab === 'dashboard' ? 'active' : ''} ${currentMode === 'love' ? 'love' : ''}`;
-    document.getElementById('btnNavLaporan').className = `nav-item ${tab === 'laporan' ? 'active' : ''} ${currentMode === 'love' ? 'love' : ''}`;
+    document.getElementById('dashboardPribadi').style.display = tab === 'dashboard' ? 'block' : 'none';
+    document.getElementById('viewDetailLaporan').style.display = tab === 'laporan' ? 'block' : 'none';
+
+    document.getElementById('btnNavDashboard').className = `nav-btn ${tab === 'dashboard' ? 'active' : ''}`;
+    document.getElementById('btnNavLaporan').className = `nav-btn ${tab === 'laporan' ? 'active' : ''}`;
 
     if (tab === 'laporan') renderLaporanDetailTable();
   }
 
-  function startSetup(mode) {
-    currentMode = mode;
-    localStorage.setItem('hsm_v4_mode', mode);
-    closeModal('modalSelection');
+  function selectSystemMode(mode) {
+    activeMode = mode;
+    localStorage.setItem('hsm_v5_mode', mode);
+    closeModal('modalMiniLogin');
 
     if (mode === 'pribadi') {
       if (!setupPribadiDone) {
@@ -498,14 +480,14 @@
 
     const totalInit = b + c + cel + ew;
     const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-    
-    txPribadi = [{ type: 'income', category: 'Saldo Awal', account: 'Bank', amount: totalInit, desc: 'Saldo Keuangan Awal', date: new Date().toISOString().split('T')[0] }];
+
+    txPribadi = [{ type: 'income', category: 'Saldo Awal', account: 'Bank', amount: totalInit, desc: 'Saldo Awal Terbuka', date: new Date().toISOString().split('T')[0] }];
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v4_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v4_target_pribadi', targetPribadi);
-    localStorage.setItem('hsm_v4_update_pribadi', lastUpdatePribadi);
-    localStorage.setItem('hsm_v4_setup_pribadi', 'true');
+    localStorage.setItem('hsm_v5_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v5_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v5_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v5_setup_pribadi', 'true');
     setupPribadiDone = true;
 
     closeModal('modalSetupPribadi');
@@ -520,59 +502,60 @@
     commitKekoo = parseFloat(document.getElementById('initCommitKekoo').value) || 500000;
     const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
 
-    if (currentLove > 0) {
-      txLove = [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Setoran Tabungan Awal', date: new Date().toISOString().split('T')[0] }];
-    } else {
-      txLove = [];
-    }
-
+    txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
     lastUpdateLove = now;
-    localStorage.setItem('hsm_v4_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v4_target_love', targetLove);
-    localStorage.setItem('hsm_v4_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v4_commit_kekoo', commitKekoo);
-    localStorage.setItem('hsm_v4_update_love', lastUpdateLove);
-    localStorage.setItem('hsm_v4_setup_love', 'true');
+
+    localStorage.setItem('hsm_v5_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v5_target_love', targetLove);
+    localStorage.setItem('hsm_v5_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v5_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v5_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v5_setup_love', 'true');
     setupLoveDone = true;
 
     closeModal('modalSetupLove');
     initApp();
   });
 
-  // App Master Init
+  // Main App Init
   function initApp() {
-    if (!currentMode) {
-      openModeSelection();
+    if (!activeMode) {
+      openLoginModal();
       return;
     }
 
-    const modeChip = document.getElementById('modeChip');
-    const modeName = document.getElementById('modeName');
-    const modeIcon = document.getElementById('modeIcon');
+    const badge = document.getElementById('modeBadge');
+    const badgeName = document.getElementById('modeName');
+    const fabBtn = document.getElementById('fabMainBtn');
+    const bottomNav = document.getElementById('bottomNavBar');
 
-    if (currentMode === 'pribadi') {
-      modeChip.className = 'mode-chip';
-      modeName.innerText = 'Keuangan Pribadi';
-      modeIcon.setAttribute('data-lucide', 'user');
-      document.getElementById('pribadiContent').style.display = 'grid';
-      document.getElementById('loveContent').style.display = 'none';
+    if (activeMode === 'pribadi') {
+      badge.className = 'mode-badge';
+      badgeName.innerText = 'Pribadi';
+      fabBtn.className = 'fab-trigger';
+      bottomNav.style.display = 'flex';
+      
+      document.getElementById('dashboardPribadi').style.display = 'block';
+      document.getElementById('dashboardLove').style.display = 'none';
+      document.getElementById('viewDetailLaporan').style.display = 'none';
       renderPribadi();
     } else {
-      modeChip.className = 'mode-chip love';
-      modeName.innerText = 'With My Love ❤️';
-      modeIcon.setAttribute('data-lucide', 'heart');
-      document.getElementById('pribadiContent').style.display = 'none';
-      document.getElementById('loveContent').style.display = 'grid';
+      badge.className = 'mode-badge love';
+      badgeName.innerText = 'With My Love ❤️';
+      fabBtn.className = 'fab-trigger love';
+      bottomNav.style.display = 'none'; // Sembunyikan bottom bar karena Love tidak ada detail laporan
+      
+      document.getElementById('dashboardPribadi').style.display = 'none';
+      document.getElementById('dashboardLove').style.display = 'block';
+      document.getElementById('viewDetailLaporan').style.display = 'none';
       renderLove();
     }
     lucide.createIcons();
-    switchMainTab('dashboard');
   }
 
-  // Inline Goal Updates
-  function updateTargetPribadi(val) {
+  function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v4_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v5_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -581,13 +564,12 @@
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
 
-    localStorage.setItem('hsm_v4_target_love', targetLove);
-    localStorage.setItem('hsm_v4_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v4_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v5_target_love', targetLove);
+    localStorage.setItem('hsm_v5_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v5_commit_kekoo', commitKekoo);
     renderLove();
   }
 
-  // Render Pribadi
   function renderPribadi() {
     let inTotal = 0, outTotal = 0;
     txPribadi.forEach(t => {
@@ -596,45 +578,45 @@
     });
 
     const net = inTotal - outTotal;
-    document.getElementById('valSaldoPribadi').innerText = formatIDR(net);
-    document.getElementById('valIncomePribadi').innerText = formatIDR(inTotal);
-    document.getElementById('valExpensePribadi').innerText = formatIDR(outTotal);
-    document.getElementById('lastUpdatePribadi').innerText = `Terakhir Diupdate: ${lastUpdatePribadi}`;
-
     const pct = targetPribadi > 0 ? Math.min((net / targetPribadi) * 100, 100) : 0;
-    document.getElementById('valTargetTextPribadi').innerText = `${pct.toFixed(1)}% dari Target ${formatIDR(targetPribadi)}`;
+
+    document.getElementById('valTargetPctPribadi').innerText = `${pct.toFixed(1)}%`;
+    document.getElementById('valSaldoPribadi').innerText = `Saldo Kas: ${formatIDR(net)} / Target ${formatIDR(targetPribadi)}`;
     document.getElementById('progressPribadi').style.width = `${pct}%`;
     document.getElementById('inputTargetPribadi').value = targetPribadi;
+    document.getElementById('lblLastUpdatePribadi').innerText = `Diupdate: ${lastUpdatePribadi}`;
 
-    renderChartsPribadi(inTotal, outTotal);
+    document.getElementById('valIncomePribadi').innerText = formatIDR(inTotal);
+    document.getElementById('valExpensePribadi').innerText = formatIDR(outTotal);
+
+    renderChartPribadi();
   }
 
-  // Render Love
   function renderLove() {
-    let totalCollected = txLove.reduce((acc, t) => acc + t.amount, 0);
-    document.getElementById('valTotalLove').innerText = formatIDR(totalCollected);
-    document.getElementById('lastUpdateLove').innerText = `Terakhir Diupdate: ${lastUpdateLove}`;
+    let totalLove = txLove.reduce((s,t) => s + t.amount, 0);
+    const pct = targetLove > 0 ? Math.min((totalLove / targetLove) * 100, 100) : 0;
 
-    const pct = targetLove > 0 ? Math.min((totalCollected / targetLove) * 100, 100) : 0;
-    document.getElementById('valTargetTextLove').innerText = `${pct.toFixed(1)}% dari Target ${formatIDR(targetLove)}`;
+    document.getElementById('valTargetPctLove').innerText = `${pct.toFixed(1)}%`;
+    document.getElementById('valSaldoLove').innerText = `Terkumpul: ${formatIDR(totalLove)} / Target ${formatIDR(targetLove)}`;
     document.getElementById('progressLove').style.width = `${pct}%`;
+    document.getElementById('lblLastUpdateLove').innerText = `Diupdate: ${lastUpdateLove}`;
 
     document.getElementById('inputTargetLove').value = targetLove;
     document.getElementById('inputCommitIjaa').value = commitIjaa;
     document.getElementById('inputCommitKekoo').value = commitKekoo;
 
-    // Log Setoran
-    const tableBody = document.getElementById('tableLoveLog');
-    tableBody.innerHTML = txLove.length === 0 ? '<tr><td colspan="5" style="text-align:center;">Belum ada setoran tabungan.</td></tr>' : '';
-    
+    // Log Table
+    const tbody = document.getElementById('tableLoveLog');
+    tbody.innerHTML = txLove.length === 0 ? '<tr><td colspan="5" style="text-align:center;">Belum ada setoran tabungan.</td></tr>' : '';
+
     txLove.slice().reverse().forEach(t => {
-      tableBody.innerHTML += `
+      tbody.innerHTML += `
         <tr>
           <td>${t.date}</td>
           <td><b>${t.penyetor}</b></td>
           <td>${t.account}</td>
           <td>${t.desc || '-'}</td>
-          <td style="color:var(--accent-pink); font-weight:700;">${formatIDR(t.amount)}</td>
+          <td style="color:var(--love-pink); font-weight:800;">${formatIDR(t.amount)}</td>
         </tr>
       `;
     });
@@ -642,15 +624,12 @@
     renderChartLove();
   }
 
-  // Modal Lapor Handlers
-  function openLaporPribadiModal() { document.getElementById('modalLaporPribadi').classList.add('active'); }
-  function openLaporLoveModal() { document.getElementById('modalLaporLove').classList.add('active'); }
-
-  function toggleCategoryPribadi() {
+  function toggleCatPribadi() {
     const type = document.getElementById('txPribadiType').value;
     document.getElementById('groupCatPribadi').style.display = type === 'expense' ? 'block' : 'none';
   }
 
+  // Submit Laporan
   document.getElementById('formLaporPribadi').addEventListener('submit', (e) => {
     e.preventDefault();
     const type = document.getElementById('txPribadiType').value;
@@ -664,8 +643,8 @@
     txPribadi.push({ type, category, account, amount, desc, date });
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v4_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v4_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v5_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v5_update_pribadi', lastUpdatePribadi);
 
     document.getElementById('txPribadiAmount').value = '';
     document.getElementById('txPribadiDesc').value = '';
@@ -685,8 +664,8 @@
     txLove.push({ penyetor, account, amount, desc, date });
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v4_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v4_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v5_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v5_update_love', lastUpdateLove);
 
     document.getElementById('txLoveAmount').value = '';
     document.getElementById('txLoveDesc').value = '';
@@ -694,30 +673,20 @@
     renderLove();
   });
 
-  // Render Charts
-  function renderChartsPribadi(inTotal, outTotal) {
+  function renderChartPribadi() {
     const cats = ['Belanja Bulanan', 'Makan dan Minum', 'Jajan', 'Wants', 'Needs'];
     const dataExp = cats.map(c => txPribadi.filter(t => t.type === 'expense' && t.category === c).reduce((s, t) => s + t.amount, 0));
 
     const ctxE = document.getElementById('chartExpensesPribadi').getContext('2d');
-    if (chartExpPribadiInstance) chartExpPribadiInstance.destroy();
-    chartExpPribadiInstance = new Chart(ctxE, {
+    if (chartExpInstance) chartExpInstance.destroy();
+    chartExpInstance = new Chart(ctxE, {
       type: 'doughnut',
-      data: { labels: cats, datasets: [{ data: dataExp, backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'] }] },
+      data: { labels: cats, datasets: [{ data: dataExp, backgroundColor: ['#a78bfa', '#10b981', '#fbbf24', '#f43f5e', '#60a5fa'] }] },
       options: { responsive: true, maintainAspectRatio: false }
-    });
-
-    const ctxC = document.getElementById('chartCashflowPribadi').getContext('2d');
-    if (chartCashPribadiInstance) chartCashPribadiInstance.destroy();
-    chartCashPribadiInstance = new Chart(ctxC, {
-      type: 'bar',
-      data: { labels: ['Pemasukan', 'Pengeluaran'], datasets: [{ data: [inTotal, outTotal], backgroundColor: ['#10b981', '#ef4444'] }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
     });
   }
 
   function renderChartLove() {
-    // Group monthly savings
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     const monthlyData = new Array(12).fill(0);
 
@@ -732,92 +701,66 @@
     if (chartMonthlyLoveInstance) chartMonthlyLoveInstance.destroy();
     chartMonthlyLoveInstance = new Chart(ctxM, {
       type: 'bar',
-      data: { labels: months, datasets: [{ label: 'Total Setoran (Rp)', data: monthlyData, backgroundColor: '#ec4899' }] },
+      data: { labels: months, datasets: [{ label: 'Setoran Tabungan', data: monthlyData, backgroundColor: '#f472b6', borderRadius: 8 }] },
       options: { responsive: true, maintainAspectRatio: false }
     });
   }
 
-  // Render Table Detail Laporan (Separate Tab)
   function renderLaporanDetailTable() {
     const tbody = document.getElementById('tableLaporanDetail');
-    const isPribadi = currentMode === 'pribadi';
-    const dataList = isPribadi ? txPribadi : txLove;
+    tbody.innerHTML = txPribadi.length === 0 ? '<tr><td colspan="7" style="text-align:center;">Belum ada histori laporan transaksi.</td></tr>' : '';
 
-    tbody.innerHTML = dataList.length === 0 ? '<tr><td colspan="7" style="text-align:center;">Belum ada histori laporan transaksi.</td></tr>' : '';
-
-    dataList.slice().reverse().forEach((t, idx) => {
-      const realIdx = dataList.length - 1 - idx;
-      if (isPribadi) {
-        let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
-        tbody.innerHTML += `
-          <tr>
-            <td>${t.date}</td>
-            <td><span style="color:${labelColor}; font-weight:700;">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
-            <td>${t.account}</td>
-            <td>${t.category || '-'}</td>
-            <td>${t.desc || '-'}</td>
-            <td style="font-weight:700;">${formatIDR(t.amount)}</td>
-            <td><button onclick="deleteTxPribadi(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
-          </tr>
-        `;
-      } else {
-        tbody.innerHTML += `
-          <tr>
-            <td>${t.date}</td>
-            <td><span style="color:var(--accent-pink); font-weight:700;">Setoran Love</span></td>
-            <td>${t.account}</td>
-            <td>Penyetor: <b>${t.penyetor}</b></td>
-            <td>${t.desc || '-'}</td>
-            <td style="font-weight:700; color:var(--accent-pink);">${formatIDR(t.amount)}</td>
-            <td><button onclick="deleteTxLove(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
-          </tr>
-        `;
-      }
+    txPribadi.slice().reverse().forEach((t, idx) => {
+      const realIdx = txPribadi.length - 1 - idx;
+      let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
+      tbody.innerHTML += `
+        <tr>
+          <td>${t.date}</td>
+          <td><span style="color:${labelColor}; font-weight:800;">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
+          <td>${t.account}</td>
+          <td>${t.category || '-'}</td>
+          <td>${t.desc || '-'}</td>
+          <td style="font-weight:800;">${formatIDR(t.amount)}</td>
+          <td><button onclick="deleteTxPribadi(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
+        </tr>
+      `;
     });
     lucide.createIcons();
   }
 
   function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
-    localStorage.setItem('hsm_v4_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v5_tx_pribadi', JSON.stringify(txPribadi));
     renderPribadi();
     renderLaporanDetailTable();
   }
 
-  function deleteTxLove(idx) {
-    txLove.splice(idx, 1);
-    localStorage.setItem('hsm_v4_tx_love', JSON.stringify(txLove));
-    renderLove();
-    renderLaporanDetailTable();
-  }
-
-  // AI Consultation Engines
   function askAIPribadi() {
     const input = document.getElementById('aiInputPribadi').value;
-    const box = document.getElementById('aiBoxPribadi');
+    const box = document.getElementById('aiBubblePribadi');
     if (!input) return;
 
-    let totalIn = txPribadi.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
-    let totalOut = txPribadi.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
-    let net = totalIn - totalOut;
+    let inTotal = txPribadi.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
+    let outTotal = txPribadi.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
+    let net = inTotal - outTotal;
 
-    box.innerHTML = `<b>Jawaban AI untuk "${input}":</b><br>Berdasarkan catatan kas Anda saat ini (Saldo: ${formatIDR(net)}), disarankan untuk memprioritaskan alokasi tabungan sebelum mengalokasikan ke pos <i>Wants & Jajan</i>.`;
+    box.innerHTML = `<b>Jawaban AI untuk "${input}":</b><br>Berdasarkan saldo kas pribadi Anda saat ini (${formatIDR(net)}), disarankan untuk memprioritaskan alokasi tabungan bulanan sebelum menambah pengeluaran tersier.`;
   }
 
   function askAILove() {
     const input = document.getElementById('aiInputLove').value;
-    const box = document.getElementById('aiBoxLove');
+    const box = document.getElementById('aiBubbleLove');
     if (!input) return;
 
-    let collected = txLove.reduce((s,t) => s + t.amount, 0);
-    let rem = Math.max(targetLove - collected, 0);
-    let monthlyJoint = commitIjaa + commitKekoo;
-    let estMonths = monthlyJoint > 0 ? Math.ceil(rem / monthlyJoint) : 0;
+    let totalLove = txLove.reduce((s,t) => s + t.amount, 0);
+    let rem = Math.max(targetLove - totalLove, 0);
+    let jointCommit = commitIjaa + commitKekoo;
+    let est = jointCommit > 0 ? Math.ceil(rem / jointCommit) : 0;
 
-    box.innerHTML = `<b>Konsultasi AI With My Love ("${input}"):</b><br>Sisa target tabungan bersama Ijaa & Kekoo adalah <b>${formatIDR(rem)}</b>. Dengan total iuran bersama <b>${formatIDR(monthlyJoint)}/bulan</b>, target diproyeksikan akan tercapai dalam <b>${estMonths} bulan</b> ke depan!`;
+    box.innerHTML = `<b>AI Advisor Love ("${input}"):</b><br>Sisa target bersama Ijaa & Kekoo adalah <b>${formatIDR(rem)}</b>. Dengan iuran rutin <b>${formatIDR(jointCommit)}/bulan</b>, target diproyeksikan tercapai dalam <b>${est} bulan</b>! 💖`;
   }
 
-  // Launch App
+  // Run App
   initApp();
 </script>
 </body>
