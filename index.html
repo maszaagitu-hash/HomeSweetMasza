@@ -3,15 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home Sweet Maszaa - Financial App</title>
+  <title>Home Sweet Maszaa - Financial Assistant</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
       --primary: #1e293b;
       --accent: #2563eb;
+      --accent-light: #eff6ff;
       --success: #10b981;
       --danger: #ef4444;
+      --warning: #f59e0b;
       --bg: #f8fafc;
       --card-bg: #ffffff;
       --text: #0f172a;
@@ -20,59 +22,79 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 75px; }
 
     /* Layout Wrapper */
     .app-layout { display: flex; min-height: 100vh; }
 
-    /* Desktop Sidebar */
+    /* Sidebar Laptop */
     .sidebar { width: 260px; background: var(--primary); color: white; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
-    .sidebar-brand h2 { font-size: 20px; font-weight: 700; color: #fff; }
+    .sidebar-brand h2 { font-size: 20px; font-weight: 800; color: #fff; }
     .sidebar-brand p { font-size: 12px; color: #94a3b8; margin-top: 4px; }
     .sidebar-menu { margin-top: 30px; display: flex; flex-direction: column; gap: 8px; }
-    .sidebar-btn { background: none; border: none; color: #94a3b8; padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; width: 100%; transition: 0.2s; }
+    .sidebar-btn { background: none; border: none; color: #94a3b8; padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; width: 100%; transition: 0.2s; }
     .sidebar-btn.active, .sidebar-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 
     /* Main Area */
-    .main-content { flex: 1; padding: 30px; max-width: 1200px; margin: 0 auto; width: 100%; padding-bottom: 90px; }
+    .main-content { flex: 1; padding: 24px; max-width: 1000px; margin: 0 auto; width: 100%; }
 
     /* Header Bar */
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .btn-lapor { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.25); }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .app-title h1 { font-size: 22px; font-weight: 800; color: var(--text); }
+    .app-title p { font-size: 13px; color: var(--text-sub); }
 
-    /* Grid Dashboard */
-    .dashboard-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
+    /* Grid Dashboard Layout */
+    .dashboard-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
 
-    /* Card Component */
-    .card { background: var(--card-bg); border-radius: 16px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    /* Base Card Style */
+    .card { background: var(--card-bg); border-radius: 18px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     .col-12 { grid-column: span 12; }
-    .col-8 { grid-column: span 8; }
-    .col-4 { grid-column: span 4; }
     .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
 
-    /* Balance Stat Card */
-    .stat-title { font-size: 12px; color: var(--text-sub); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-amount { font-size: 26px; font-weight: 800; margin: 8px 0; color: var(--text); }
-    .stat-sub-grid { display: flex; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); }
-    .stat-sub-item { flex: 1; }
-    .stat-sub-label { font-size: 11px; color: var(--text-sub); }
-    .stat-sub-val { font-size: 15px; font-weight: 700; margin-top: 2px; }
+    /* 1. Target Savings Hero Box */
+    .hero-target { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; border: none; position: relative; overflow: hidden; }
+    .hero-target::before { content: ""; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: rgba(37,99,235,0.25); border-radius: 50%; blur: 40px; }
+    .target-top-bar { display: flex; justify-content: space-between; align-items: center; }
+    .target-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; color: #93c5fd; }
+    .last-update { font-size: 11px; color: #94a3b8; font-weight: 500; }
+    
+    .target-amount-row { display: flex; justify-content: space-between; align-items: flex-end; margin: 16px 0 10px 0; }
+    .target-val { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+    .target-pct { font-size: 24px; font-weight: 800; color: #60a5fa; }
 
-    /* Target Box */
-    .target-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .target-input-group { display: flex; align-items: center; gap: 5px; }
-    .target-input-group input { width: 140px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600; text-align: right; }
-    .progress-bar-bg { background: #e2e8f0; height: 12px; border-radius: 10px; overflow: hidden; margin-top: 12px; }
-    .progress-bar-fill { background: var(--accent); height: 100%; width: 0%; transition: width 0.4s ease; }
+    .target-input-edit { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    .target-input-edit input { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 6px 12px; border-radius: 8px; font-size: 13px; outline: none; width: 140px; text-align: right; }
 
-    /* AI Advice Box Integrated */
-    .ai-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; border-radius: 12px; padding: 16px; margin-top: 15px; }
-    .ai-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--accent); color: white; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; margin-bottom: 8px; }
+    .progress-bar-bg { background: rgba(255,255,255,0.15); height: 12px; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+    .progress-bar-fill { background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%); height: 100%; width: 0%; transition: width 0.5s ease; }
 
-    /* Bottom Navigation (Mobile Only) */
-    .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 8px 0; justify-content: space-around; z-index: 99; }
-    .nav-item-mb { border: none; background: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); font-size: 10px; font-weight: 600; width: 33%; }
-    .nav-item-mb.active { color: var(--accent); }
+    /* 2. Balance Summary Cards */
+    .stat-title { font-size: 12px; color: var(--text-sub); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+    .stat-amount { font-size: 22px; font-weight: 800; margin-top: 6px; color: var(--text); }
+
+    /* 3. Financial Charts */
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .chart-container { position: relative; height: 230px; width: 100%; }
+
+    /* 4. AI Financial Advisor Section */
+    .ai-card { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; }
+    .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .ai-chip { background: var(--accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; }
+    
+    .ai-prompt-box { display: flex; gap: 8px; margin-top: 14px; }
+    .ai-prompt-box input { flex: 1; padding: 10px 14px; border: 1px solid #93c5fd; border-radius: 10px; font-size: 13px; outline: none; background: white; }
+    .ai-prompt-box button { background: var(--accent); color: white; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .ai-response-content { font-size: 13px; line-height: 1.6; color: #1e3a8a; background: rgba(255,255,255,0.7); padding: 14px; border-radius: 12px; border: 1px solid #bfdbfe; margin-top: 10px; }
+
+    /* Action Lapor Button */
+    .btn-lapor-main { background: var(--accent); color: white; border: none; padding: 14px 24px; border-radius: 14px; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 16px rgba(37,99,235,0.3); width: 100%; transition: transform 0.1s; }
+    .btn-lapor-main:active { transform: scale(0.98); }
+
+    /* Bottom Nav Bar (Dashboard & Laporan ONLY) */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 10px 0; display: flex; justify-content: space-around; z-index: 99; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
+    .nav-btn { border: none; background: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); font-size: 11px; font-weight: 700; width: 50%; cursor: pointer; }
+    .nav-btn.active { color: var(--accent); }
 
     /* Modal Form */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
@@ -80,25 +102,27 @@
     .modal-content { background: white; width: 100%; max-width: 480px; border-radius: 20px; padding: 24px; max-height: 90vh; overflow-y: auto; }
     
     .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-sub); margin-bottom: 5px; }
-    .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-sub); margin-bottom: 5px; }
+    .form-group input, .form-group select { width: 100%; padding: 11px 13px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; }
     .form-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .btn-submit { flex: 2; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-    .btn-cancel { flex: 1; background: #e2e8f0; color: var(--text-sub); border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .btn-submit { flex: 2; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+    .btn-cancel { flex: 1; background: #e2e8f0; color: var(--text-sub); border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
     /* Table Styles */
     table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-    th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); }
-    th { color: var(--text-sub); font-weight: 600; font-size: 12px; }
+    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--border); }
+    th { color: var(--text-sub); font-weight: 700; font-size: 11px; text-transform: uppercase; }
+
+    /* Desktop Hide Bottom Nav */
+    @media (min-width: 769px) {
+      .bottom-nav { display: none; }
+    }
 
     /* Mobile Responsive Adjustments */
     @media (max-width: 768px) {
       .sidebar { display: none; }
-      .bottom-nav { display: flex; }
       .main-content { padding: 16px; padding-bottom: 85px; }
-      .col-8, .col-4, .col-6 { grid-column: span 12; }
-      .top-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .btn-lapor { width: 100%; justify-content: center; }
+      .col-6, .col-4 { grid-column: span 12; }
       .modal-overlay { align-items: flex-end; padding: 0; }
       .modal-content { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; }
     }
@@ -107,19 +131,19 @@
 <body>
 
 <div class="app-layout">
-  <!-- Sidebar untuk Tampilan Laptop/Desktop -->
+  <!-- Sidebar untuk Tampilan Laptop / Desktop -->
   <aside class="sidebar">
     <div>
       <div class="sidebar-brand">
         <h2>Home Sweet Maszaa</h2>
-        <p>Laporan Keuangan System</p>
+        <p>Financial Intelligence System</p>
       </div>
       <div class="sidebar-menu">
-        <button class="sidebar-btn active" onclick="switchView('dashboard')">
-          <i data-lucide="layout-dashboard"></i> Dashboard
+        <button class="sidebar-btn active" onclick="switchView('dashboard', this)">
+          <i data-lucide="layout-dashboard"></i> Dashboard Utama
         </button>
-        <button class="sidebar-btn" onclick="switchView('history')">
-          <i data-lucide="receipt"></i> Riwayat Laporan
+        <button class="sidebar-btn" onclick="switchView('laporan', this)">
+          <i data-lucide="receipt"></i> Detail Laporan
         </button>
       </div>
     </div>
@@ -128,81 +152,115 @@
   <!-- Content Area Main -->
   <main class="main-content">
     <div class="top-header">
-      <div>
-        <h1 style="font-size: 22px; font-weight: 800;">Laporan Keuangan</h1>
-        <p style="font-size: 13px; color: var(--text-sub);">Ringkasan posisi arus kas & target keuangan Anda</p>
+      <div class="app-title">
+        <h1>Home Sweet Maszaa</h1>
+        <p>Ringkasan Laporan & Rekomendasi AI</p>
       </div>
-      <button class="btn-lapor" onclick="openModal()">
-        <i data-lucide="plus-circle"></i> Tombol Lapor (Input)
-      </button>
     </div>
 
-    <!-- Tampilan View: Dashboard Utama -->
+    <!-- VIEW 1: DASHBOARD UTAMA -->
     <div id="view-dashboard" class="dashboard-grid">
-      <!-- Row 1: Saldo Utama -->
-      <div class="card col-8">
-        <div class="stat-title">Total Saldo Kas Lengkap</div>
-        <div class="stat-amount" id="val-balance">Rp 0</div>
-        <div class="stat-sub-grid">
-          <div class="stat-sub-item">
-            <div class="stat-sub-label">Pemasukan</div>
-            <div class="stat-sub-val" style="color: var(--success);" id="val-income">Rp 0</div>
-          </div>
-          <div class="stat-sub-item">
-            <div class="stat-sub-label">Pengeluaran (Expenses)</div>
-            <div class="stat-sub-val" style="color: var(--danger);" id="val-expense">Rp 0</div>
-          </div>
+      
+      <!-- 1. Hero Box: Target Tabungan + Last Update -->
+      <div class="card hero-target col-12">
+        <div class="target-top-bar">
+          <div class="target-badge"><i data-lucide="target" style="width:14px; height:14px;"></i> Target Tabungan</div>
+          <div class="last-update" id="lblLastUpdate">Terakhir Diupdate: -</div>
         </div>
-      </div>
 
-      <!-- Row 1: Target Keuangan Box -->
-      <div class="card col-4">
-        <div class="target-header">
-          <div class="stat-title">Target Tabungan</div>
-          <div class="target-input-group">
-            <span style="font-size: 12px; font-weight: 600; color: var(--text-sub);">Rp</span>
-            <input type="number" id="targetInput" placeholder="5000000" onchange="updateTarget(this.value)">
+        <div class="target-amount-row">
+          <div>
+            <div style="font-size: 12px; color: #94a3b8; font-weight: 600;">Sisa Capaian Saldo Kas</div>
+            <div class="target-val" id="valCurrentBalance">Rp 0</div>
           </div>
+          <div class="target-pct" id="valTargetPct">0%</div>
         </div>
-        <div style="font-size: 20px; font-weight: 700; margin-top: 10px;" id="target-percentage">0%</div>
-        <div style="font-size: 12px; color: var(--text-sub);" id="target-status">Dari target Rp 0</div>
+
         <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="target-progress"></div>
+          <div class="progress-bar-fill" id="valTargetProgress"></div>
+        </div>
+
+        <div class="target-input-edit">
+          <span style="font-size: 12px; color: #94a3b8;">Target Anda: Rp</span>
+          <input type="number" id="targetInput" placeholder="10000000" onchange="updateTargetValue(this.value)">
         </div>
       </div>
 
-      <!-- Row 2: Visual Grafik & Ringkasan AI -->
+      <!-- 2. Ringkasan Informasi Saldo, Pemasukan & Pengeluaran -->
+      <div class="card col-4">
+        <div class="stat-title"><i data-lucide="wallet" style="width:14px; color:var(--accent);"></i> Total Saldo Kas</div>
+        <div class="stat-amount" id="valBalanceSummary">Rp 0</div>
+      </div>
+      <div class="card col-4">
+        <div class="stat-title"><i data-lucide="arrow-down-left" style="width:14px; color:var(--success);"></i> Total Pemasukan</div>
+        <div class="stat-amount" style="color:var(--success);" id="valIncomeSummary">Rp 0</div>
+      </div>
+      <div class="card col-4">
+        <div class="stat-title"><i data-lucide="arrow-up-right" style="width:14px; color:var(--danger);"></i> Total Pengeluaran</div>
+        <div class="stat-amount" style="color:var(--danger);" id="valExpenseSummary">Rp 0</div>
+      </div>
+
+      <!-- 3. Grafik Keuangan Informatif & Menarik -->
       <div class="card col-6">
-        <div class="stat-title" style="margin-bottom: 12px;"><i data-lucide="pie-chart" style="width: 14px; height:14px; display:inline;"></i> Proporsi Transaksi</div>
-        <canvas id="chartPie" style="max-height: 220px;"></canvas>
+        <div class="chart-header">
+          <div class="stat-title"><i data-lucide="pie-chart" style="width:14px;"></i> Komposisi Expenses (Pengeluaran)</div>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartExpenses"></canvas>
+        </div>
       </div>
 
       <div class="card col-6">
-        <div class="stat-title" style="margin-bottom: 12px;"><i data-lucide="sparkles" style="width: 14px; height:14px; display:inline;"></i> Asisten AI Advisor & Rekomendasi</div>
-        <div id="ai-advice-container">
-          <!-- Dynamic AI Output -->
+        <div class="chart-header">
+          <div class="stat-title"><i data-lucide="bar-chart-3" style="width:14px;"></i> Arus Kas Pemasukan vs Pengeluaran</div>
         </div>
+        <div class="chart-container">
+          <canvas id="chartCashflow"></canvas>
+        </div>
+      </div>
+
+      <!-- 4. Fitur AI Advisor & Keinginan Target Konsultasi -->
+      <div class="card ai-card col-12">
+        <div class="ai-header">
+          <span class="ai-chip"><i data-lucide="sparkles" style="width:12px; display:inline;"></i> MASZAA AI FINANCIAL ADVISOR</span>
+        </div>
+        
+        <div id="aiAnalysisResult" class="ai-response-content">
+          Memuat analisa otomatis...
+        </div>
+
+        <div class="ai-prompt-box">
+          <input type="text" id="aiUserWish" placeholder="Contoh: Saya pengen tgl 30 bulan depan kumpul Rp 5 Juta, bisa direkomendasikan?">
+          <button onclick="sendWishToAI()"><i data-lucide="send" style="width:14px;"></i> Kirim Ke AI</button>
+        </div>
+      </div>
+
+      <!-- 5. Tombol Lapor (Input Transaksi) -->
+      <div class="col-12" style="margin-top: 5px;">
+        <button class="btn-lapor-main" onclick="openModal()">
+          <i data-lucide="plus-circle"></i> + TOMBOL LAPOR TRANSAKSI BARU
+        </button>
       </div>
     </div>
 
-    <!-- Tampilan View: Riwayat Transaksi -->
-    <div id="view-history" class="dashboard-grid" style="display: none;">
+    <!-- VIEW 2: DETAIL LAPORAN KEUANGAN -->
+    <div id="view-laporan" class="dashboard-grid" style="display: none;">
       <div class="card col-12">
-        <div class="stat-title" style="margin-bottom: 15px;">Riwayat Seluruh Transaksi Laporan</div>
+        <div class="stat-title" style="margin-bottom: 16px; font-size:14px;">Detail Laporan Transaksi Keuangan</div>
         <div style="overflow-x: auto;">
           <table>
             <thead>
               <tr>
                 <th>Tanggal</th>
                 <th>Jenis</th>
-                <th>Akun/Aset</th>
-                <th>Kategori</th>
+                <th>Akun / Assets</th>
+                <th>Kategori Expenses</th>
                 <th>Keterangan</th>
                 <th>Nominal</th>
                 <th>Aksi</th>
               </tr>
             </thead>
-            <tbody id="history-table-body">
+            <tbody id="laporanTableBody">
               <!-- Content Filled Dynamically -->
             </tbody>
           </table>
@@ -212,23 +270,20 @@
   </main>
 </div>
 
-<!-- Bottom Navigation Bar (Khusus HP) -->
+<!-- Bottom Navigation Bar (KHUSUS: Hanya Tombol Dashboard & Laporan) -->
 <nav class="bottom-nav">
-  <button class="nav-item-mb active" onclick="switchView('dashboard', this)">
+  <button class="nav-btn active" id="btnNavDashboard" onclick="switchView('dashboard', this)">
     <i data-lucide="layout-dashboard"></i> Dashboard
   </button>
-  <button class="nav-item-mb" onclick="openModal()">
-    <i data-lucide="plus-circle"></i> Lapor
-  </button>
-  <button class="nav-item-mb" onclick="switchView('history', this)">
+  <button class="nav-btn" id="btnNavLaporan" onclick="switchView('laporan', this)">
     <i data-lucide="receipt"></i> Laporan
   </button>
 </nav>
 
-<!-- Modal Form Input Laporan Keuangan -->
+<!-- Modal Form Lapor Keuangan -->
 <div class="modal-overlay" id="modalForm">
   <div class="modal-content">
-    <h3 style="margin-bottom: 15px; font-size: 16px;">Form Lapor Keuangan</h3>
+    <h3 style="margin-bottom: 15px; font-size: 17px; font-weight: 800;">Form Lapor Transaksi</h3>
     <form id="financialForm">
       <div class="form-group">
         <label>Jenis Transaksi</label>
@@ -277,12 +332,12 @@
       </div>
 
       <div class="form-group">
-        <label>Keterangan Tambahan (Opsional / Boleh Kosong)</label>
+        <label>Keterangan Tambahan (Boleh Kosong / Opsional)</label>
         <input type="text" id="txDesc" placeholder="Contoh: Beli kopi / Beli beras">
       </div>
 
       <div class="form-group">
-        <label>Tanggal</label>
+        <label>Tanggal Transaksi</label>
         <input type="date" id="txDate" required>
       </div>
 
@@ -295,31 +350,41 @@
 </div>
 
 <script>
-  // App Global State
-  let transactions = JSON.parse(localStorage.getItem('hsm_transactions')) || [];
-  let targetSavings = parseFloat(localStorage.getItem('hsm_target')) || 5000000;
-  let chartPieInstance = null;
+  // Application Data States
+  let transactions = JSON.parse(localStorage.getItem('hsm_v3_transactions')) || [];
+  let targetSavings = parseFloat(localStorage.getItem('hsm_v3_target')) || 10000000;
+  let lastUpdateDate = localStorage.getItem('hsm_v3_last_update') || '-';
+  let customWishText = localStorage.getItem('hsm_v3_user_wish') || '';
+
+  let chartExpensesInstance = null;
+  let chartCashflowInstance = null;
 
   lucide.createIcons();
   document.getElementById('txDate').valueAsDate = new Date();
   document.getElementById('targetInput').value = targetSavings;
+  if(customWishText) document.getElementById('aiUserWish').value = customWishText;
 
-  // View Switcher (Desktop & Mobile)
+  // Navigation Controller
   function switchView(viewName, el) {
     document.getElementById('view-dashboard').style.display = viewName === 'dashboard' ? 'grid' : 'none';
-    document.getElementById('view-history').style.display = viewName === 'history' ? 'grid' : 'none';
+    document.getElementById('view-laporan').style.display = viewName === 'laporan' ? 'grid' : 'none';
 
     document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.nav-item-mb').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
-    if (el) el.classList.add('active');
+    if (viewName === 'dashboard') {
+      document.getElementById('btnNavDashboard').classList.add('active');
+    } else {
+      document.getElementById('btnNavLaporan').classList.add('active');
+    }
+
+    if(el && el.classList.contains('sidebar-btn')) el.classList.add('active');
   }
 
-  // Modal Control
+  // Modal Handling
   function openModal() { document.getElementById('modalForm').classList.add('active'); }
   function closeModal() { document.getElementById('modalForm').classList.remove('active'); }
 
-  // Dynamic Form Field Adjuster
   function toggleCategoryField() {
     const type = document.getElementById('txType').value;
     const catGroup = document.getElementById('groupCategory');
@@ -329,11 +394,11 @@
     if (type === 'expense') {
       catGroup.style.display = 'block';
       toAccGroup.style.display = 'none';
-      lblAcc.innerText = 'Sumber Akun/Assets';
+      lblAcc.innerText = 'Sumber Akun / Assets';
     } else if (type === 'income') {
       catGroup.style.display = 'none';
       toAccGroup.style.display = 'none';
-      lblAcc.innerText = 'Masuk ke Akun/Assets';
+      lblAcc.innerText = 'Masuk Ke Akun / Assets';
     } else if (type === 'transfer') {
       catGroup.style.display = 'none';
       toAccGroup.style.display = 'block';
@@ -343,14 +408,14 @@
 
   const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 
-  function updateTarget(val) {
+  function updateTargetValue(val) {
     targetSavings = parseFloat(val) || 0;
-    localStorage.setItem('hsm_target', targetSavings);
+    localStorage.setItem('hsm_v3_target', targetSavings);
     renderApp();
   }
 
+  // Main Render Logic
   function renderApp() {
-    // 1. Calculate Totals
     let totalIn = 0;
     let totalOut = 0;
 
@@ -361,51 +426,55 @@
 
     const netBalance = totalIn - totalOut;
 
-    document.getElementById('val-income').innerText = formatIDR(totalIn);
-    document.getElementById('val-expense').innerText = formatIDR(totalOut);
-    document.getElementById('val-balance').innerText = formatIDR(netBalance);
+    // Set Header & Summary Stats
+    document.getElementById('lblLastUpdate').innerText = `Terakhir Diupdate: ${lastUpdateDate}`;
+    document.getElementById('valCurrentBalance').innerText = formatIDR(netBalance);
+    document.getElementById('valBalanceSummary').innerText = formatIDR(netBalance);
+    document.getElementById('valIncomeSummary').innerText = formatIDR(totalIn);
+    document.getElementById('valExpenseSummary').innerText = formatIDR(totalOut);
 
-    // 2. Target Progress Calculation
-    const progressPct = targetSavings > 0 ? Math.min(Math.max((netBalance / targetSavings) * 100, 0), 100) : 0;
-    document.getElementById('target-percentage').innerText = `${progressPct.toFixed(1)}%`;
-    document.getElementById('target-status').innerText = `Dari target ${formatIDR(targetSavings)}`;
-    document.getElementById('target-progress').style.width = `${progressPct}%`;
+    // Target Calculation & Progress Bar
+    const pct = targetSavings > 0 ? Math.min(Math.max((netBalance / targetSavings) * 100, 0), 100) : 0;
+    document.getElementById('valTargetPct').innerText = `${pct.toFixed(1)}%`;
+    document.getElementById('valTargetProgress').style.width = `${pct}%`;
 
-    // 3. Render Table History
-    const tbody = document.getElementById('history-table-body');
-    tbody.innerHTML = transactions.length === 0 ? '<tr><td colspan="7" style="text-align:center; color:#94a3b8;">Belum ada data laporan.</td></tr>' : '';
+    // Render Detailed Laporan Table
+    const tbody = document.getElementById('laporanTableBody');
+    tbody.innerHTML = transactions.length === 0 ? '<tr><td colspan="7" style="text-align:center; color:#94a3b8;">Belum ada laporan transaksi.</td></tr>' : '';
 
     transactions.slice().reverse().forEach((t, idx) => {
-      const realIndex = transactions.length - 1 - idx;
+      const realIdx = transactions.length - 1 - idx;
       let badgeColor = t.type === 'income' ? 'var(--success)' : (t.type === 'expense' ? 'var(--danger)' : 'var(--accent)');
       let typeLabel = t.type === 'income' ? 'Pemasukan' : (t.type === 'expense' ? 'Pengeluaran' : 'Transfer/Tarik Tunai');
-      let detailAccount = t.type === 'transfer' ? `${t.account} ➔ ${t.toAccount}` : t.account;
+      let accountDetail = t.type === 'transfer' ? `${t.account} ➔ ${t.toAccount}` : t.account;
 
       tbody.innerHTML += `
         <tr>
           <td>${t.date}</td>
           <td><span style="color:${badgeColor}; font-weight:700;">${typeLabel}</span></td>
-          <td>${detailAccount}</td>
+          <td>${accountDetail}</td>
           <td>${t.category || '-'}</td>
           <td>${t.desc || '-'}</td>
           <td style="font-weight:700;">${formatIDR(t.amount)}</td>
-          <td><button onclick="deleteTx(${realIndex})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
+          <td><button onclick="deleteTx(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
         </tr>
       `;
     });
 
     lucide.createIcons();
     renderCharts(totalIn, totalOut);
-    generateAIAdvice(totalIn, totalOut, netBalance);
+    generateAIAdvisor(totalIn, totalOut, netBalance);
   }
 
   function deleteTx(index) {
     transactions.splice(index, 1);
-    localStorage.setItem('hsm_transactions', JSON.stringify(transactions));
+    lastUpdateDate = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    localStorage.setItem('hsm_v3_last_update', lastUpdateDate);
+    localStorage.setItem('hsm_v3_transactions', JSON.stringify(transactions));
     renderApp();
   }
 
-  // Form Submit Handler
+  // Submit Laporan Form
   document.getElementById('financialForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const type = document.getElementById('txType').value;
@@ -421,69 +490,86 @@
     };
 
     transactions.push(newTx);
-    localStorage.setItem('hsm_transactions', JSON.stringify(transactions));
+    lastUpdateDate = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    
+    localStorage.setItem('hsm_v3_last_update', lastUpdateDate);
+    localStorage.setItem('hsm_v3_transactions', JSON.stringify(transactions));
 
-    // Reset inputs
     document.getElementById('txAmount').value = '';
     document.getElementById('txDesc').value = '';
     closeModal();
     renderApp();
   });
 
-  // Chart Rendering
+  // Render Graphical Charts
   function renderCharts(totalIn, totalOut) {
-    const ctx = document.getElementById('chartPie').getContext('2d');
-    if (chartPieInstance) chartPieInstance.destroy();
+    // 1. Chart Expenses Breakdown by Category
+    const expCategories = ['Belanja Bulanan', 'Makan dan Minum', 'Jajan', 'Wants', 'Needs'];
+    const expTotals = expCategories.map(cat => {
+      return transactions.filter(t => t.type === 'expense' && t.category === cat)
+                         .reduce((sum, t) => sum + t.amount, 0);
+    });
 
-    chartPieInstance = new Chart(ctx, {
+    const ctxExp = document.getElementById('chartExpenses').getContext('2d');
+    if (chartExpensesInstance) chartExpensesInstance.destroy();
+    chartExpensesInstance = new Chart(ctxExp, {
       type: 'doughnut',
       data: {
-        labels: ['Pemasukan', 'Pengeluaran (Expenses)'],
+        labels: expCategories,
         datasets: [{
-          data: [totalIn, totalOut],
-          backgroundColor: ['#10b981', '#ef4444']
+          data: expTotals,
+          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6']
         }]
       },
       options: { responsive: true, maintainAspectRatio: false }
     });
+
+    // 2. Chart Cashflow Bar Chart
+    const ctxCash = document.getElementById('chartCashflow').getContext('2d');
+    if (chartCashflowInstance) chartCashflowInstance.destroy();
+    chartCashflowInstance = new Chart(ctxCash, {
+      type: 'bar',
+      data: {
+        labels: ['Pemasukan', 'Pengeluaran'],
+        datasets: [{
+          label: 'Total Rupiah',
+          data: [totalIn, totalOut],
+          backgroundColor: ['#10b981', '#ef4444']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+    });
   }
 
-  // AI Advisor Logic
-  function generateAIAdvice(totalIn, totalOut, netBalance) {
-    const container = document.getElementById('ai-advice-container');
-    const burnRate = totalIn > 0 ? (totalOut / totalIn) * 100 : 0;
-    
-    let html = '';
+  // AI Advice Engine with Goal / Wish Integration
+  function sendWishToAI() {
+    const wish = document.getElementById('aiUserWish').value;
+    if(!wish) return;
+    customWishText = wish;
+    localStorage.setItem('hsm_v3_user_wish', customWishText);
+    renderApp();
+  }
 
-    if (transactions.length === 0) {
-      html = `<div class="ai-box"><div class="ai-badge">Asisten AI</div><p style="font-size:13px;">Belum ada data untuk dianalisis. Silakan buat laporan keuangan pertama Anda.</p></div>`;
+  function generateAIAdvisor(totalIn, totalOut, netBalance) {
+    const box = document.getElementById('aiAnalysisResult');
+    const remainingTarget = Math.max(targetSavings - netBalance, 0);
+    const burnRate = totalIn > 0 ? ((totalOut / totalIn) * 100).toFixed(1) : 0;
+
+    let text = `<b>Halo Maszaa!</b> Berikut analisis keuangan dari sistem AI:<br>`;
+    text += `• Rasio Pengeluaran Anda berada di angka <b>${burnRate}%</b> dari total pemasukan.<br>`;
+    text += `• Kekurangan untuk mencapai target tabungan Anda adalah <b>${formatIDR(remainingTarget)}</b>.<br>`;
+
+    if (customWishText) {
+      text += `<br><b>💡 Rekomendasi Berdasarkan Keinginan Anda ("${customWishText}"):</b><br>`;
+      text += `Untuk mencapai target impian tersebut, Anda disarankan mengalokasikan minimal <b>${formatIDR(Math.ceil(remainingTarget / 2))}</b> per periode pembayaran dan menekan pos pengeluaran <i>Wants & Jajan</i>.`;
     } else {
-      if (burnRate > 75) {
-        html += `
-          <div class="ai-box" style="background:#fef2f2; border-color:#fecaca;">
-            <div class="ai-badge" style="background:var(--danger)">Peringatan Pengeluaran</div>
-            <p style="font-size:13px; color:#991b1b;">Rasio pengeluaran Anda cukup tinggi (<b>${burnRate.toFixed(1)}%</b> dari total pemasukan). Kurangi pos <b>Wants / Jajan</b> untuk mempercepat pencapaian target tabungan.</p>
-          </div>`;
-      } else {
-        html += `
-          <div class="ai-box">
-            <div class="ai-badge">Arus Kas Sehat</div>
-            <p style="font-size:13px;">Rasio pengeluaran Anda terjaga di angka <b>${burnRate.toFixed(1)}%</b>. Pertahankan performa ini untuk terus mengumpulkan saldo kas.</p>
-          </div>`;
-      }
-
-      const remTarget = Math.max(targetSavings - netBalance, 0);
-      html += `
-        <div class="ai-box">
-          <div class="ai-badge">Saran Progres Target</div>
-          <p style="font-size:13px;">Sisa target yang harus dipenuhi: <b>${formatIDR(remTarget)}</b>. Usahakan menyisihkan minimal 10-20% dari setiap pemasukan baru ke dalam rekening utama.</p>
-        </div>`;
+      text += `<br><i>Silakan ketik target atau keinginan Anda di kolom bawah untuk mendapatkan alokasi rekomendasi khusus dari AI.</i>`;
     }
 
-    container.innerHTML = html;
+    box.innerHTML = text;
   }
 
-  // Initialize First Run
+  // App Initialization
   renderApp();
 </script>
 </body>
