@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Home Sweet Maszaa - Cute Mobile Finance</title>
+  <title>Home Sweet Maszaa - Financial Assitant</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -34,13 +34,7 @@
       padding-bottom: 85px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Nunito', sans-serif;
-      word-break: break-word;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; word-break: break-word; }
 
     .app-container {
       width: 100%;
@@ -50,423 +44,107 @@
     }
 
     /* Navbar */
-    .nav-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .brand-title {
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--primary);
-    }
+    .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .brand-title { font-size: 18px; font-weight: 900; color: var(--primary); }
     .mode-badge {
-      background: white;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      border: 2px solid var(--primary-light);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      box-shadow: var(--shadow);
+      background: white; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;
+      border: 2px solid var(--primary-light); color: var(--primary); display: flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: var(--shadow);
     }
-    .mode-badge.love {
-      border-color: #fbcfe8;
-      color: var(--love-pink);
-    }
+    .mode-badge.love { border-color: #fbcfe8; color: var(--love-pink); }
 
     /* Card Base */
     .card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-      border: 2px solid #f8fafc;
-      margin-bottom: 14px;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
+      background: var(--card-bg); border-radius: 20px; padding: 18px; box-shadow: var(--shadow);
+      border: 2px solid #f8fafc; margin-bottom: 14px; width: 100%; position: relative; overflow: hidden;
     }
 
-    /* Hero Target Cards */
-    .target-card {
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      color: white;
-      border: none;
-    }
-    .target-card.love {
-      background: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
+    /* Card Header Flex with Dropdown */
+    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-title-sub { font-size: 11px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; }
+    .year-select {
+      background: var(--love-bg); border: 1px solid #fbcfe8; color: var(--love-pink);
+      padding: 4px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; outline: none;
     }
 
-    .target-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      font-weight: 800;
-      opacity: 0.9;
-      text-transform: uppercase;
-    }
+    /* Target Hero Cards */
+    .target-card { background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); color: white; border: none; }
+    .target-card.love { background: linear-gradient(135deg, #f472b6 0%, #db2777 100%); }
+    .target-header { display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; }
+    .saldo-main-title { font-size: 11px; text-transform: uppercase; font-weight: 800; opacity: 0.85; margin-top: 10px; }
+    .saldo-main-val { font-size: 32px; font-weight: 900; line-height: 1.1; margin: 4px 0 8px 0; letter-spacing: -0.5px; }
+    .target-pct-val { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+    .target-sub-text { font-size: 11px; opacity: 0.85; font-weight: 700; }
 
-    .saldo-main-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      font-weight: 800;
-      opacity: 0.85;
-      margin-top: 10px;
-    }
-    .saldo-main-val {
-      font-size: 32px;
-      font-weight: 900;
-      line-height: 1.1;
-      margin: 4px 0 8px 0;
-      letter-spacing: -0.5px;
-    }
+    .progress-bar-bg { background: rgba(255, 255, 255, 0.25); height: 10px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+    .progress-bar-fill { background: white; height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; }
 
-    .target-pct-val {
-      font-size: 18px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .target-sub-text {
-      font-size: 11px;
-      opacity: 0.85;
-      font-weight: 700;
-    }
-
-    .progress-bar-bg {
-      background: rgba(255, 255, 255, 0.25);
-      height: 10px;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-    .progress-bar-fill {
-      background: white;
-      height: 100%;
-      width: 0%;
-      border-radius: 10px;
-      transition: width 0.5s ease;
-    }
-
-    .inline-edit-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.3);
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .inline-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .inline-input {
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 800;
-      outline: none;
-      width: 90px;
-      text-align: center;
-    }
+    .inline-edit-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(255, 255, 255, 0.3); font-size: 11px; font-weight: 700; }
+    .inline-item { display: flex; align-items: center; gap: 4px; }
+    .inline-input { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; outline: none; width: 90px; text-align: center; }
 
     /* Grid Accounts Sisa Saldo */
-    .account-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .account-card-item {
-      background: #f8fafc;
-      border: 1.5px solid #f1f5f9;
-      border-radius: 14px;
-      padding: 10px 12px;
-    }
-    .account-name {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--text-sub);
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .account-val {
-      font-size: 14px;
-      font-weight: 900;
-      color: var(--text);
-      margin-top: 2px;
-    }
+    .account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .account-card-item { background: #f8fafc; border: 1.5px solid #f1f5f9; border-radius: 14px; padding: 10px 12px; }
+    .account-name { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; display: flex; align-items: center; gap: 4px; }
+    .account-val { font-size: 14px; font-weight: 900; color: var(--text); margin-top: 2px; }
 
     /* Stat Box Parallel */
-    .stat-row-parallel {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-      width: 100%;
-    }
-    .stat-box {
-      background: white;
-      border-radius: 18px;
-      padding: 14px;
-      box-shadow: var(--shadow);
-      border: 2px solid #f8fafc;
-    }
-    .stat-label {
-      font-size: 10px;
-      font-weight: 800;
-      color: var(--text-sub);
-      text-transform: uppercase;
-    }
-    .stat-amount {
-      font-size: 15px;
-      font-weight: 900;
-      margin-top: 2px;
-    }
-    .input-box-commit {
-      width: 100%;
-      border: 1px solid #f1f5f9;
-      background: #faf5ff;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--love-pink);
-      outline: none;
-      margin-top: 4px;
-    }
+    .stat-row-parallel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; width: 100%; }
+    .stat-box { background: white; border-radius: 18px; padding: 14px; box-shadow: var(--shadow); border: 2px solid #f8fafc; }
+    .stat-label { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; }
+    .stat-amount { font-size: 15px; font-weight: 900; margin-top: 2px; }
+    .input-box-commit { width: 100%; border: 1px solid #f1f5f9; background: #faf5ff; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 800; color: var(--love-pink); outline: none; margin-top: 4px; }
 
     /* AI Card */
     .ai-card { background: #f5f3ff; border: 2px dashed #ddd6fe; }
     .ai-card.love { background: #fdf2f8; border-color: #fbcfe8; }
     .ai-title { font-size: 11px; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 4px; }
     .ai-title.love { color: var(--love-pink); }
-    .ai-chat-bubble {
-      background: white;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #475569;
-      margin-top: 8px;
-      line-height: 1.4;
-      border: 1px solid #edf2f7;
-    }
+    .ai-chat-bubble { background: white; border-radius: 12px; padding: 10px 12px; font-size: 11px; font-weight: 700; color: #475569; margin-top: 8px; line-height: 1.4; border: 1px solid #edf2f7; }
     .ai-input-group { display: flex; gap: 6px; margin-top: 8px; }
-    .ai-input-group input {
-      flex: 1;
-      border: 1px solid #e2e8f0;
-      padding: 8px 10px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 700;
-      outline: none;
-    }
-    .ai-input-group button {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-weight: 800;
-      font-size: 11px;
-      cursor: pointer;
-    }
+    .ai-input-group input { flex: 1; border: 1px solid #e2e8f0; padding: 8px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; outline: none; }
+    .ai-input-group button { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 10px; font-weight: 800; font-size: 11px; cursor: pointer; }
     .ai-input-group button.love { background: var(--love-pink); }
 
-    /* FREEZE COLUMN TABLE SCROLL CSS (SCROLL HORIZONTAL 2025-2050) */
-    .freeze-table-wrapper {
-      width: 100%;
-      overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-    .freeze-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-size: 11px;
-      white-space: nowrap;
-    }
-    .freeze-table th, .freeze-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 700;
-      background: white;
-      text-align: center;
-      min-width: 75px;
-    }
-    .freeze-table th {
-      color: var(--text-sub);
-      font-size: 10px;
-      text-transform: uppercase;
-      font-weight: 800;
-      background: #f8fafc;
-    }
+    /* FREEZE COLUMN TABLE SCROLL CSS */
+    .freeze-table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .freeze-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; white-space: nowrap; }
+    .freeze-table th, .freeze-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-weight: 700; background: white; text-align: center; min-width: 65px; }
+    .freeze-table th { color: var(--text-sub); font-size: 10px; text-transform: uppercase; font-weight: 800; background: #f8fafc; }
+    
+    /* FREEZE KIRI KHUSUS (BARIS IJAA, KEKOO, STATUS, DLL) */
     .freeze-col {
-      position: sticky;
-      left: 0;
-      z-index: 10;
-      border-right: 2px solid #f1f5f9 !important;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.02);
-      text-align: left !important;
-      min-width: 85px;
-    }
-    .freeze-table th.freeze-col {
-      background: #f1f5f9;
+      position: sticky; left: 0; z-index: 10; border-right: 2px solid #f1f5f9 !important;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.02); text-align: left !important; min-width: 80px; background: #f8fafc !important; font-weight: 800 !important;
     }
 
     /* Floating Action Button */
     .fab-wrapper { position: fixed; bottom: 18px; right: 18px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .fab-popup-menu { display: none; flex-direction: column; gap: 6px; align-items: flex-end; }
     .fab-popup-menu.active { display: flex; }
-    .fab-btn-option {
-      background: white;
-      color: var(--text);
-      border: 2px solid var(--primary-light);
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-weight: 800;
-      font-size: 11px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .fab-trigger {
-      background: var(--primary);
-      color: white;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+    .fab-btn-option { background: white; color: var(--text); border: 2px solid var(--primary-light); padding: 10px 14px; border-radius: 16px; font-weight: 800; font-size: 11px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .fab-trigger { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; }
     .fab-trigger.love { background: var(--love-pink); box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4); }
 
     /* Modals Overlay */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 16px;
-    }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
     .modal-overlay.active { display: flex; }
-
-    /* POPUP MINI KECIL & LUCU */
-    .modal-mini-card {
-      background: white;
-      border-radius: 24px;
-      padding: 22px;
-      width: 100%;
-      max-width: 320px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-      animation: popIn 0.25s ease-out;
-    }
+    .modal-mini-card { background: white; border-radius: 24px; padding: 22px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.15); animation: popIn 0.25s ease-out; }
     @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
     .mini-button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-    .btn-mini-select {
-      background: var(--primary-light);
-      color: var(--primary);
-      border: none;
-      padding: 12px 8px;
-      border-radius: 16px;
-      font-weight: 800;
-      font-size: 11px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
+    .btn-mini-select { background: var(--primary-light); color: var(--primary); border: none; padding: 12px 8px; border-radius: 16px; font-weight: 800; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .btn-mini-select.love { background: var(--love-bg); color: var(--love-pink); }
 
-    /* Form Modals */
-    .modal-form-card {
-      background: white;
-      border-radius: 24px;
-      padding: 20px;
-      width: 100%;
-      max-width: 380px;
-      max-height: 85vh;
-      overflow-y: auto;
-    }
+    .modal-form-card { background: white; border-radius: 24px; padding: 20px; width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto; }
     .form-group { margin-bottom: 10px; }
     .form-group label { display: block; font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin-bottom: 4px; }
-    .form-group input, .form-group select {
-      width: 100%;
-      border: 2px solid #f1f5f9;
-      background: #f8fafc;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 700;
-      outline: none;
-    }
-    .btn-submit-form {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 14px;
-      font-weight: 800;
-      font-size: 12px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
+    .form-group input, .form-group select { width: 100%; border: 2px solid #f1f5f9; background: #f8fafc; padding: 10px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; outline: none; }
+    .btn-submit-form { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 14px; font-weight: 800; font-size: 12px; cursor: pointer; margin-top: 10px; }
     .btn-submit-form.love { background: var(--love-pink); }
 
-    /* Bottom Navigation Bar */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: white;
-      border-top: 2px solid #f1f5f9;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      z-index: 90;
-    }
-    .nav-btn {
-      border: none;
-      background: none;
-      color: var(--text-sub);
-      font-size: 10px;
-      font-weight: 800;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      cursor: pointer;
-      width: 50%;
-    }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #f1f5f9; display: flex; justify-content: space-around; padding: 10px 0; z-index: 90; }
+    .nav-btn { border: none; background: none; color: var(--text-sub); font-size: 10px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; width: 50%; }
     .nav-btn.active { color: var(--primary); }
   </style>
 </head>
@@ -484,25 +162,18 @@
 
   <!-- DASHBOARD PRIBADI -->
   <main id="dashboardPribadi">
-    <!-- Target Hero Box -->
     <div class="card target-card">
       <div class="target-header">
         <span>✨ Kas & Target Tabungan</span>
         <span id="lblLastUpdatePribadi">Diupdate: -</span>
       </div>
-      
-      <!-- TOTAL SALDO UTAMA GEDE -->
       <div class="saldo-main-title">TOTAL SALDO KAS SAAT INI</div>
       <div class="saldo-main-val" id="valTotalSaldoPribadi">Rp 0</div>
-
-      <!-- PERSENTASE -->
       <div class="target-pct-val">
         <span id="valTargetPctPribadi">0%</span>
         <span class="target-sub-text" id="valTargetSubPribadi">Tercapai dari Target Rp 0</span>
       </div>
-
       <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressPribadi"></div></div>
-      
       <div class="inline-edit-grid">
         <div class="inline-item">
           <span>Target Tabungan: Rp</span>
@@ -511,7 +182,6 @@
       </div>
     </div>
 
-    <!-- Pemasukan & Pengeluaran Sejajar (Kanan Kiri) -->
     <div class="stat-row-parallel">
       <div class="stat-box">
         <div class="stat-label">Pemasukan</div>
@@ -523,7 +193,6 @@
       </div>
     </div>
 
-    <!-- CARD INFO BREAKDOWN SISA SALDO TIAP AKUN -->
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">BREAKDOWN SISA SALDO PER AKUN</div>
       <div class="account-grid">
@@ -546,13 +215,11 @@
       </div>
     </div>
 
-    <!-- Grafik Expenses -->
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">EXPENSES PER KATEGORI</div>
       <div style="height:170px;"><canvas id="chartExpensesPribadi"></canvas></div>
     </div>
 
-    <!-- AI Advisor -->
     <div class="card ai-card">
       <div class="ai-title"><i data-lucide="bot" style="width:14px;"></i> MASZAA AI ASSISTANT</div>
       <div class="ai-chat-bubble" id="aiBubblePribadi">AI siap membantu merekap & memberikan strategi keuangan Anda...</div>
@@ -565,25 +232,18 @@
 
   <!-- DASHBOARD WITH MY LOVE -->
   <main id="dashboardLove" style="display:none;">
-    <!-- Target Hero Box Love -->
     <div class="card target-card love">
       <div class="target-header">
         <span>❤️ Tabungan Bersama</span>
         <span id="lblLastUpdateLove">Diupdate: -</span>
       </div>
-
-      <!-- TOTAL TABUNGAN GEDE -->
       <div class="saldo-main-title">TOTAL TABUNGAN BERSAMA</div>
       <div class="saldo-main-val" id="valTotalLove">Rp 0</div>
-
-      <!-- PERSENTASE -->
       <div class="target-pct-val">
         <span id="valTargetPctLove">0%</span>
         <span class="target-sub-text" id="valTargetSubLove">Tercapai dari Target Rp 0</span>
       </div>
-
       <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressLove"></div></div>
-      
       <div class="inline-edit-grid">
         <div class="inline-item">
           <span>Target Tabungan: Rp</span>
@@ -592,7 +252,6 @@
       </div>
     </div>
 
-    <!-- KOMITMEN IJAA & KEKOO DIBAWAH CARD BERSAMA (SEJAJAR KANAN KIRI) -->
     <div class="stat-row-parallel">
       <div class="stat-box" style="border-color:#fbcfe8;">
         <div class="stat-label" style="color:var(--love-pink);">Iuran Ijaa / bln</div>
@@ -604,24 +263,25 @@
       </div>
     </div>
 
-    <!-- TABEL CHECKLIST TRACKING SETORAN BULANAN (SCROLL MENYAMPING 2025 - 2050) -->
+    <!-- TABEL CHECKLIST TRACKING SETORAN (BARIS: IJAA, KEKOO, STATUS / KOLOM: JAN - DES SCROLL KANAN) -->
     <div class="card">
-      <div style="font-size:11px; font-weight:800; color:var(--love-pink); margin-bottom:10px;">CHECKLIST TRACKING SETORAN (2025 - 2050)</div>
+      <div class="card-header-flex">
+        <div class="card-title-sub" style="color:var(--love-pink);">CHECKLIST SETORAN BULANAN</div>
+        <!-- FILTER TAHUN POJOK KANAN ATAS CARD (2025 - 2050) -->
+        <select id="selectLoveYear" class="year-select" onchange="renderLoveChecklistRotated()"></select>
+      </div>
       <div class="freeze-table-wrapper">
         <table class="freeze-table">
-          <thead id="headLoveChecklist"></thead>
-          <tbody id="tableLoveChecklist"></tbody>
+          <tbody id="bodyLoveChecklistRotated"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- Grafik Setoran Per Bulan -->
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">GRAFIK SETORAN IJAA & KEKOO</div>
       <div style="height:170px;"><canvas id="chartMonthlyLove"></canvas></div>
     </div>
 
-    <!-- Log Setoran Tabungan Love -->
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:8px;">LOG SETORAN TABUNGAN CINTA</div>
       <div class="freeze-table-wrapper">
@@ -640,7 +300,6 @@
       </div>
     </div>
 
-    <!-- AI Advisor Love -->
     <div class="card ai-card love">
       <div class="ai-title love"><i data-lucide="sparkles" style="width:14px;"></i> LOVE AI ASSISTANT</div>
       <div class="ai-chat-bubble" id="aiBubbleLove">AI siap menghitung estimasi pencapaian target iuran Ijaa & Kekoo!</div>
@@ -651,11 +310,10 @@
     </div>
   </main>
 
-  <!-- TAB DETAIL LAPORAN (KHUSUS PRIBADI - STICKY FREEZE COLUMN TANGGAL) -->
+  <!-- TAB DETAIL LAPORAN -->
   <main id="viewDetailLaporan" style="display:none;">
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">DETAIL HISTORI LAPORAN TRANSAKSI</div>
-      
       <div class="freeze-table-wrapper">
         <table class="freeze-table">
           <thead>
@@ -685,7 +343,7 @@
   <button class="fab-trigger" id="fabMainBtn" onclick="toggleFabMenu()"><i data-lucide="sparkles" style="width:22px;"></i></button>
 </div>
 
-<!-- BOTTOM NAVIGATION BAR -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNavBar">
   <button class="nav-btn active" id="btnNavDashboard" onclick="switchMainTab('dashboard')">
     <i data-lucide="layout-dashboard" style="width:18px;"></i> Dashboard
@@ -695,7 +353,7 @@
   </button>
 </nav>
 
-<!-- POPUP AWAL MINI & LUCU -->
+<!-- POPUP MINI -->
 <div class="modal-overlay" id="modalMiniLogin">
   <div class="modal-mini-card">
     <div style="font-size:28px;">🌸</div>
@@ -712,7 +370,7 @@
   </div>
 </div>
 
-<!-- MODAL ONBOARDING SETUP PRIBADI -->
+<!-- SETUP MODALS -->
 <div class="modal-overlay" id="modalSetupPribadi">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; margin-bottom:2px;">Kondisi Keuangan Saat Ini</h3>
@@ -728,7 +386,6 @@
   </div>
 </div>
 
-<!-- MODAL ONBOARDING SETUP WITH MY LOVE -->
 <div class="modal-overlay" id="modalSetupLove">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; color:var(--love-pink); margin-bottom:2px;">❤️ Setup With My Love</h3>
@@ -743,7 +400,7 @@
   </div>
 </div>
 
-<!-- MODAL LAPOR PRIBADI -->
+<!-- MODAL LAPOR -->
 <div class="modal-overlay" id="modalLaporPribadi">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; margin-bottom:12px;">Lapor Transaksi Pribadi</h3>
@@ -785,7 +442,6 @@
   </div>
 </div>
 
-<!-- MODAL LAPOR WITH MY LOVE -->
 <div class="modal-overlay" id="modalLaporLove">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; color:var(--love-pink); margin-bottom:12px;">❤️ Setoran Tabungan Love</h3>
@@ -818,20 +474,20 @@
 </div>
 
 <script>
-  let activeMode = localStorage.getItem('hsm_v12_mode') || '';
-  let setupPribadiDone = localStorage.getItem('hsm_v12_setup_pribadi') === 'true';
-  let setupLoveDone = localStorage.getItem('hsm_v12_setup_love') === 'true';
+  let activeMode = localStorage.getItem('hsm_v13_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_v13_setup_pribadi') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_v13_setup_love') === 'true';
 
-  let txPribadi = JSON.parse(localStorage.getItem('hsm_v12_tx_pribadi')) || [];
-  let txLove = JSON.parse(localStorage.getItem('hsm_v12_tx_love')) || [];
+  let txPribadi = JSON.parse(localStorage.getItem('hsm_v13_tx_pribadi')) || [];
+  let txLove = JSON.parse(localStorage.getItem('hsm_v13_tx_love')) || [];
 
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v12_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v12_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v12_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v12_commit_kekoo')) || 500000;
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v13_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v13_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v13_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v13_commit_kekoo')) || 500000;
 
-  let lastUpdatePribadi = localStorage.getItem('hsm_v12_update_pribadi') || '-';
-  let lastUpdateLove = localStorage.getItem('hsm_v12_update_love') || '-';
+  let lastUpdatePribadi = localStorage.getItem('hsm_v13_update_pribadi') || '-';
+  let lastUpdateLove = localStorage.getItem('hsm_v13_update_love') || '-';
 
   let chartExpInstance = null;
   let chartMonthlyLoveInstance = null;
@@ -839,6 +495,16 @@
   lucide.createIcons();
   document.getElementById('txPribadiDate').valueAsDate = new Date();
   document.getElementById('txLoveDate').valueAsDate = new Date();
+
+  // Populate Options Tahun (2025 s/d 2050)
+  const yrSelect = document.getElementById('selectLoveYear');
+  for (let yr = 2025; yr <= 2050; yr++) {
+    let opt = document.createElement('option');
+    opt.value = yr;
+    opt.innerText = yr;
+    if (yr === 2026) opt.selected = true;
+    yrSelect.appendChild(opt);
+  }
 
   const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 
@@ -877,7 +543,7 @@
 
   function selectSystemMode(mode) {
     activeMode = mode;
-    localStorage.setItem('hsm_v12_mode', mode);
+    localStorage.setItem('hsm_v13_mode', mode);
     closeModal('modalMiniLogin');
 
     if (mode === 'pribadi') {
@@ -895,7 +561,7 @@
     }
   }
 
-  // Setup Handlers
+  // Setup
   document.getElementById('formSetupPribadi').addEventListener('submit', (e) => {
     e.preventDefault();
     const b = parseFloat(document.getElementById('initBank').value) || 0;
@@ -916,10 +582,10 @@
 
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v12_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v12_target_pribadi', targetPribadi);
-    localStorage.setItem('hsm_v12_update_pribadi', lastUpdatePribadi);
-    localStorage.setItem('hsm_v12_setup_pribadi', 'true');
+    localStorage.setItem('hsm_v13_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v13_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v13_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v13_setup_pribadi', 'true');
     setupPribadiDone = true;
 
     closeModal('modalSetupPribadi');
@@ -937,12 +603,12 @@
     txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v12_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v12_target_love', targetLove);
-    localStorage.setItem('hsm_v12_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v12_commit_kekoo', commitKekoo);
-    localStorage.setItem('hsm_v12_update_love', lastUpdateLove);
-    localStorage.setItem('hsm_v12_setup_love', 'true');
+    localStorage.setItem('hsm_v13_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v13_target_love', targetLove);
+    localStorage.setItem('hsm_v13_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v13_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v13_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v13_setup_love', 'true');
     setupLoveDone = true;
 
     closeModal('modalSetupLove');
@@ -986,7 +652,7 @@
 
   function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v12_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v13_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -995,9 +661,9 @@
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
 
-    localStorage.setItem('hsm_v12_target_love', targetLove);
-    localStorage.setItem('hsm_v12_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v12_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v13_target_love', targetLove);
+    localStorage.setItem('hsm_v13_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v13_commit_kekoo', commitKekoo);
     renderLove();
   }
 
@@ -1029,7 +695,6 @@
     document.getElementById('valIncomePribadi').innerText = formatIDR(inTotal);
     document.getElementById('valExpensePribadi').innerText = formatIDR(outTotal);
 
-    // Render Breakdown Saldo per Akun
     document.getElementById('accValBank').innerText = formatIDR(accBalance['Bank']);
     document.getElementById('accValCash').innerText = formatIDR(accBalance['Cash']);
     document.getElementById('accValCelengan').innerText = formatIDR(accBalance['Celengan']);
@@ -1052,9 +717,8 @@
     document.getElementById('inputCommitIjaa').value = commitIjaa;
     document.getElementById('inputCommitKekoo').value = commitKekoo;
 
-    renderLoveChecklistTable2050();
+    renderLoveChecklistRotated();
 
-    // Log Table
     const tbody = document.getElementById('tableLoveLog');
     tbody.innerHTML = txLove.length === 0 ? '<tr><td colspan="5" style="text-align:center;">Belum ada setoran tabungan.</td></tr>' : '';
 
@@ -1073,60 +737,61 @@
     renderChartLove();
   }
 
-  // RENDER TABEL CHECKLIST 2025 - 2050 (SCROLL MENYAMPING)
-  function renderLoveChecklistTable2050() {
-    const startYear = 2025;
-    const endYear = 2050;
-    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  // RENDER TABEL CHECKLIST (KOLOM KIRI: FREEZE [BULAN, IJAA, KEKOO, STATUS] / KANAN: JAN - DES SCROLL)
+  function renderLoveChecklistRotated() {
+    const selectedYear = document.getElementById('selectLoveYear').value;
+    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const tbody = document.getElementById('bodyLoveChecklistRotated');
 
-    const thead = document.getElementById('headLoveChecklist');
-    const tbody = document.getElementById('tableLoveChecklist');
+    let isIjaa = new Array(12).fill(false);
+    let isKekoo = new Array(12).fill(false);
 
-    // Build Table Header (Freeze Column Bulan + Tahun 2025 s/d 2050)
-    let headHTML = '<tr><th class="freeze-col">Bulan</th>';
-    for (let yr = startYear; yr <= endYear; yr++) {
-      headHTML += `<th style="text-align:center;">${yr}</th>`;
-    }
-    headHTML += '</tr>';
-    thead.innerHTML = headHTML;
-
-    // Build Table Body
-    let bodyHTML = '';
-    months.forEach((m, mIdx) => {
-      bodyHTML += `<tr><td class="freeze-col"><b>${m}</b></td>`;
-
-      for (let yr = startYear; yr <= endYear; yr++) {
-        let isIjaaSetor = false;
-        let isKekooSetor = false;
-
-        txLove.forEach(t => {
-          if (t.date) {
-            const d = new Date(t.date);
-            if (d.getFullYear() === yr && d.getMonth() === mIdx) {
-              if (t.penyetor === 'Ijaa' || t.penyetor === 'Ijaa & Kekoo') isIjaaSetor = true;
-              if (t.penyetor === 'Kekoo' || t.penyetor === 'Ijaa & Kekoo') isKekooSetor = true;
-            }
-          }
-        });
-
-        let cellContent = '';
-        if (isIjaaSetor && isKekooSetor) {
-          cellContent = '<span style="color:var(--success); font-weight:800;">✅ I & K</span>';
-        } else if (isIjaaSetor) {
-          cellContent = '<span style="color:var(--primary); font-weight:800;">✅ Ijaa</span>';
-        } else if (isKekooSetor) {
-          cellContent = '<span style="color:var(--love-pink); font-weight:800;">✅ Kekoo</span>';
-        } else {
-          cellContent = ''; // Kosong bersih tanpa emot
+    txLove.forEach(t => {
+      if (t.date) {
+        const d = new Date(t.date);
+        if (d.getFullYear().toString() === selectedYear) {
+          const mIdx = d.getMonth();
+          if (t.penyetor === 'Ijaa' || t.penyetor === 'Ijaa & Kekoo') isIjaa[mIdx] = true;
+          if (t.penyetor === 'Kekoo' || t.penyetor === 'Ijaa & Kekoo') isKekoo[mIdx] = true;
         }
-
-        bodyHTML += `<td style="text-align:center;">${cellContent}</td>`;
       }
-
-      bodyHTML += '</tr>';
     });
 
-    tbody.innerHTML = bodyHTML;
+    // Baris 1: Bulan (Header)
+    let rowBulan = `<tr><td class="freeze-col">Bulan</td>`;
+    monthsShort.forEach(m => { rowBulan += `<td style="font-weight:800; color:var(--text-sub); background:#f8fafc;">${m}</td>`; });
+    rowBulan += `</tr>`;
+
+    // Baris 2: Ijaa
+    let rowIjaa = `<tr><td class="freeze-col" style="color:var(--primary);">Ijaa</td>`;
+    for (let i = 0; i < 12; i++) {
+      rowIjaa += `<td>${isIjaa[i] ? '✅' : ''}</td>`;
+    }
+    rowIjaa += `</tr>`;
+
+    // Baris 3: Kekoo
+    let rowKekoo = `<tr><td class="freeze-col" style="color:var(--love-pink);">Kekoo</td>`;
+    for (let i = 0; i < 12; i++) {
+      rowKekoo += `<td>${isKekoo[i] ? '✅' : ''}</td>`;
+    }
+    rowKekoo += `</tr>`;
+
+    // Baris 4: Status
+    let rowStatus = `<tr><td class="freeze-col">Status</td>`;
+    for (let i = 0; i < 12; i++) {
+      let st = '';
+      if (isIjaa[i] && isKekoo[i]) {
+        st = '<span style="color:var(--success); font-weight:800;">Lengkap</span>';
+      } else if (isIjaa[i] || isKekoo[i]) {
+        st = '<span style="color:#f59e0b; font-weight:800;">Sebagian</span>';
+      } else {
+        st = '<span style="color:var(--text-sub);">Belum</span>';
+      }
+      rowStatus += `<td>${st}</td>`;
+    }
+    rowStatus += `</tr>`;
+
+    tbody.innerHTML = rowBulan + rowIjaa + rowKekoo + rowStatus;
   }
 
   function toggleCatPribadi() {
@@ -1134,7 +799,6 @@
     document.getElementById('groupCatPribadi').style.display = type === 'expense' ? 'block' : 'none';
   }
 
-  // Submit Lapor Transaksi
   document.getElementById('formLaporPribadi').addEventListener('submit', (e) => {
     e.preventDefault();
     const type = document.getElementById('txPribadiType').value;
@@ -1148,8 +812,8 @@
     txPribadi.push({ type, category, account, amount, desc, date });
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v12_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v12_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v13_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v13_update_pribadi', lastUpdatePribadi);
 
     document.getElementById('txPribadiAmount').value = '';
     document.getElementById('txPribadiDesc').value = '';
@@ -1169,8 +833,8 @@
     txLove.push({ penyetor, account, amount, desc, date });
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v12_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v12_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v13_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v13_update_love', lastUpdateLove);
 
     document.getElementById('txLoveAmount').value = '';
     document.getElementById('txLoveDesc').value = '';
@@ -1235,7 +899,7 @@
 
   function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
-    localStorage.setItem('hsm_v12_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v13_tx_pribadi', JSON.stringify(txPribadi));
     renderPribadi();
     renderLaporanDetailTable();
   }
