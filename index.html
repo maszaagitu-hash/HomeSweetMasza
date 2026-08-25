@@ -93,30 +93,6 @@
       overflow: hidden;
     }
 
-    /* Card Header Flex with Dropdown */
-    .card-header-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .card-title-sub {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-sub);
-      text-transform: uppercase;
-    }
-    .year-select {
-      background: var(--love-bg);
-      border: 1px solid #fbcfe8;
-      color: var(--love-pink);
-      padding: 4px 8px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 800;
-      outline: none;
-    }
-
     /* Hero Target Cards */
     .target-card {
       background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
@@ -312,7 +288,7 @@
     }
     .ai-input-group button.love { background: var(--love-pink); }
 
-    /* FREEZE COLUMN TABLE SCROLL CSS (HORIZONTAL) */
+    /* FREEZE COLUMN TABLE SCROLL CSS (SCROLL HORIZONTAL 2025-2050) */
     .freeze-table-wrapper {
       width: 100%;
       overflow-x: auto;
@@ -327,12 +303,12 @@
       white-space: nowrap;
     }
     .freeze-table th, .freeze-table td {
-      padding: 10px 14px;
+      padding: 10px 12px;
       border-bottom: 1px solid var(--border);
       font-weight: 700;
       background: white;
       text-align: center;
-      min-width: 80px;
+      min-width: 75px;
     }
     .freeze-table th {
       color: var(--text-sub);
@@ -348,7 +324,7 @@
       border-right: 2px solid #f1f5f9 !important;
       box-shadow: 2px 0 5px rgba(0,0,0,0.02);
       text-align: left !important;
-      min-width: 90px;
+      min-width: 85px;
     }
     .freeze-table th.freeze-col {
       background: #f1f5f9;
@@ -628,27 +604,12 @@
       </div>
     </div>
 
-    <!-- TABEL CHECKLIST TRACKING SETORAN BULANAN (SCROLL MENYAMPING, FREEZE BULAN) -->
+    <!-- TABEL CHECKLIST TRACKING SETORAN BULANAN (SCROLL MENYAMPING 2025 - 2050) -->
     <div class="card">
-      <div class="card-header-flex">
-        <div class="card-title-sub" style="color:var(--love-pink);">CHECKLIST SETORAN BULANAN</div>
-        <select id="selectLoveYear" class="year-select" onchange="renderLoveChecklistTable()">
-          <option value="2025">2025</option>
-          <option value="2026" selected>2026</option>
-          <option value="2027">2027</option>
-          <option value="2028">2028</option>
-        </select>
-      </div>
+      <div style="font-size:11px; font-weight:800; color:var(--love-pink); margin-bottom:10px;">CHECKLIST TRACKING SETORAN (2025 - 2050)</div>
       <div class="freeze-table-wrapper">
         <table class="freeze-table">
-          <thead>
-            <tr>
-              <th class="freeze-col">Bulan</th>
-              <th>Ijaa</th>
-              <th>Kekoo</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+          <thead id="headLoveChecklist"></thead>
           <tbody id="tableLoveChecklist"></tbody>
         </table>
       </div>
@@ -857,20 +818,20 @@
 </div>
 
 <script>
-  let activeMode = localStorage.getItem('hsm_v11_mode') || '';
-  let setupPribadiDone = localStorage.getItem('hsm_v11_setup_pribadi') === 'true';
-  let setupLoveDone = localStorage.getItem('hsm_v11_setup_love') === 'true';
+  let activeMode = localStorage.getItem('hsm_v12_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_v12_setup_pribadi') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_v12_setup_love') === 'true';
 
-  let txPribadi = JSON.parse(localStorage.getItem('hsm_v11_tx_pribadi')) || [];
-  let txLove = JSON.parse(localStorage.getItem('hsm_v11_tx_love')) || [];
+  let txPribadi = JSON.parse(localStorage.getItem('hsm_v12_tx_pribadi')) || [];
+  let txLove = JSON.parse(localStorage.getItem('hsm_v12_tx_love')) || [];
 
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v11_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v11_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v11_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v11_commit_kekoo')) || 500000;
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v12_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v12_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v12_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v12_commit_kekoo')) || 500000;
 
-  let lastUpdatePribadi = localStorage.getItem('hsm_v11_update_pribadi') || '-';
-  let lastUpdateLove = localStorage.getItem('hsm_v11_update_love') || '-';
+  let lastUpdatePribadi = localStorage.getItem('hsm_v12_update_pribadi') || '-';
+  let lastUpdateLove = localStorage.getItem('hsm_v12_update_love') || '-';
 
   let chartExpInstance = null;
   let chartMonthlyLoveInstance = null;
@@ -916,7 +877,7 @@
 
   function selectSystemMode(mode) {
     activeMode = mode;
-    localStorage.setItem('hsm_v11_mode', mode);
+    localStorage.setItem('hsm_v12_mode', mode);
     closeModal('modalMiniLogin');
 
     if (mode === 'pribadi') {
@@ -955,10 +916,10 @@
 
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v11_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v11_target_pribadi', targetPribadi);
-    localStorage.setItem('hsm_v11_update_pribadi', lastUpdatePribadi);
-    localStorage.setItem('hsm_v11_setup_pribadi', 'true');
+    localStorage.setItem('hsm_v12_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v12_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v12_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v12_setup_pribadi', 'true');
     setupPribadiDone = true;
 
     closeModal('modalSetupPribadi');
@@ -976,12 +937,12 @@
     txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v11_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v11_target_love', targetLove);
-    localStorage.setItem('hsm_v11_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v11_commit_kekoo', commitKekoo);
-    localStorage.setItem('hsm_v11_update_love', lastUpdateLove);
-    localStorage.setItem('hsm_v11_setup_love', 'true');
+    localStorage.setItem('hsm_v12_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v12_target_love', targetLove);
+    localStorage.setItem('hsm_v12_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v12_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v12_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v12_setup_love', 'true');
     setupLoveDone = true;
 
     closeModal('modalSetupLove');
@@ -1025,7 +986,7 @@
 
   function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v11_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v12_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -1034,9 +995,9 @@
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
 
-    localStorage.setItem('hsm_v11_target_love', targetLove);
-    localStorage.setItem('hsm_v11_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v11_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v12_target_love', targetLove);
+    localStorage.setItem('hsm_v12_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v12_commit_kekoo', commitKekoo);
     renderLove();
   }
 
@@ -1091,7 +1052,7 @@
     document.getElementById('inputCommitIjaa').value = commitIjaa;
     document.getElementById('inputCommitKekoo').value = commitKekoo;
 
-    renderLoveChecklistTable();
+    renderLoveChecklistTable2050();
 
     // Log Table
     const tbody = document.getElementById('tableLoveLog');
@@ -1112,39 +1073,60 @@
     renderChartLove();
   }
 
-  // RENDER TABEL CHECKLIST MENYAMPING (IJAA & KEKOO)
-  function renderLoveChecklistTable() {
-    const selectedYear = document.getElementById('selectLoveYear').value;
+  // RENDER TABEL CHECKLIST 2025 - 2050 (SCROLL MENYAMPING)
+  function renderLoveChecklistTable2050() {
+    const startYear = 2025;
+    const endYear = 2050;
     const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+    const thead = document.getElementById('headLoveChecklist');
     const tbody = document.getElementById('tableLoveChecklist');
-    tbody.innerHTML = '';
 
-    months.forEach((m, idx) => {
-      let isIjaaSetor = false;
-      let isKekooSetor = false;
+    // Build Table Header (Freeze Column Bulan + Tahun 2025 s/d 2050)
+    let headHTML = '<tr><th class="freeze-col">Bulan</th>';
+    for (let yr = startYear; yr <= endYear; yr++) {
+      headHTML += `<th style="text-align:center;">${yr}</th>`;
+    }
+    headHTML += '</tr>';
+    thead.innerHTML = headHTML;
 
-      txLove.forEach(t => {
-        if (t.date) {
-          const d = new Date(t.date);
-          if (d.getFullYear().toString() === selectedYear && d.getMonth() === idx) {
-            if (t.penyetor === 'Ijaa' || t.penyetor === 'Ijaa & Kekoo') isIjaaSetor = true;
-            if (t.penyetor === 'Kekoo' || t.penyetor === 'Ijaa & Kekoo') isKekooSetor = true;
+    // Build Table Body
+    let bodyHTML = '';
+    months.forEach((m, mIdx) => {
+      bodyHTML += `<tr><td class="freeze-col"><b>${m}</b></td>`;
+
+      for (let yr = startYear; yr <= endYear; yr++) {
+        let isIjaaSetor = false;
+        let isKekooSetor = false;
+
+        txLove.forEach(t => {
+          if (t.date) {
+            const d = new Date(t.date);
+            if (d.getFullYear() === yr && d.getMonth() === mIdx) {
+              if (t.penyetor === 'Ijaa' || t.penyetor === 'Ijaa & Kekoo') isIjaaSetor = true;
+              if (t.penyetor === 'Kekoo' || t.penyetor === 'Ijaa & Kekoo') isKekooSetor = true;
+            }
           }
+        });
+
+        let cellContent = '';
+        if (isIjaaSetor && isKekooSetor) {
+          cellContent = '<span style="color:var(--success); font-weight:800;">✅ I & K</span>';
+        } else if (isIjaaSetor) {
+          cellContent = '<span style="color:var(--primary); font-weight:800;">✅ Ijaa</span>';
+        } else if (isKekooSetor) {
+          cellContent = '<span style="color:var(--love-pink); font-weight:800;">✅ Kekoo</span>';
+        } else {
+          cellContent = ''; // Kosong bersih tanpa emot
         }
-      });
 
-      // Teks status tanpa emotikon
-      let statusFull = isIjaaSetor && isKekooSetor ? '<span style="color:var(--success); font-weight:800;">Lengkap</span>' : (isIjaaSetor || isKekooSetor ? '<span style="color:#f59e0b; font-weight:800;">Sebagian</span>' : '<span style="color:var(--text-sub);">Belum</span>');
+        bodyHTML += `<td style="text-align:center;">${cellContent}</td>`;
+      }
 
-      tbody.innerHTML += `
-        <tr>
-          <td class="freeze-col"><b>${m}</b></td>
-          <td>${isIjaaSetor ? '✅' : ''}</td>
-          <td>${isKekooSetor ? '✅' : ''}</td>
-          <td>${statusFull}</td>
-        </tr>
-      `;
+      bodyHTML += '</tr>';
     });
+
+    tbody.innerHTML = bodyHTML;
   }
 
   function toggleCatPribadi() {
@@ -1166,8 +1148,8 @@
     txPribadi.push({ type, category, account, amount, desc, date });
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v11_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v11_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v12_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v12_update_pribadi', lastUpdatePribadi);
 
     document.getElementById('txPribadiAmount').value = '';
     document.getElementById('txPribadiDesc').value = '';
@@ -1187,8 +1169,8 @@
     txLove.push({ penyetor, account, amount, desc, date });
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v11_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v11_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v12_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v12_update_love', lastUpdateLove);
 
     document.getElementById('txLoveAmount').value = '';
     document.getElementById('txLoveDesc').value = '';
@@ -1253,7 +1235,7 @@
 
   function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
-    localStorage.setItem('hsm_v11_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v12_tx_pribadi', JSON.stringify(txPribadi));
     renderPribadi();
     renderLaporanDetailTable();
   }
