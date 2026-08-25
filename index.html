@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Home Sweet Maszaa - Financial Assitant</title>
+  <title>Home Sweet Maszaa - Financial Assistant</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -112,7 +112,7 @@
     .freeze-table th, .freeze-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-weight: 700; background: white; text-align: center; min-width: 65px; }
     .freeze-table th { color: var(--text-sub); font-size: 10px; text-transform: uppercase; font-weight: 800; background: #f8fafc; }
     
-    /* FREEZE KIRI KHUSUS (BARIS IJAA, KEKOO, STATUS, DLL) */
+    /* FREEZE KIRI KHUSUS */
     .freeze-col {
       position: sticky; left: 0; z-index: 10; border-right: 2px solid #f1f5f9 !important;
       box-shadow: 2px 0 5px rgba(0,0,0,0.02); text-align: left !important; min-width: 80px; background: #f8fafc !important; font-weight: 800 !important;
@@ -263,11 +263,10 @@
       </div>
     </div>
 
-    <!-- TABEL CHECKLIST TRACKING SETORAN (BARIS: IJAA, KEKOO, STATUS / KOLOM: JAN - DES SCROLL KANAN) -->
+    <!-- TABEL CHECKLIST TRACKING SETORAN BULANAN -->
     <div class="card">
       <div class="card-header-flex">
         <div class="card-title-sub" style="color:var(--love-pink);">CHECKLIST SETORAN BULANAN</div>
-        <!-- FILTER TAHUN POJOK KANAN ATAS CARD (2025 - 2050) -->
         <select id="selectLoveYear" class="year-select" onchange="renderLoveChecklistRotated()"></select>
       </div>
       <div class="freeze-table-wrapper">
@@ -451,6 +450,7 @@
         <select id="txLovePenyetor">
           <option value="Ijaa">Ijaa</option>
           <option value="Kekoo">Kekoo</option>
+          <option value="Ijaa & Kekoo">Ijaa & Kekoo (Gabungan)</option>
         </select>
       </div>
       <div class="form-group">
@@ -474,20 +474,20 @@
 </div>
 
 <script>
-  let activeMode = localStorage.getItem('hsm_v13_mode') || '';
-  let setupPribadiDone = localStorage.getItem('hsm_v13_setup_pribadi') === 'true';
-  let setupLoveDone = localStorage.getItem('hsm_v13_setup_love') === 'true';
+  let activeMode = localStorage.getItem('hsm_v14_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_v14_setup_pribadi') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_v14_setup_love') === 'true';
 
-  let txPribadi = JSON.parse(localStorage.getItem('hsm_v13_tx_pribadi')) || [];
-  let txLove = JSON.parse(localStorage.getItem('hsm_v13_tx_love')) || [];
+  let txPribadi = JSON.parse(localStorage.getItem('hsm_v14_tx_pribadi')) || [];
+  let txLove = JSON.parse(localStorage.getItem('hsm_v14_tx_love')) || [];
 
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v13_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v13_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v13_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v13_commit_kekoo')) || 500000;
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v14_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v14_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v14_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v14_commit_kekoo')) || 500000;
 
-  let lastUpdatePribadi = localStorage.getItem('hsm_v13_update_pribadi') || '-';
-  let lastUpdateLove = localStorage.getItem('hsm_v13_update_love') || '-';
+  let lastUpdatePribadi = localStorage.getItem('hsm_v14_update_pribadi') || '-';
+  let lastUpdateLove = localStorage.getItem('hsm_v14_update_love') || '-';
 
   let chartExpInstance = null;
   let chartMonthlyLoveInstance = null;
@@ -502,7 +502,7 @@
     let opt = document.createElement('option');
     opt.value = yr;
     opt.innerText = yr;
-    if (yr === 2026) opt.selected = true;
+    if (yr === new Date().getFullYear()) opt.selected = true;
     yrSelect.appendChild(opt);
   }
 
@@ -543,7 +543,7 @@
 
   function selectSystemMode(mode) {
     activeMode = mode;
-    localStorage.setItem('hsm_v13_mode', mode);
+    localStorage.setItem('hsm_v14_mode', mode);
     closeModal('modalMiniLogin');
 
     if (mode === 'pribadi') {
@@ -561,7 +561,7 @@
     }
   }
 
-  // Setup
+  // Setup Handlers
   document.getElementById('formSetupPribadi').addEventListener('submit', (e) => {
     e.preventDefault();
     const b = parseFloat(document.getElementById('initBank').value) || 0;
@@ -582,10 +582,10 @@
 
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v13_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v13_target_pribadi', targetPribadi);
-    localStorage.setItem('hsm_v13_update_pribadi', lastUpdatePribadi);
-    localStorage.setItem('hsm_v13_setup_pribadi', 'true');
+    localStorage.setItem('hsm_v14_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v14_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v14_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v14_setup_pribadi', 'true');
     setupPribadiDone = true;
 
     closeModal('modalSetupPribadi');
@@ -603,12 +603,12 @@
     txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v13_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v13_target_love', targetLove);
-    localStorage.setItem('hsm_v13_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v13_commit_kekoo', commitKekoo);
-    localStorage.setItem('hsm_v13_update_love', lastUpdateLove);
-    localStorage.setItem('hsm_v13_setup_love', 'true');
+    localStorage.setItem('hsm_v14_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v14_target_love', targetLove);
+    localStorage.setItem('hsm_v14_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v14_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v14_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v14_setup_love', 'true');
     setupLoveDone = true;
 
     closeModal('modalSetupLove');
@@ -652,7 +652,7 @@
 
   function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v13_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v14_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -661,9 +661,9 @@
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
 
-    localStorage.setItem('hsm_v13_target_love', targetLove);
-    localStorage.setItem('hsm_v13_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v13_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v14_target_love', targetLove);
+    localStorage.setItem('hsm_v14_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v14_commit_kekoo', commitKekoo);
     renderLove();
   }
 
@@ -737,9 +737,9 @@
     renderChartLove();
   }
 
-  // RENDER TABEL CHECKLIST (KOLOM KIRI: FREEZE [BULAN, IJAA, KEKOO, STATUS] / KANAN: JAN - DES SCROLL)
+  // LOGIKA RENDER CHECKLIST DENGAN PARSING TANGGAL AMAN & AKURAT
   function renderLoveChecklistRotated() {
-    const selectedYear = document.getElementById('selectLoveYear').value;
+    const selectedYear = parseInt(document.getElementById('selectLoveYear').value, 10);
     const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
     const tbody = document.getElementById('bodyLoveChecklistRotated');
 
@@ -748,11 +748,17 @@
 
     txLove.forEach(t => {
       if (t.date) {
-        const d = new Date(t.date);
-        if (d.getFullYear().toString() === selectedYear) {
-          const mIdx = d.getMonth();
-          if (t.penyetor === 'Ijaa' || t.penyetor === 'Ijaa & Kekoo') isIjaa[mIdx] = true;
-          if (t.penyetor === 'Kekoo' || t.penyetor === 'Ijaa & Kekoo') isKekoo[mIdx] = true;
+        // Parsing aman string YYYY-MM-DD
+        const parts = t.date.split('-');
+        if (parts.length === 3) {
+          const yr = parseInt(parts[0], 10);
+          const mIdx = parseInt(parts[1], 10) - 1; // 0-indexed month
+
+          if (yr === selectedYear && mIdx >= 0 && mIdx < 12) {
+            const penyetorLower = (t.penyetor || '').toLowerCase();
+            if (penyetorLower.includes('ijaa')) isIjaa[mIdx] = true;
+            if (penyetorLower.includes('kekoo')) isKekoo[mIdx] = true;
+          }
         }
       }
     });
@@ -812,8 +818,8 @@
     txPribadi.push({ type, category, account, amount, desc, date });
     lastUpdatePribadi = now;
 
-    localStorage.setItem('hsm_v13_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v13_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v14_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v14_update_pribadi', lastUpdatePribadi);
 
     document.getElementById('txPribadiAmount').value = '';
     document.getElementById('txPribadiDesc').value = '';
@@ -833,8 +839,8 @@
     txLove.push({ penyetor, account, amount, desc, date });
     lastUpdateLove = now;
 
-    localStorage.setItem('hsm_v13_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v13_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v14_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v14_update_love', lastUpdateLove);
 
     document.getElementById('txLoveAmount').value = '';
     document.getElementById('txLoveDesc').value = '';
@@ -861,8 +867,11 @@
 
     txLove.forEach(t => {
       if (t.date) {
-        const mIdx = new Date(t.date).getMonth();
-        monthlyData[mIdx] += t.amount;
+        const parts = t.date.split('-');
+        if (parts.length === 3) {
+          const mIdx = parseInt(parts[1], 10) - 1;
+          if (mIdx >= 0 && mIdx < 12) monthlyData[mIdx] += t.amount;
+        }
       }
     });
 
@@ -899,7 +908,7 @@
 
   function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
-    localStorage.setItem('hsm_v13_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v14_tx_pribadi', JSON.stringify(txPribadi));
     renderPribadi();
     renderLaporanDetailTable();
   }
