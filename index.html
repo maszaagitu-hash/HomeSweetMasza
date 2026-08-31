@@ -418,7 +418,7 @@
       <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporPribadi')">Batal</button>
-        <button type="submit" class="btn-submit-form" id="btnSavePribadi">Simpan</button>
+        <button type="submit" class="btn-submit-form">Simpan</button>
       </div>
     </form>
   </div>
@@ -450,7 +450,7 @@
       <div class="form-group"><label>Tanggal Setoran</label><input type="date" id="txLoveDate" required></div>
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporLove')">Batal</button>
-        <button type="submit" class="btn-submit-form love" id="btnSaveLove">Simpan</button>
+        <button type="submit" class="btn-submit-form love">Simpan</button>
       </div>
     </form>
   </div>
@@ -481,6 +481,14 @@
   lucide.createIcons();
   document.getElementById('txPribadiDate').valueAsDate = new Date();
   document.getElementById('txLoveDate').valueAsDate = new Date();
+
+  // Helper format tanggal singkat (YYYY-MM-DD), tanpa jam
+  function cleanDate(dStr) {
+    if (!dStr) return '-';
+    if (dStr.includes('T')) return dStr.split('T')[0];
+    if (dStr.includes(' ')) return dStr.split(' ')[0];
+    return dStr;
+  }
 
   // Populate Options Tahun (2025 s/d 2050)
   const yrSelect = document.getElementById('selectLoveYear');
@@ -558,11 +566,11 @@
       const data = await res.json();
       
       if (data.txPribadi && data.txPribadi.length > 0) {
-        txPribadi = data.txPribadi;
+        txPribadi = data.txPribadi.map(t => ({ ...t, date: cleanDate(t.date) }));
         localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
       }
       if (data.txLove && data.txLove.length > 0) {
-        txLove = data.txLove;
+        txLove = data.txLove.map(t => ({ ...t, date: cleanDate(t.date) }));
         localStorage.setItem('hsm_v17_tx_love', JSON.stringify(txLove));
       }
 
@@ -761,7 +769,7 @@
     txLove.slice().reverse().forEach(t => {
       tbody.innerHTML += `
         <tr>
-          <td class="freeze-col">${t.date}</td>
+          <td class="freeze-col">${cleanDate(t.date)}</td>
           <td><b>${t.penyetor}</b></td>
           <td>${t.account}</td>
           <td>${t.desc || '-'}</td>
@@ -782,8 +790,9 @@
     let isKekoo = new Array(12).fill(false);
 
     txLove.forEach(t => {
-      if (t.date) {
-        const parts = t.date.split('-');
+      const formattedDate = cleanDate(t.date);
+      if (formattedDate) {
+        const parts = formattedDate.split('-');
         if (parts.length === 3) {
           const yr = parseInt(parts[0], 10);
           const mIdx = parseInt(parts[1], 10) - 1;
@@ -843,7 +852,7 @@
     const account = document.getElementById('txPribadiAccount').value;
     const amount = parseFloat(document.getElementById('txPribadiAmount').value);
     const desc = document.getElementById('txPribadiDesc').value;
-    const date = document.getElementById('txPribadiDate').value;
+    const date = cleanDate(document.getElementById('txPribadiDate').value);
     const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
 
     const newTx = { type, category, account, amount, desc, date };
@@ -876,7 +885,7 @@
     const account = document.getElementById('txLoveAccount').value;
     const amount = parseFloat(document.getElementById('txLoveAmount').value);
     const desc = document.getElementById('txLoveDesc').value;
-    const date = document.getElementById('txLoveDate').value;
+    const date = cleanDate(document.getElementById('txLoveDate').value);
     const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
 
     const newTx = { penyetor, account, amount, desc, date };
@@ -921,8 +930,9 @@
     const monthlyData = new Array(12).fill(0);
 
     txLove.forEach(t => {
-      if (t.date) {
-        const parts = t.date.split('-');
+      const formattedDate = cleanDate(t.date);
+      if (formattedDate) {
+        const parts = formattedDate.split('-');
         if (parts.length === 3) {
           const mIdx = parseInt(parts[1], 10) - 1;
           if (mIdx >= 0 && mIdx < 12) monthlyData[mIdx] += t.amount;
@@ -948,7 +958,7 @@
       let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
       tbody.innerHTML += `
         <tr>
-          <td class="freeze-col">${t.date}</td>
+          <td class="freeze-col">${cleanDate(t.date)}</td>
           <td><span style="color:${labelColor}; font-weight:800;">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
           <td>${t.account}</td>
           <td>${t.category || '-'}</td>
