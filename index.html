@@ -24,20 +24,33 @@
     }
 
     html, body {
-      width: 100%; max-width: 100%; overflow-x: hidden; position: relative;
-      background-color: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 85px;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      position: relative;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 85px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; word-break: break-word; }
 
-    .app-container { width: 100%; max-width: 500px; margin: 0 auto; padding: 16px; }
+    .app-container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 16px;
+    }
 
+    /* Sync Indicator Badge */
     .sync-status {
-      font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 12px;
+      font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 12px;
       display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; background: #e2e8f0; color: #475569;
     }
     .sync-status.active { background: #dcfce7; color: #15803d; }
 
+    /* Navbar */
     .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .brand-title { font-size: 18px; font-weight: 900; color: var(--primary); }
     .mode-badge {
@@ -46,11 +59,13 @@
     }
     .mode-badge.love { border-color: #fbcfe8; color: var(--love-pink); }
 
+    /* Card Base */
     .card {
       background: var(--card-bg); border-radius: 20px; padding: 18px; box-shadow: var(--shadow);
       border: 2px solid #f8fafc; margin-bottom: 14px; width: 100%; position: relative; overflow: hidden;
     }
 
+    /* Card Header Flex with Dropdown */
     .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .card-title-sub { font-size: 11px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; }
     .year-select {
@@ -58,6 +73,7 @@
       padding: 4px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; outline: none;
     }
 
+    /* Target Hero Cards */
     .target-card { background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); color: white; border: none; }
     .target-card.love { background: linear-gradient(135deg, #f472b6 0%, #db2777 100%); }
     .target-header { display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; }
@@ -73,17 +89,20 @@
     .inline-item { display: flex; align-items: center; gap: 4px; }
     .inline-input { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; outline: none; width: 90px; text-align: center; }
 
+    /* Grid Accounts Sisa Saldo */
     .account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .account-card-item { background: #f8fafc; border: 1.5px solid #f1f5f9; border-radius: 14px; padding: 10px 12px; }
     .account-name { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; display: flex; align-items: center; gap: 4px; }
     .account-val { font-size: 14px; font-weight: 900; color: var(--text); margin-top: 2px; }
 
+    /* Stat Box Parallel */
     .stat-row-parallel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; width: 100%; }
     .stat-box { background: white; border-radius: 18px; padding: 14px; box-shadow: var(--shadow); border: 2px solid #f8fafc; }
     .stat-label { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; }
     .stat-amount { font-size: 15px; font-weight: 900; margin-top: 2px; }
     .input-box-commit { width: 100%; border: 1px solid #f1f5f9; background: #faf5ff; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 800; color: var(--love-pink); outline: none; margin-top: 4px; }
 
+    /* FREEZE COLUMN TABLE SCROLL CSS */
     .freeze-table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
     .freeze-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; white-space: nowrap; }
     .freeze-table th, .freeze-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-weight: 700; background: white; text-align: center; min-width: 65px; }
@@ -94,6 +113,7 @@
       box-shadow: 2px 0 5px rgba(0,0,0,0.02); text-align: left !important; min-width: 80px; background: #f8fafc !important; font-weight: 800 !important;
     }
 
+    /* Floating Action Button */
     .fab-wrapper { position: fixed; bottom: 18px; right: 18px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .fab-popup-menu { display: none; flex-direction: column; gap: 6px; align-items: flex-end; }
     .fab-popup-menu.active { display: flex; }
@@ -101,6 +121,7 @@
     .fab-trigger { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; }
     .fab-trigger.love { background: var(--love-pink); box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4); }
 
+    /* Modals Overlay */
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
     .modal-overlay.active { display: flex; }
     .modal-mini-card { background: white; border-radius: 24px; padding: 22px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.15); animation: popIn 0.25s ease-out; }
@@ -125,6 +146,7 @@
 <body>
 
 <div class="app-container">
+  <!-- Header Navbar -->
   <header class="nav-header">
     <div class="brand-title">Home Sweet Maszaa 🌸</div>
     <div class="mode-badge" id="modeBadge" onclick="openLoginModal()">
@@ -133,6 +155,7 @@
     </div>
   </header>
 
+  <!-- Sinkronisasi Bar Status -->
   <div style="text-align: center;">
     <div class="sync-status" id="syncStatus">
       <i data-lucide="refresh-cw" style="width:12px;"></i> <span id="syncText">Menghubungkan ke Google Sheets...</span>
@@ -283,6 +306,7 @@
               <th>Kategori</th>
               <th>Keterangan</th>
               <th>Nominal</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody id="tableLaporanDetail"></tbody>
@@ -328,6 +352,36 @@
   </div>
 </div>
 
+<!-- SETUP MODALS -->
+<div class="modal-overlay" id="modalSetupPribadi">
+  <div class="modal-form-card">
+    <h3 style="font-size:15px; font-weight:900; margin-bottom:2px;">Kondisi Keuangan Saat Ini</h3>
+    <p style="font-size:11px; color:var(--text-sub); font-weight:700; margin-bottom:12px;">Isi saldo awal per akun (Diisi sekali saja):</p>
+    <form id="formSetupPribadi">
+      <div class="form-group"><label>Saldo Bank (Transfer)</label><input type="number" id="initBank" value="0" required></div>
+      <div class="form-group"><label>Saldo Cash (Tunai)</label><input type="number" id="initCash" value="0" required></div>
+      <div class="form-group"><label>Saldo Celengan</label><input type="number" id="initCelengan" value="0" required></div>
+      <div class="form-group"><label>Saldo QRIS / E-Wallet</label><input type="number" id="initEwallet" value="0" required></div>
+      <div class="form-group"><label>Target Tabungan Pribadi (Rp)</label><input type="number" id="initTargetPribadi" value="10000000" required></div>
+      <button type="submit" class="btn-submit-form">Simpan & Masuk</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalSetupLove">
+  <div class="modal-form-card">
+    <h3 style="font-size:15px; font-weight:900; color:var(--love-pink); margin-bottom:2px;">❤️ Setup With My Love</h3>
+    <p style="font-size:11px; color:var(--text-sub); font-weight:700; margin-bottom:12px;">Atur target bersama & iuran bulanan Ijaa & Kekoo:</p>
+    <form id="formSetupLove">
+      <div class="form-group"><label>Target Tabungan Bersama (Rp)</label><input type="number" id="initTargetLove" value="20000000" required></div>
+      <div class="form-group"><label>Total Tabungan Terkumpul Saat Ini (Rp)</label><input type="number" id="initCurrentLove" value="0" required></div>
+      <div class="form-group"><label>Komitmen Iuran Ijaa / Bulan (Rp)</label><input type="number" id="initCommitIjaa" value="500000" required></div>
+      <div class="form-group"><label>Komitmen Iuran Kekoo / Bulan (Rp)</label><input type="number" id="initCommitKekoo" value="500000" required></div>
+      <button type="submit" class="btn-submit-form love">Simpan & Masuk</button>
+    </form>
+  </div>
+</div>
+
 <!-- MODAL LAPOR -->
 <div class="modal-overlay" id="modalLaporPribadi">
   <div class="modal-form-card">
@@ -364,7 +418,7 @@
       <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporPribadi')">Batal</button>
-        <button type="submit" class="btn-submit-form" id="btnSavePribadi">Simpan ke Spreadsheet</button>
+        <button type="submit" class="btn-submit-form" id="btnSavePribadi">Simpan</button>
       </div>
     </form>
   </div>
@@ -396,33 +450,44 @@
       <div class="form-group"><label>Tanggal Setoran</label><input type="date" id="txLoveDate" required></div>
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporLove')">Batal</button>
-        <button type="submit" class="btn-submit-form love" id="btnSaveLove">Simpan ke Spreadsheet</button>
+        <button type="submit" class="btn-submit-form love" id="btnSaveLove">Simpan</button>
       </div>
     </form>
   </div>
 </div>
 
 <script>
+  // URL GOOGLE APPS SCRIPT SPREADSHEET
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKSSxT-UuC7i7PRtc9q8RiG-C9T3D5SAgq3L7vNKH4P6ZbHg2VpU4Ww0BJjkc3Knkx/exec";
 
-  let activeMode = localStorage.getItem('hsm_v19_mode') || 'pribadi';
-  let txPribadi = [], txLove = [];
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v19_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v19_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v19_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v19_commit_kekoo')) || 500000;
+  let activeMode = localStorage.getItem('hsm_v17_mode') || '';
+  let setupPribadiDone = localStorage.getItem('hsm_v17_setup_pribadi') === 'true';
+  let setupLoveDone = localStorage.getItem('hsm_v17_setup_love') === 'true';
 
-  let lastUpdatePribadi = '-', lastUpdateLove = '-';
-  let chartExpInstance = null, chartMonthlyLoveInstance = null;
+  let txPribadi = JSON.parse(localStorage.getItem('hsm_v17_tx_pribadi')) || [];
+  let txLove = JSON.parse(localStorage.getItem('hsm_v17_tx_love')) || [];
+
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v17_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v17_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v17_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v17_commit_kekoo')) || 500000;
+
+  let lastUpdatePribadi = localStorage.getItem('hsm_v17_update_pribadi') || '-';
+  let lastUpdateLove = localStorage.getItem('hsm_v17_update_love') || '-';
+
+  let chartExpInstance = null;
+  let chartMonthlyLoveInstance = null;
 
   lucide.createIcons();
   document.getElementById('txPribadiDate').valueAsDate = new Date();
   document.getElementById('txLoveDate').valueAsDate = new Date();
 
+  // Populate Options Tahun (2025 s/d 2050)
   const yrSelect = document.getElementById('selectLoveYear');
   for (let yr = 2025; yr <= 2050; yr++) {
     let opt = document.createElement('option');
-    opt.value = yr; opt.innerText = yr;
+    opt.value = yr;
+    opt.innerText = yr;
     if (yr === new Date().getFullYear()) opt.selected = true;
     yrSelect.appendChild(opt);
   }
@@ -434,6 +499,7 @@
     document.getElementById('fabMenu').classList.remove('active');
     document.getElementById('modalMiniLogin').classList.add('active'); 
   }
+
   function toggleFabMenu() { document.getElementById('fabMenu').classList.toggle('active'); }
 
   function triggerLaporModal() {
@@ -451,51 +517,146 @@
       document.getElementById('viewDetailLaporan').style.display = 'none';
       return;
     }
+
     document.getElementById('dashboardPribadi').style.display = tab === 'dashboard' ? 'block' : 'none';
     document.getElementById('viewDetailLaporan').style.display = tab === 'laporan' ? 'block' : 'none';
+
     document.getElementById('btnNavDashboard').className = `nav-btn ${tab === 'dashboard' ? 'active' : ''}`;
     document.getElementById('btnNavLaporan').className = `nav-btn ${tab === 'laporan' ? 'active' : ''}`;
+
     if (tab === 'laporan') renderLaporanDetailTable();
   }
 
   function selectSystemMode(mode) {
     activeMode = mode;
-    localStorage.setItem('hsm_v19_mode', mode);
+    localStorage.setItem('hsm_v17_mode', mode);
     closeModal('modalMiniLogin');
-    initApp();
+
+    if (mode === 'pribadi') {
+      if (!setupPribadiDone) {
+        document.getElementById('modalSetupPribadi').classList.add('active');
+      } else {
+        initApp();
+      }
+    } else {
+      if (!setupLoveDone) {
+        document.getElementById('modalSetupLove').classList.add('active');
+      } else {
+        initApp();
+      }
+    }
   }
 
-  // AMBIL DATA SPREADSHEET (MENANGANI REDIRECT GOOGLE SCRIPT)
+  // AMBIL DATA DARI GOOGLE SPREADSHEET SECARA REALTIME
   async function fetchSpreadsheetData() {
     const statusEl = document.getElementById('syncStatus');
     const textEl = document.getElementById('syncText');
 
     try {
-      textEl.innerText = "Menyingkronkan Google Sheets...";
-      statusEl.classList.remove('active');
-      
+      textEl.innerText = "Menyingkronkan Spreadsheet...";
       const res = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), { redirect: 'follow' });
       const data = await res.json();
       
-      txPribadi = data.txPribadi || [];
-      txLove = data.txLove || [];
-      
-      const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
-      lastUpdatePribadi = now;
-      lastUpdateLove = now;
+      if (data.txPribadi && data.txPribadi.length > 0) {
+        txPribadi = data.txPribadi;
+        localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
+      }
+      if (data.txLove && data.txLove.length > 0) {
+        txLove = data.txLove;
+        localStorage.setItem('hsm_v17_tx_love', JSON.stringify(txLove));
+      }
 
+      const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
       statusEl.classList.add('active');
-      textEl.innerText = `Terhubung dengan Spreadsheet (${now})`;
+      textEl.innerText = `Terhubung ke Spreadsheet (${now})`;
 
       if (activeMode === 'pribadi') renderPribadi();
       else renderLove();
     } catch (err) {
       statusEl.classList.remove('active');
-      textEl.innerText = "Gagal Mengambil Data Spreadsheet";
+      textEl.innerText = "Mode Offline / Lokal";
     }
   }
 
+  // Setup Handlers
+  document.getElementById('formSetupPribadi').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const b = parseFloat(document.getElementById('initBank').value) || 0;
+    const c = parseFloat(document.getElementById('initCash').value) || 0;
+    const cel = parseFloat(document.getElementById('initCelengan').value) || 0;
+    const ew = parseFloat(document.getElementById('initEwallet').value) || 0;
+    targetPribadi = parseFloat(document.getElementById('initTargetPribadi').value) || 10000000;
+
+    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    const todayISO = new Date().toISOString().split('T')[0];
+
+    txPribadi = [
+      { type: 'income', category: 'Saldo Awal', account: 'Bank', amount: b, desc: 'Saldo Awal Bank', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'Cash', amount: c, desc: 'Saldo Awal Cash', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'Celengan', amount: cel, desc: 'Saldo Awal Celengan', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'QRIS/E-Wallet', amount: ew, desc: 'Saldo Awal E-Wallet', date: todayISO }
+    ].filter(t => t.amount > 0);
+
+    lastUpdatePribadi = now;
+
+    localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v17_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v17_update_pribadi', lastUpdatePribadi);
+    localStorage.setItem('hsm_v17_setup_pribadi', 'true');
+    setupPribadiDone = true;
+
+    // Kirim data saldo awal ke Spreadsheet
+    txPribadi.forEach(item => {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: "addPribadi", ...item })
+      });
+    });
+
+    closeModal('modalSetupPribadi');
+    initApp();
+  });
+
+  document.getElementById('formSetupLove').addEventListener('submit', (e) => {
+    e.preventDefault();
+    targetLove = parseFloat(document.getElementById('initTargetLove').value) || 20000000;
+    const currentLove = parseFloat(document.getElementById('initCurrentLove').value) || 0;
+    commitIjaa = parseFloat(document.getElementById('initCommitIjaa').value) || 500000;
+    commitKekoo = parseFloat(document.getElementById('initCommitKekoo').value) || 500000;
+    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+
+    txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
+    lastUpdateLove = now;
+
+    localStorage.setItem('hsm_v17_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v17_target_love', targetLove);
+    localStorage.setItem('hsm_v17_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v17_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v17_update_love', lastUpdateLove);
+    localStorage.setItem('hsm_v17_setup_love', 'true');
+    setupLoveDone = true;
+
+    if (txLove.length > 0) {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: "addLove", ...txLove[0] })
+      });
+    }
+
+    closeModal('modalSetupLove');
+    initApp();
+  });
+
   function initApp() {
+    if (!activeMode) {
+      openLoginModal();
+      return;
+    }
+
     const badge = document.getElementById('modeBadge');
     const badgeName = document.getElementById('modeName');
     const fabBtn = document.getElementById('fabMainBtn');
@@ -506,6 +667,7 @@
       badgeName.innerText = 'Pribadi';
       fabBtn.className = 'fab-trigger';
       bottomNav.style.display = 'flex';
+      
       document.getElementById('dashboardPribadi').style.display = 'block';
       document.getElementById('dashboardLove').style.display = 'none';
       document.getElementById('viewDetailLaporan').style.display = 'none';
@@ -515,6 +677,7 @@
       badgeName.innerText = 'With My Love ❤️';
       fabBtn.className = 'fab-trigger love';
       bottomNav.style.display = 'none';
+      
       document.getElementById('dashboardPribadi').style.display = 'none';
       document.getElementById('dashboardLove').style.display = 'block';
       document.getElementById('viewDetailLaporan').style.display = 'none';
@@ -525,7 +688,7 @@
 
   function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v19_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v17_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -533,9 +696,10 @@
     targetLove = parseFloat(document.getElementById('inputTargetLove').value) || 0;
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
-    localStorage.setItem('hsm_v19_target_love', targetLove);
-    localStorage.setItem('hsm_v19_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v19_commit_kekoo', commitKekoo);
+
+    localStorage.setItem('hsm_v17_target_love', targetLove);
+    localStorage.setItem('hsm_v17_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v17_commit_kekoo', commitKekoo);
     renderLove();
   }
 
@@ -638,16 +802,27 @@
     rowBulan += `</tr>`;
 
     let rowIjaa = `<tr><td class="freeze-col" style="color:var(--primary);">Ijaa</td>`;
-    for (let i = 0; i < 12; i++) { rowIjaa += `<td>${isIjaa[i] ? '✅' : ''}</td>`; }
+    for (let i = 0; i < 12; i++) {
+      rowIjaa += `<td>${isIjaa[i] ? '✅' : ''}</td>`;
+    }
     rowIjaa += `</tr>`;
 
     let rowKekoo = `<tr><td class="freeze-col" style="color:var(--love-pink);">Kekoo</td>`;
-    for (let i = 0; i < 12; i++) { rowKekoo += `<td>${isKekoo[i] ? '✅' : ''}</td>`; }
+    for (let i = 0; i < 12; i++) {
+      rowKekoo += `<td>${isKekoo[i] ? '✅' : ''}</td>`;
+    }
     rowKekoo += `</tr>`;
 
     let rowStatus = `<tr><td class="freeze-col">Status</td>`;
     for (let i = 0; i < 12; i++) {
-      let st = (isIjaa[i] && isKekoo[i]) ? '<span style="color:var(--success); font-weight:800;">Lengkap</span>' : (isIjaa[i] || isKekoo[i]) ? '<span style="color:#f59e0b; font-weight:800;">Sebagian</span>' : '<span style="color:var(--text-sub);">Belum</span>';
+      let st = '';
+      if (isIjaa[i] && isKekoo[i]) {
+        st = '<span style="color:var(--success); font-weight:800;">Lengkap</span>';
+      } else if (isIjaa[i] || isKekoo[i]) {
+        st = '<span style="color:#f59e0b; font-weight:800;">Sebagian</span>';
+      } else {
+        st = '<span style="color:var(--text-sub);">Belum</span>';
+      }
       rowStatus += `<td>${st}</td>`;
     }
     rowStatus += `</tr>`;
@@ -660,76 +835,72 @@
     document.getElementById('groupCatPribadi').style.display = type === 'expense' ? 'block' : 'none';
   }
 
-  // KIRIM DATA DARI FORM KE GOOGLE SPREADSHEET (MENANGANI NO-CORS MODE)
+  // SUBMIT HANDLER DENGAN INTEGRASI GOOGLE SPREADSHEET
   document.getElementById('formLaporPribadi').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('btnSavePribadi');
-    btn.innerText = "Menyimpan ke Spreadsheet...";
-    btn.disabled = true;
+    const type = document.getElementById('txPribadiType').value;
+    const category = type === 'expense' ? document.getElementById('txPribadiCat').value : null;
+    const account = document.getElementById('txPribadiAccount').value;
+    const amount = parseFloat(document.getElementById('txPribadiAmount').value);
+    const desc = document.getElementById('txPribadiDesc').value;
+    const date = document.getElementById('txPribadiDate').value;
+    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
 
-    const payload = {
-      action: "addPribadi",
-      type: document.getElementById('txPribadiType').value,
-      category: document.getElementById('txPribadiType').value === 'expense' ? document.getElementById('txPribadiCat').value : '-',
-      account: document.getElementById('txPribadiAccount').value,
-      amount: parseFloat(document.getElementById('txPribadiAmount').value),
-      desc: document.getElementById('txPribadiDesc').value || '-',
-      date: document.getElementById('txPribadiDate').value
-    };
+    const newTx = { type, category, account, amount, desc, date };
+    txPribadi.push(newTx);
+    lastUpdatePribadi = now;
 
+    localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
+    localStorage.setItem('hsm_v17_update_pribadi', lastUpdatePribadi);
+
+    document.getElementById('txPribadiAmount').value = '';
+    document.getElementById('txPribadiDesc').value = '';
+    closeModal('modalLaporPribadi');
+    renderPribadi();
+
+    // Kirim ke Google Sheets
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ action: "addPribadi", ...newTx })
       });
-
-      document.getElementById('txPribadiAmount').value = '';
-      document.getElementById('txPribadiDesc').value = '';
-      closeModal('modalLaporPribadi');
-      setTimeout(fetchSpreadsheetData, 1500);
-    } catch (err) {
-      alert("Gagal menyimpan ke Google Sheets");
-    } finally {
-      btn.innerText = "Simpan ke Spreadsheet";
-      btn.disabled = false;
-    }
+      setTimeout(fetchSpreadsheetData, 1000);
+    } catch(err) {}
   });
 
   document.getElementById('formLaporLove').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('btnSaveLove');
-    btn.innerText = "Menyimpan ke Spreadsheet...";
-    btn.disabled = true;
+    const penyetor = document.getElementById('txLovePenyetor').value;
+    const account = document.getElementById('txLoveAccount').value;
+    const amount = parseFloat(document.getElementById('txLoveAmount').value);
+    const desc = document.getElementById('txLoveDesc').value;
+    const date = document.getElementById('txLoveDate').value;
+    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
 
-    const payload = {
-      action: "addLove",
-      penyetor: document.getElementById('txLovePenyetor').value,
-      account: document.getElementById('txLoveAccount').value,
-      amount: parseFloat(document.getElementById('txLoveAmount').value),
-      desc: document.getElementById('txLoveDesc').value || '-',
-      date: document.getElementById('txLoveDate').value
-    };
+    const newTx = { penyetor, account, amount, desc, date };
+    txLove.push(newTx);
+    lastUpdateLove = now;
 
+    localStorage.setItem('hsm_v17_tx_love', JSON.stringify(txLove));
+    localStorage.setItem('hsm_v17_update_love', lastUpdateLove);
+
+    document.getElementById('txLoveAmount').value = '';
+    document.getElementById('txLoveDesc').value = '';
+    closeModal('modalLaporLove');
+    renderLove();
+
+    // Kirim ke Google Sheets
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ action: "addLove", ...newTx })
       });
-
-      document.getElementById('txLoveAmount').value = '';
-      document.getElementById('txLoveDesc').value = '';
-      closeModal('modalLaporLove');
-      setTimeout(fetchSpreadsheetData, 1500);
-    } catch (err) {
-      alert("Gagal menyimpan ke Google Sheets");
-    } finally {
-      btn.innerText = "Simpan ke Spreadsheet";
-      btn.disabled = false;
-    }
+      setTimeout(fetchSpreadsheetData, 1000);
+    } catch(err) {}
   });
 
   function renderChartPribadi() {
@@ -770,9 +941,10 @@
 
   function renderLaporanDetailTable() {
     const tbody = document.getElementById('tableLaporanDetail');
-    tbody.innerHTML = txPribadi.length === 0 ? '<tr><td colspan="6" style="text-align:center;">Belum ada histori laporan transaksi.</td></tr>' : '';
+    tbody.innerHTML = txPribadi.length === 0 ? '<tr><td colspan="7" style="text-align:center;">Belum ada histori laporan transaksi.</td></tr>' : '';
 
-    txPribadi.slice().reverse().forEach((t) => {
+    txPribadi.slice().reverse().forEach((t, idx) => {
+      const realIdx = txPribadi.length - 1 - idx;
       let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
       tbody.innerHTML += `
         <tr>
@@ -782,14 +954,33 @@
           <td>${t.category || '-'}</td>
           <td>${t.desc || '-'}</td>
           <td style="font-weight:800;">${formatIDR(t.amount)}</td>
+          <td><button onclick="deleteTxPribadi(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
         </tr>
       `;
     });
     lucide.createIcons();
   }
 
+  async function deleteTxPribadi(idx) {
+    txPribadi.splice(idx, 1);
+    localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
+    renderPribadi();
+    renderLaporanDetailTable();
+
+    // Hapus dari Google Spreadsheet
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: "deletePribadi", rowIndex: idx })
+      });
+    } catch(err) {}
+  }
+
   initApp();
   fetchSpreadsheetData();
+  // Auto Sync tiap 15 detik
   setInterval(fetchSpreadsheetData, 15000);
 </script>
 </body>
