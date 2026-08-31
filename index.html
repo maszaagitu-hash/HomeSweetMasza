@@ -24,24 +24,20 @@
     }
 
     html, body {
-      width: 100%;
-      max-width: 100%;
-      overflow-x: hidden;
-      position: relative;
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 85px;
+      width: 100%; max-width: 100%; overflow-x: hidden; position: relative;
+      background-color: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 85px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; word-break: break-word; }
 
-    .app-container {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 16px;
+    .app-container { width: 100%; max-width: 500px; margin: 0 auto; padding: 16px; }
+
+    /* Sync Indicator Badge */
+    .sync-status {
+      font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 12px;
+      display: inline-flex; align-items: center; gap: 4px; margin-bottom: 8px; background: #e2e8f0; color: #475569;
     }
+    .sync-status.active { background: #dcfce7; color: #15803d; }
 
     /* Navbar */
     .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
@@ -139,7 +135,6 @@
 <body>
 
 <div class="app-container">
-  <!-- Header Navbar -->
   <header class="nav-header">
     <div class="brand-title">Home Sweet Maszaa 🌸</div>
     <div class="mode-badge" id="modeBadge" onclick="openLoginModal()">
@@ -147,6 +142,12 @@
       <span id="modeName">Pribadi</span>
     </div>
   </header>
+
+  <div style="text-align: center;">
+    <div class="sync-status" id="syncStatus">
+      <i data-lucide="refresh-cw" style="width:12px;"></i> <span id="syncText">Menghubungkan ke Google Sheets...</span>
+    </div>
+  </div>
 
   <!-- DASHBOARD PRIBADI -->
   <main id="dashboardPribadi">
@@ -292,7 +293,6 @@
               <th>Kategori</th>
               <th>Keterangan</th>
               <th>Nominal</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           <tbody id="tableLaporanDetail"></tbody>
@@ -338,36 +338,6 @@
   </div>
 </div>
 
-<!-- SETUP MODALS -->
-<div class="modal-overlay" id="modalSetupPribadi">
-  <div class="modal-form-card">
-    <h3 style="font-size:15px; font-weight:900; margin-bottom:2px;">Kondisi Keuangan Saat Ini</h3>
-    <p style="font-size:11px; color:var(--text-sub); font-weight:700; margin-bottom:12px;">Isi saldo awal per akun (Diisi sekali saja):</p>
-    <form id="formSetupPribadi">
-      <div class="form-group"><label>Saldo Bank (Transfer)</label><input type="number" id="initBank" value="0" required></div>
-      <div class="form-group"><label>Saldo Cash (Tunai)</label><input type="number" id="initCash" value="0" required></div>
-      <div class="form-group"><label>Saldo Celengan</label><input type="number" id="initCelengan" value="0" required></div>
-      <div class="form-group"><label>Saldo QRIS / E-Wallet</label><input type="number" id="initEwallet" value="0" required></div>
-      <div class="form-group"><label>Target Tabungan Pribadi (Rp)</label><input type="number" id="initTargetPribadi" value="10000000" required></div>
-      <button type="submit" class="btn-submit-form">Simpan & Masuk</button>
-    </form>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalSetupLove">
-  <div class="modal-form-card">
-    <h3 style="font-size:15px; font-weight:900; color:var(--love-pink); margin-bottom:2px;">❤️ Setup With My Love</h3>
-    <p style="font-size:11px; color:var(--text-sub); font-weight:700; margin-bottom:12px;">Atur target bersama & iuran bulanan Ijaa & Kekoo:</p>
-    <form id="formSetupLove">
-      <div class="form-group"><label>Target Tabungan Bersama (Rp)</label><input type="number" id="initTargetLove" value="20000000" required></div>
-      <div class="form-group"><label>Total Tabungan Terkumpul Saat Ini (Rp)</label><input type="number" id="initCurrentLove" value="0" required></div>
-      <div class="form-group"><label>Komitmen Iuran Ijaa / Bulan (Rp)</label><input type="number" id="initCommitIjaa" value="500000" required></div>
-      <div class="form-group"><label>Komitmen Iuran Kekoo / Bulan (Rp)</label><input type="number" id="initCommitKekoo" value="500000" required></div>
-      <button type="submit" class="btn-submit-form love">Simpan & Masuk</button>
-    </form>
-  </div>
-</div>
-
 <!-- MODAL LAPOR -->
 <div class="modal-overlay" id="modalLaporPribadi">
   <div class="modal-form-card">
@@ -404,7 +374,7 @@
       <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporPribadi')">Batal</button>
-        <button type="submit" class="btn-submit-form">Simpan</button>
+        <button type="submit" class="btn-submit-form" id="btnSavePribadi">Simpan ke Spreadsheet</button>
       </div>
     </form>
   </div>
@@ -436,41 +406,34 @@
       <div class="form-group"><label>Tanggal Setoran</label><input type="date" id="txLoveDate" required></div>
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporLove')">Batal</button>
-        <button type="submit" class="btn-submit-form love">Simpan</button>
+        <button type="submit" class="btn-submit-form love" id="btnSaveLove">Simpan ke Spreadsheet</button>
       </div>
     </form>
   </div>
 </div>
 
 <script>
-  let activeMode = localStorage.getItem('hsm_v17_mode') || '';
-  let setupPribadiDone = localStorage.getItem('hsm_v17_setup_pribadi') === 'true';
-  let setupLoveDone = localStorage.getItem('hsm_v17_setup_love') === 'true';
+  // URL GOOGLE APPS SCRIPT
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKSSxT-UuC7i7PRtc9q8RiG-C9T3D5SAgq3L7vNKH4P6ZbHg2VpU4Ww0BJjkc3Knkx/exec";
 
-  let txPribadi = JSON.parse(localStorage.getItem('hsm_v17_tx_pribadi')) || [];
-  let txLove = JSON.parse(localStorage.getItem('hsm_v17_tx_love')) || [];
+  let activeMode = localStorage.getItem('hsm_v19_mode') || 'pribadi';
+  let txPribadi = [], txLove = [];
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v19_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v19_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v19_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v19_commit_kekoo')) || 500000;
 
-  let targetPribadi = parseFloat(localStorage.getItem('hsm_v17_target_pribadi')) || 10000000;
-  let targetLove = parseFloat(localStorage.getItem('hsm_v17_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v17_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v17_commit_kekoo')) || 500000;
-
-  let lastUpdatePribadi = localStorage.getItem('hsm_v17_update_pribadi') || '-';
-  let lastUpdateLove = localStorage.getItem('hsm_v17_update_love') || '-';
-
-  let chartExpInstance = null;
-  let chartMonthlyLoveInstance = null;
+  let lastUpdatePribadi = '-', lastUpdateLove = '-';
+  let chartExpInstance = null, chartMonthlyLoveInstance = null;
 
   lucide.createIcons();
   document.getElementById('txPribadiDate').valueAsDate = new Date();
   document.getElementById('txLoveDate').valueAsDate = new Date();
 
-  // Populate Options Tahun (2025 s/d 2050)
   const yrSelect = document.getElementById('selectLoveYear');
   for (let yr = 2025; yr <= 2050; yr++) {
     let opt = document.createElement('option');
-    opt.value = yr;
-    opt.innerText = yr;
+    opt.value = yr; opt.innerText = yr;
     if (yr === new Date().getFullYear()) opt.selected = true;
     yrSelect.appendChild(opt);
   }
@@ -482,7 +445,6 @@
     document.getElementById('fabMenu').classList.remove('active');
     document.getElementById('modalMiniLogin').classList.add('active'); 
   }
-
   function toggleFabMenu() { document.getElementById('fabMenu').classList.toggle('active'); }
 
   function triggerLaporModal() {
@@ -500,96 +462,50 @@
       document.getElementById('viewDetailLaporan').style.display = 'none';
       return;
     }
-
     document.getElementById('dashboardPribadi').style.display = tab === 'dashboard' ? 'block' : 'none';
     document.getElementById('viewDetailLaporan').style.display = tab === 'laporan' ? 'block' : 'none';
-
     document.getElementById('btnNavDashboard').className = `nav-btn ${tab === 'dashboard' ? 'active' : ''}`;
     document.getElementById('btnNavLaporan').className = `nav-btn ${tab === 'laporan' ? 'active' : ''}`;
-
     if (tab === 'laporan') renderLaporanDetailTable();
   }
 
   function selectSystemMode(mode) {
     activeMode = mode;
-    localStorage.setItem('hsm_v17_mode', mode);
+    localStorage.setItem('hsm_v19_mode', mode);
     closeModal('modalMiniLogin');
+    initApp();
+  }
 
-    if (mode === 'pribadi') {
-      if (!setupPribadiDone) {
-        document.getElementById('modalSetupPribadi').classList.add('active');
-      } else {
-        initApp();
-      }
-    } else {
-      if (!setupLoveDone) {
-        document.getElementById('modalSetupLove').classList.add('active');
-      } else {
-        initApp();
-      }
+  // AMBIL DATA REAL-TIME DARI GOOGLE SPREADSHEET
+  async function fetchSpreadsheetData() {
+    const statusEl = document.getElementById('syncStatus');
+    const textEl = document.getElementById('syncText');
+
+    try {
+      textEl.innerText = "Menyingkronkan Google Sheets...";
+      statusEl.classList.remove('active');
+      const res = await fetch(SCRIPT_URL);
+      const data = await res.json();
+      
+      txPribadi = data.txPribadi || [];
+      txLove = data.txLove || [];
+      
+      const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+      lastUpdatePribadi = now;
+      lastUpdateLove = now;
+
+      statusEl.classList.add('active');
+      textEl.innerText = `Terhubung dengan Spreadsheet (${now})`;
+
+      if (activeMode === 'pribadi') renderPribadi();
+      else renderLove();
+    } catch (err) {
+      statusEl.classList.remove('active');
+      textEl.innerText = "Gagal Mengambil Data Spreadsheet";
     }
   }
 
-  // Setup Handlers
-  document.getElementById('formSetupPribadi').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const b = parseFloat(document.getElementById('initBank').value) || 0;
-    const c = parseFloat(document.getElementById('initCash').value) || 0;
-    const cel = parseFloat(document.getElementById('initCelengan').value) || 0;
-    const ew = parseFloat(document.getElementById('initEwallet').value) || 0;
-    targetPribadi = parseFloat(document.getElementById('initTargetPribadi').value) || 10000000;
-
-    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-    const todayISO = new Date().toISOString().split('T')[0];
-
-    txPribadi = [
-      { type: 'income', category: 'Saldo Awal', account: 'Bank', amount: b, desc: 'Saldo Awal Bank', date: todayISO },
-      { type: 'income', category: 'Saldo Awal', account: 'Cash', amount: c, desc: 'Saldo Awal Cash', date: todayISO },
-      { type: 'income', category: 'Saldo Awal', account: 'Celengan', amount: cel, desc: 'Saldo Awal Celengan', date: todayISO },
-      { type: 'income', category: 'Saldo Awal', account: 'QRIS/E-Wallet', amount: ew, desc: 'Saldo Awal E-Wallet', date: todayISO }
-    ].filter(t => t.amount > 0);
-
-    lastUpdatePribadi = now;
-
-    localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v17_target_pribadi', targetPribadi);
-    localStorage.setItem('hsm_v17_update_pribadi', lastUpdatePribadi);
-    localStorage.setItem('hsm_v17_setup_pribadi', 'true');
-    setupPribadiDone = true;
-
-    closeModal('modalSetupPribadi');
-    initApp();
-  });
-
-  document.getElementById('formSetupLove').addEventListener('submit', (e) => {
-    e.preventDefault();
-    targetLove = parseFloat(document.getElementById('initTargetLove').value) || 20000000;
-    const currentLove = parseFloat(document.getElementById('initCurrentLove').value) || 0;
-    commitIjaa = parseFloat(document.getElementById('initCommitIjaa').value) || 500000;
-    commitKekoo = parseFloat(document.getElementById('initCommitKekoo').value) || 500000;
-    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-
-    txLove = currentLove > 0 ? [{ penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: new Date().toISOString().split('T')[0] }] : [];
-    lastUpdateLove = now;
-
-    localStorage.setItem('hsm_v17_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v17_target_love', targetLove);
-    localStorage.setItem('hsm_v17_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v17_commit_kekoo', commitKekoo);
-    localStorage.setItem('hsm_v17_update_love', lastUpdateLove);
-    localStorage.setItem('hsm_v17_setup_love', 'true');
-    setupLoveDone = true;
-
-    closeModal('modalSetupLove');
-    initApp();
-  });
-
   function initApp() {
-    if (!activeMode) {
-      openLoginModal();
-      return;
-    }
-
     const badge = document.getElementById('modeBadge');
     const badgeName = document.getElementById('modeName');
     const fabBtn = document.getElementById('fabMainBtn');
@@ -600,7 +516,6 @@
       badgeName.innerText = 'Pribadi';
       fabBtn.className = 'fab-trigger';
       bottomNav.style.display = 'flex';
-      
       document.getElementById('dashboardPribadi').style.display = 'block';
       document.getElementById('dashboardLove').style.display = 'none';
       document.getElementById('viewDetailLaporan').style.display = 'none';
@@ -610,7 +525,6 @@
       badgeName.innerText = 'With My Love ❤️';
       fabBtn.className = 'fab-trigger love';
       bottomNav.style.display = 'none';
-      
       document.getElementById('dashboardPribadi').style.display = 'none';
       document.getElementById('dashboardLove').style.display = 'block';
       document.getElementById('viewDetailLaporan').style.display = 'none';
@@ -621,7 +535,7 @@
 
   function updateTargetPribadiVal(val) {
     targetPribadi = parseFloat(val) || 0;
-    localStorage.setItem('hsm_v17_target_pribadi', targetPribadi);
+    localStorage.setItem('hsm_v19_target_pribadi', targetPribadi);
     renderPribadi();
   }
 
@@ -629,10 +543,9 @@
     targetLove = parseFloat(document.getElementById('inputTargetLove').value) || 0;
     commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
     commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
-
-    localStorage.setItem('hsm_v17_target_love', targetLove);
-    localStorage.setItem('hsm_v17_commit_ijaa', commitIjaa);
-    localStorage.setItem('hsm_v17_commit_kekoo', commitKekoo);
+    localStorage.setItem('hsm_v19_target_love', targetLove);
+    localStorage.setItem('hsm_v19_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v19_commit_kekoo', commitKekoo);
     renderLove();
   }
 
@@ -735,27 +648,16 @@
     rowBulan += `</tr>`;
 
     let rowIjaa = `<tr><td class="freeze-col" style="color:var(--primary);">Ijaa</td>`;
-    for (let i = 0; i < 12; i++) {
-      rowIjaa += `<td>${isIjaa[i] ? '✅' : ''}</td>`;
-    }
+    for (let i = 0; i < 12; i++) { rowIjaa += `<td>${isIjaa[i] ? '✅' : ''}</td>`; }
     rowIjaa += `</tr>`;
 
     let rowKekoo = `<tr><td class="freeze-col" style="color:var(--love-pink);">Kekoo</td>`;
-    for (let i = 0; i < 12; i++) {
-      rowKekoo += `<td>${isKekoo[i] ? '✅' : ''}</td>`;
-    }
+    for (let i = 0; i < 12; i++) { rowKekoo += `<td>${isKekoo[i] ? '✅' : ''}</td>`; }
     rowKekoo += `</tr>`;
 
     let rowStatus = `<tr><td class="freeze-col">Status</td>`;
     for (let i = 0; i < 12; i++) {
-      let st = '';
-      if (isIjaa[i] && isKekoo[i]) {
-        st = '<span style="color:var(--success); font-weight:800;">Lengkap</span>';
-      } else if (isIjaa[i] || isKekoo[i]) {
-        st = '<span style="color:#f59e0b; font-weight:800;">Sebagian</span>';
-      } else {
-        st = '<span style="color:var(--text-sub);">Belum</span>';
-      }
+      let st = (isIjaa[i] && isKekoo[i]) ? '<span style="color:var(--success); font-weight:800;">Lengkap</span>' : (isIjaa[i] || isKekoo[i]) ? '<span style="color:#f59e0b; font-weight:800;">Sebagian</span>' : '<span style="color:var(--text-sub);">Belum</span>';
       rowStatus += `<td>${st}</td>`;
     }
     rowStatus += `</tr>`;
@@ -768,47 +670,64 @@
     document.getElementById('groupCatPribadi').style.display = type === 'expense' ? 'block' : 'none';
   }
 
-  document.getElementById('formLaporPribadi').addEventListener('submit', (e) => {
+  // KIRIM DATA DARI FORM KE GOOGLE SPREADSHEET
+  document.getElementById('formLaporPribadi').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const type = document.getElementById('txPribadiType').value;
-    const category = type === 'expense' ? document.getElementById('txPribadiCat').value : null;
-    const account = document.getElementById('txPribadiAccount').value;
-    const amount = parseFloat(document.getElementById('txPribadiAmount').value);
-    const desc = document.getElementById('txPribadiDesc').value;
-    const date = document.getElementById('txPribadiDate').value;
-    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    const btn = document.getElementById('btnSavePribadi');
+    btn.innerText = "Menyimpan ke Spreadsheet...";
+    btn.disabled = true;
 
-    txPribadi.push({ type, category, account, amount, desc, date });
-    lastUpdatePribadi = now;
+    const payload = {
+      action: "addPribadi",
+      type: document.getElementById('txPribadiType').value,
+      category: document.getElementById('txPribadiType').value === 'expense' ? document.getElementById('txPribadiCat').value : '-',
+      account: document.getElementById('txPribadiAccount').value,
+      amount: parseFloat(document.getElementById('txPribadiAmount').value),
+      desc: document.getElementById('txPribadiDesc').value || '-',
+      date: document.getElementById('txPribadiDate').value
+    };
 
-    localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
-    localStorage.setItem('hsm_v17_update_pribadi', lastUpdatePribadi);
-
-    document.getElementById('txPribadiAmount').value = '';
-    document.getElementById('txPribadiDesc').value = '';
-    closeModal('modalLaporPribadi');
-    renderPribadi();
+    try {
+      await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      document.getElementById('txPribadiAmount').value = '';
+      document.getElementById('txPribadiDesc').value = '';
+      closeModal('modalLaporPribadi');
+      await fetchSpreadsheetData();
+    } catch (err) {
+      alert("Gagal menyimpan ke Google Sheets");
+    } finally {
+      btn.innerText = "Simpan ke Spreadsheet";
+      btn.disabled = false;
+    }
   });
 
-  document.getElementById('formLaporLove').addEventListener('submit', (e) => {
+  document.getElementById('formLaporLove').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const penyetor = document.getElementById('txLovePenyetor').value;
-    const account = document.getElementById('txLoveAccount').value;
-    const amount = parseFloat(document.getElementById('txLoveAmount').value);
-    const desc = document.getElementById('txLoveDesc').value;
-    const date = document.getElementById('txLoveDate').value;
-    const now = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    const btn = document.getElementById('btnSaveLove');
+    btn.innerText = "Menyimpan ke Spreadsheet...";
+    btn.disabled = true;
 
-    txLove.push({ penyetor, account, amount, desc, date });
-    lastUpdateLove = now;
+    const payload = {
+      action: "addLove",
+      penyetor: document.getElementById('txLovePenyetor').value,
+      account: document.getElementById('txLoveAccount').value,
+      amount: parseFloat(document.getElementById('txLoveAmount').value),
+      desc: document.getElementById('txLoveDesc').value || '-',
+      date: document.getElementById('txLoveDate').value
+    };
 
-    localStorage.setItem('hsm_v17_tx_love', JSON.stringify(txLove));
-    localStorage.setItem('hsm_v17_update_love', lastUpdateLove);
-
-    document.getElementById('txLoveAmount').value = '';
-    document.getElementById('txLoveDesc').value = '';
-    closeModal('modalLaporLove');
-    renderLove();
+    try {
+      await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+      document.getElementById('txLoveAmount').value = '';
+      document.getElementById('txLoveDesc').value = '';
+      closeModal('modalLaporLove');
+      await fetchSpreadsheetData();
+    } catch (err) {
+      alert("Gagal menyimpan ke Google Sheets");
+    } finally {
+      btn.innerText = "Simpan ke Spreadsheet";
+      btn.disabled = false;
+    }
   });
 
   function renderChartPribadi() {
@@ -849,10 +768,9 @@
 
   function renderLaporanDetailTable() {
     const tbody = document.getElementById('tableLaporanDetail');
-    tbody.innerHTML = txPribadi.length === 0 ? '<tr><td colspan="7" style="text-align:center;">Belum ada histori laporan transaksi.</td></tr>' : '';
+    tbody.innerHTML = txPribadi.length === 0 ? '<tr><td colspan="6" style="text-align:center;">Belum ada histori laporan transaksi.</td></tr>' : '';
 
-    txPribadi.slice().reverse().forEach((t, idx) => {
-      const realIdx = txPribadi.length - 1 - idx;
+    txPribadi.slice().reverse().forEach((t) => {
       let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
       tbody.innerHTML += `
         <tr>
@@ -862,21 +780,16 @@
           <td>${t.category || '-'}</td>
           <td>${t.desc || '-'}</td>
           <td style="font-weight:800;">${formatIDR(t.amount)}</td>
-          <td><button onclick="deleteTxPribadi(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
         </tr>
       `;
     });
     lucide.createIcons();
   }
 
-  function deleteTxPribadi(idx) {
-    txPribadi.splice(idx, 1);
-    localStorage.setItem('hsm_v17_tx_pribadi', JSON.stringify(txPribadi));
-    renderPribadi();
-    renderLaporanDetailTable();
-  }
-
   initApp();
+  fetchSpreadsheetData();
+  // Auto Refresh data setiap 30 detik untuk sinkronisasi otomatis antar device
+  setInterval(fetchSpreadsheetData, 30000);
 </script>
 </body>
 </html>
