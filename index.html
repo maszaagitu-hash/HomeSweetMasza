@@ -457,7 +457,8 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKSSxT-UuC7i7PRtc9q8RiG-C9T3D5SAgq3L7vNKH4P6ZbHg2VpU4Ww0BJjkc3Knkx/exec";
+  // URL deployment Apps Script terbaru
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzAgwIxYiDdk5vfdF-2CtWZMmK7A-TsFpGXCueWkXe0wl0g59RUSynVjBCFsoK5Woe/exec";
 
   let activeMode = localStorage.getItem('hsm_v18_mode') || 'pribadi';
   let txPribadi = [], txLove = [];
@@ -468,7 +469,6 @@
   let commitIjaa = parseFloat(localStorage.getItem('hsm_v18_commit_ijaa')) || 500000;
   let commitKekoo = parseFloat(localStorage.getItem('hsm_v18_commit_kekoo')) || 500000;
 
-  let lastUpdatePribadi = '-', lastUpdateLove = '-';
   let chartExpInstance = null, chartMonthlyLoveInstance = null;
 
   lucide.createIcons();
@@ -538,7 +538,7 @@
     }
   }
 
-  // AMBIL DATA KONDISI TERKINI SPREADSHEET (SINKRONISASI LINTAS PERANGKAT)
+  // AMBIL DATA DARI GOOGLE SPREADSHEET SECARA REALTIME
   async function fetchSpreadsheetData() {
     const statusEl = document.getElementById('syncStatus');
     const textEl = document.getElementById('syncText');
@@ -557,7 +557,6 @@
       statusEl.classList.add('active');
       textEl.innerText = `Terhubung ke Spreadsheet (${now})`;
 
-      // Cek Setup Otomatis
       if (activeMode === 'pribadi' && !hasPribadiSetup) {
         document.getElementById('modalSetupPribadi').classList.add('active');
       } else if (activeMode === 'love' && !hasLoveSetup) {
@@ -919,7 +918,6 @@
     } catch(err) {}
   }
 
-  // JALANKAN CEK OTOMATIS SAAT WEB DIBUKA
   fetchSpreadsheetData();
   setInterval(fetchSpreadsheetData, 15000);
 </script>
