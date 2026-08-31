@@ -1,70 +1,796 @@
-function doGet(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetPribadi = ss.getSheetByName("Pribadi");
-  var sheetLove = ss.getSheetByName("Love");
-  
-  var txPribadi = [];
-  if (sheetPribadi) {
-    var dataPribadi = sheetPribadi.getDataRange().getValues();
-    for (var i = 1; i < dataPribadi.length; i++) {
-      if (dataPribadi[i][0]) {
-        txPribadi.push({
-          date: formatDate(dataPribadi[i][0]),
-          type: dataPribadi[i][1],
-          account: dataPribadi[i][2],
-          category: dataPribadi[i][3],
-          desc: dataPribadi[i][4],
-          amount: Number(dataPribadi[i][5]) || 0
-        });
-      }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Home Sweet Maszaa - Financial Assistant</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf5ff;
+      --card-bg: #ffffff;
+      --primary: #8b5cf6;
+      --primary-light: #f3e8ff;
+      --love-pink: #ec4899;
+      --love-bg: #fce7f3;
+      --text: #334155;
+      --text-sub: #94a3b8;
+      --success: #10b981;
+      --danger: #f43f5e;
+      --border: #f1f5f9;
+      --shadow: 0 8px 20px -4px rgba(139, 92, 246, 0.08);
     }
-  }
-  
-  var txLove = [];
-  if (sheetLove) {
-    var dataLove = sheetLove.getDataRange().getValues();
-    for (var j = 1; j < dataLove.length; j++) {
-      if (dataLove[j][0]) {
-        txLove.push({
-          date: formatDate(dataLove[j][0]),
-          penyetor: dataLove[j][1],
-          account: dataLove[j][2],
-          desc: dataLove[j][3],
-          amount: Number(dataLove[j][4]) || 0
-        });
-      }
-    }
-  }
-  
-  return ContentService.createTextOutput(JSON.stringify({
-    txPribadi: txPribadi,
-    txLove: txLove
-  })).setMimeType(ContentService.MimeType.JSON);
-}
 
-function doPost(e) {
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var params = JSON.parse(e.postData.contents);
+    html, body {
+      width: 100%; max-width: 100%; overflow-x: hidden; position: relative;
+      background-color: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 85px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; word-break: break-word; }
+
+    .app-container { width: 100%; max-width: 500px; margin: 0 auto; padding: 16px; }
+
+    .sync-status {
+      font-size: 10px; font-weight: 800; padding: 6px 12px; border-radius: 12px;
+      display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; background: #e2e8f0; color: #475569;
+    }
+    .sync-status.active { background: #dcfce7; color: #15803d; }
+
+    .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .brand-title { font-size: 18px; font-weight: 900; color: var(--primary); }
+    .mode-badge {
+      background: white; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 800;
+      border: 2px solid var(--primary-light); color: var(--primary); display: flex; align-items: center; gap: 6px; cursor: pointer; box-shadow: var(--shadow);
+    }
+    .mode-badge.love { border-color: #fbcfe8; color: var(--love-pink); }
+
+    .card {
+      background: var(--card-bg); border-radius: 20px; padding: 18px; box-shadow: var(--shadow);
+      border: 2px solid #f8fafc; margin-bottom: 14px; width: 100%; position: relative; overflow: hidden;
+    }
+
+    .card-header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-title-sub { font-size: 11px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; }
+    .year-select {
+      background: var(--love-bg); border: 1px solid #fbcfe8; color: var(--love-pink);
+      padding: 4px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; outline: none;
+    }
+
+    .target-card { background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%); color: white; border: none; }
+    .target-card.love { background: linear-gradient(135deg, #f472b6 0%, #db2777 100%); }
+    .target-header { display: flex; justify-content: space-between; font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; }
+    .saldo-main-title { font-size: 11px; text-transform: uppercase; font-weight: 800; opacity: 0.85; margin-top: 10px; }
+    .saldo-main-val { font-size: 32px; font-weight: 900; line-height: 1.1; margin: 4px 0 8px 0; letter-spacing: -0.5px; }
+    .target-pct-val { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+    .target-sub-text { font-size: 11px; opacity: 0.85; font-weight: 700; }
+
+    .progress-bar-bg { background: rgba(255, 255, 255, 0.25); height: 10px; border-radius: 10px; overflow: hidden; margin-top: 10px; }
+    .progress-bar-fill { background: white; height: 100%; width: 0%; border-radius: 10px; transition: width 0.5s ease; }
+
+    .inline-edit-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(255, 255, 255, 0.3); font-size: 11px; font-weight: 700; }
+    .inline-item { display: flex; align-items: center; gap: 4px; }
+    .inline-input { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; outline: none; width: 90px; text-align: center; }
+
+    .account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .account-card-item { background: #f8fafc; border: 1.5px solid #f1f5f9; border-radius: 14px; padding: 10px 12px; }
+    .account-name { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; display: flex; align-items: center; gap: 4px; }
+    .account-val { font-size: 14px; font-weight: 900; color: var(--text); margin-top: 2px; }
+
+    .stat-row-parallel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; width: 100%; }
+    .stat-box { background: white; border-radius: 18px; padding: 14px; box-shadow: var(--shadow); border: 2px solid #f8fafc; }
+    .stat-label { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; }
+    .stat-amount { font-size: 15px; font-weight: 900; margin-top: 2px; }
+    .input-box-commit { width: 100%; border: 1px solid #f1f5f9; background: #faf5ff; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 800; color: var(--love-pink); outline: none; margin-top: 4px; }
+
+    .freeze-table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .freeze-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; white-space: nowrap; }
+    .freeze-table th, .freeze-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-weight: 700; background: white; text-align: center; min-width: 65px; }
+    .freeze-table th { color: var(--text-sub); font-size: 10px; text-transform: uppercase; font-weight: 800; background: #f8fafc; }
     
-    if (params.action === "addPribadi") {
-      var sheet = ss.getSheetByName("Pribadi");
-      if (!sheet) sheet = ss.insertSheet("Pribadi");
-      sheet.appendRow([params.date, params.type, params.account, params.category, params.desc, params.amount]);
-    } else if (params.action === "addLove") {
-      var sheet = ss.getSheetByName("Love");
-      if (!sheet) sheet = ss.insertSheet("Love");
-      sheet.appendRow([params.date, params.penyetor, params.account, params.desc, params.amount]);
+    .freeze-col {
+      position: sticky; left: 0; z-index: 10; border-right: 2px solid #f1f5f9 !important;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.02); text-align: left !important; min-width: 80px; background: #f8fafc !important; font-weight: 800 !important;
     }
-    return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
 
-function formatDate(d) {
-  if (d instanceof Date) {
-    return Utilities.formatDate(d, Session.getScriptTimeZone(), "yyyy-MM-dd");
+    .fab-wrapper { position: fixed; bottom: 18px; right: 18px; z-index: 999; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .fab-popup-menu { display: none; flex-direction: column; gap: 6px; align-items: flex-end; }
+    .fab-popup-menu.active { display: flex; }
+    .fab-btn-option { background: white; color: var(--text); border: 2px solid var(--primary-light); padding: 10px 14px; border-radius: 16px; font-weight: 800; font-size: 11px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .fab-trigger { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; border: none; box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4); cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    .fab-trigger.love { background: var(--love-pink); box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4); }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 16px; }
+    .modal-overlay.active { display: flex; }
+    .modal-mini-card { background: white; border-radius: 24px; padding: 22px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.15); animation: popIn 0.25s ease-out; }
+    @keyframes popIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .mini-button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .btn-mini-select { background: var(--primary-light); color: var(--primary); border: none; padding: 12px 8px; border-radius: 16px; font-weight: 800; font-size: 11px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .btn-mini-select.love { background: var(--love-bg); color: var(--love-pink); }
+
+    .modal-form-card { background: white; border-radius: 24px; padding: 20px; width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; margin-bottom: 4px; }
+    .form-group input, .form-group select { width: 100%; border: 2px solid #f1f5f9; background: #f8fafc; padding: 10px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; outline: none; }
+    .btn-submit-form { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 14px; font-weight: 800; font-size: 12px; cursor: pointer; margin-top: 10px; }
+    .btn-submit-form.love { background: var(--love-pink); }
+
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #f1f5f9; display: flex; justify-content: space-around; padding: 10px 0; z-index: 90; }
+    .nav-btn { border: none; background: none; color: var(--text-sub); font-size: 10px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; width: 50%; }
+    .nav-btn.active { color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header class="nav-header">
+    <div class="brand-title">Home Sweet Maszaa 🌸</div>
+    <div class="mode-badge" id="modeBadge" onclick="openLoginModal()">
+      <i data-lucide="user" style="width:14px;" id="modeIcon"></i>
+      <span id="modeName">Pribadi</span>
+    </div>
+  </header>
+
+  <div style="text-align: center;">
+    <div class="sync-status" id="syncStatus">
+      <i data-lucide="refresh-cw" style="width:12px;"></i> <span id="syncText">Menghubungkan ke Google Sheets...</span>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PRIBADI -->
+  <main id="dashboardPribadi">
+    <div class="card target-card">
+      <div class="target-header">
+        <span>✨ Kas & Target Tabungan</span>
+        <span id="lblLastUpdatePribadi">Diupdate: -</span>
+      </div>
+      <div class="saldo-main-title">TOTAL SALDO KAS SAAT INI</div>
+      <div class="saldo-main-val" id="valTotalSaldoPribadi">Rp 0</div>
+      <div class="target-pct-val">
+        <span id="valTargetPctPribadi">0%</span>
+        <span class="target-sub-text" id="valTargetSubPribadi">Tercapai dari Target Rp 0</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressPribadi"></div></div>
+      <div class="inline-edit-grid">
+        <div class="inline-item">
+          <span>Target Tabungan: Rp</span>
+          <input type="number" id="inputTargetPribadi" class="inline-input" onchange="updateTargetPribadiVal(this.value)">
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row-parallel">
+      <div class="stat-box">
+        <div class="stat-label">Pemasukan</div>
+        <div class="stat-amount" style="color:var(--success);" id="valIncomePribadi">Rp 0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Pengeluaran</div>
+        <div class="stat-amount" style="color:var(--danger);" id="valExpensePribadi">Rp 0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">BREAKDOWN SISA SALDO PER AKUN</div>
+      <div class="account-grid">
+        <div class="account-card-item">
+          <div class="account-name"><i data-lucide="building-2" style="width:12px;"></i> Bank</div>
+          <div class="account-val" id="accValBank">Rp 0</div>
+        </div>
+        <div class="account-card-item">
+          <div class="account-name"><i data-lucide="wallet" style="width:12px;"></i> Cash (Tunai)</div>
+          <div class="account-val" id="accValCash">Rp 0</div>
+        </div>
+        <div class="account-card-item">
+          <div class="account-name"><i data-lucide="piggy-bank" style="width:12px;"></i> Celengan</div>
+          <div class="account-val" id="accValCelengan">Rp 0</div>
+        </div>
+        <div class="account-card-item">
+          <div class="account-name"><i data-lucide="qr-code" style="width:12px;"></i> QRIS / E-Wallet</div>
+          <div class="account-val" id="accValEwallet">Rp 0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">EXPENSES PER KATEGORI</div>
+      <div style="height:170px;"><canvas id="chartExpensesPribadi"></canvas></div>
+    </div>
+  </main>
+
+  <!-- DASHBOARD WITH MY LOVE -->
+  <main id="dashboardLove" style="display:none;">
+    <div class="card target-card love">
+      <div class="target-header">
+        <span>❤️ Tabungan Bersama</span>
+        <span id="lblLastUpdateLove">Diupdate: -</span>
+      </div>
+      <div class="saldo-main-title">TOTAL TABUNGAN BERSAMA</div>
+      <div class="saldo-main-val" id="valTotalLove">Rp 0</div>
+      <div class="target-pct-val">
+        <span id="valTargetPctLove">0%</span>
+        <span class="target-sub-text" id="valTargetSubLove">Tercapai dari Target Rp 0</span>
+      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressLove"></div></div>
+      <div class="inline-edit-grid">
+        <div class="inline-item">
+          <span>Target Tabungan: Rp</span>
+          <input type="number" id="inputTargetLove" class="inline-input" style="width:90px;" onchange="updateLoveSettings()">
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-row-parallel">
+      <div class="stat-box" style="border-color:#fbcfe8;">
+        <div class="stat-label" style="color:var(--love-pink);">Iuran Ijaa / bln</div>
+        <input type="number" id="inputCommitIjaa" class="input-box-commit" onchange="updateLoveSettings()">
+      </div>
+      <div class="stat-box" style="border-color:#fbcfe8;">
+        <div class="stat-label" style="color:var(--love-pink);">Iuran Kekoo / bln</div>
+        <input type="number" id="inputCommitKekoo" class="input-box-commit" onchange="updateLoveSettings()">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header-flex">
+        <div class="card-title-sub" style="color:var(--love-pink);">CHECKLIST SETORAN BULANAN</div>
+        <select id="selectLoveYear" class="year-select" onchange="renderLoveChecklistRotated()"></select>
+      </div>
+      <div class="freeze-table-wrapper">
+        <table class="freeze-table">
+          <tbody id="bodyLoveChecklistRotated"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">GRAFIK SETORAN IJAA & KEKOO</div>
+      <div style="height:170px;"><canvas id="chartMonthlyLove"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:8px;">LOG SETORAN TABUNGAN CINTA</div>
+      <div class="freeze-table-wrapper">
+        <table class="freeze-table">
+          <thead>
+            <tr>
+              <th class="freeze-col">Tanggal</th>
+              <th>Penyetor</th>
+              <th>Metode</th>
+              <th>Keterangan</th>
+              <th>Setoran</th>
+            </tr>
+          </thead>
+          <tbody id="tableLoveLog"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- TAB DETAIL LAPORAN -->
+  <main id="viewDetailLaporan" style="display:none;">
+    <div class="card">
+      <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">DETAIL HISTORI LAPORAN TRANSAKSI</div>
+      <div class="freeze-table-wrapper">
+        <table class="freeze-table">
+          <thead>
+            <tr>
+              <th class="freeze-col">Tanggal</th>
+              <th>Jenis</th>
+              <th>Akun</th>
+              <th>Kategori</th>
+              <th>Keterangan</th>
+              <th>Nominal</th>
+            </tr>
+          </thead>
+          <tbody id="tableLaporanDetail"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- FLOATING ACTION BUTTON -->
+<div class="fab-wrapper">
+  <div class="fab-popup-menu" id="fabMenu">
+    <div class="fab-btn-option" onclick="triggerLaporModal()"><i data-lucide="plus-circle" style="width:16px;"></i> + Lapor Transaksi</div>
+    <div class="fab-btn-option" onclick="openLoginModal()"><i data-lucide="refresh-cw" style="width:16px;"></i> Ganti Akun / System</div>
+  </div>
+  <button class="fab-trigger" id="fabMainBtn" onclick="toggleFabMenu()"><i data-lucide="sparkles" style="width:22px;"></i></button>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" id="bottomNavBar">
+  <button class="nav-btn active" id="btnNavDashboard" onclick="switchMainTab('dashboard')">
+    <i data-lucide="layout-dashboard" style="width:18px;"></i> Dashboard
+  </button>
+  <button class="nav-btn" id="btnNavLaporan" onclick="switchMainTab('laporan')">
+    <i data-lucide="file-text" style="width:18px;"></i> Detail Laporan
+  </button>
+</nav>
+
+<!-- POPUP MINI -->
+<div class="modal-overlay" id="modalMiniLogin">
+  <div class="modal-mini-card">
+    <div style="font-size:28px;">🌸</div>
+    <h3 style="font-size:16px; font-weight:900; color:var(--text); margin-top:2px;">Home Sweet Maszaa</h3>
+    <p style="font-size:11px; color:var(--text-sub); font-weight:700; margin-top:2px;">Pilih akun laporan keuangan:</p>
+    <div class="mini-button-group">
+      <button class="btn-mini-select" onclick="selectSystemMode('pribadi')">
+        <i data-lucide="user" style="width:18px;"></i> Pribadi
+      </button>
+      <button class="btn-mini-select love" onclick="selectSystemMode('love')">
+        <i data-lucide="heart" style="width:18px;"></i> With My Love
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LAPOR -->
+<div class="modal-overlay" id="modalLaporPribadi">
+  <div class="modal-form-card">
+    <h3 style="font-size:15px; font-weight:900; margin-bottom:12px;">Lapor Transaksi Pribadi</h3>
+    <form id="formLaporPribadi">
+      <div class="form-group">
+        <label>Jenis Transaksi</label>
+        <select id="txPribadiType" onchange="toggleCatPribadi()">
+          <option value="expense">Pengeluaran (Expenses)</option>
+          <option value="income">Pemasukan</option>
+        </select>
+      </div>
+      <div class="form-group" id="groupCatPribadi">
+        <label>Kategori Expenses</label>
+        <select id="txPribadiCat">
+          <option value="Belanja Bulanan">Belanja Bulanan</option>
+          <option value="Makan dan Minum">Makan dan Minum</option>
+          <option value="Jajan">Jajan</option>
+          <option value="Wants">Wants</option>
+          <option value="Needs">Needs</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Akun / Assets</label>
+        <select id="txPribadiAccount">
+          <option value="Bank">Bank</option>
+          <option value="Cash">Cash</option>
+          <option value="Celengan">Celengan</option>
+          <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="txPribadiAmount" placeholder="50000" required></div>
+      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Beli beras / Kopi..."></div>
+      <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporPribadi')">Batal</button>
+        <button type="submit" class="btn-submit-form" id="btnSavePribadi">Simpan ke Spreadsheet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalLaporLove">
+  <div class="modal-form-card">
+    <h3 style="font-size:15px; font-weight:900; color:var(--love-pink); margin-bottom:12px;">❤️ Setoran Tabungan Love</h3>
+    <form id="formLaporLove">
+      <div class="form-group">
+        <label>Penyetor</label>
+        <select id="txLovePenyetor">
+          <option value="Ijaa">Ijaa</option>
+          <option value="Kekoo">Kekoo</option>
+          <option value="Ijaa & Kekoo">Ijaa & Kekoo (Gabungan)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Metode Setoran</label>
+        <select id="txLoveAccount">
+          <option value="Bank">Bank</option>
+          <option value="Cash">Cash</option>
+          <option value="Celengan">Celengan</option>
+          <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Nominal Setoran (Rp)</label><input type="number" id="txLoveAmount" placeholder="500000" required></div>
+      <div class="form-group"><label>Keterangan Setoran (Opsional)</label><input type="text" id="txLoveDesc" placeholder="Iuran bulan ini..."></div>
+      <div class="form-group"><label>Tanggal Setoran</label><input type="date" id="txLoveDate" required></div>
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporLove')">Batal</button>
+        <button type="submit" class="btn-submit-form love" id="btnSaveLove">Simpan ke Spreadsheet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKSSxT-UuC7i7PRtc9q8RiG-C9T3D5SAgq3L7vNKH4P6ZbHg2VpU4Ww0BJjkc3Knkx/exec";
+
+  let activeMode = localStorage.getItem('hsm_v19_mode') || 'pribadi';
+  let txPribadi = [], txLove = [];
+  let targetPribadi = parseFloat(localStorage.getItem('hsm_v19_target_pribadi')) || 10000000;
+  let targetLove = parseFloat(localStorage.getItem('hsm_v19_target_love')) || 20000000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v19_commit_ijaa')) || 500000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v19_commit_kekoo')) || 500000;
+
+  let lastUpdatePribadi = '-', lastUpdateLove = '-';
+  let chartExpInstance = null, chartMonthlyLoveInstance = null;
+
+  lucide.createIcons();
+  document.getElementById('txPribadiDate').valueAsDate = new Date();
+  document.getElementById('txLoveDate').valueAsDate = new Date();
+
+  const yrSelect = document.getElementById('selectLoveYear');
+  for (let yr = 2025; yr <= 2050; yr++) {
+    let opt = document.createElement('option');
+    opt.value = yr; opt.innerText = yr;
+    if (yr === new Date().getFullYear()) opt.selected = true;
+    yrSelect.appendChild(opt);
   }
-  return String(d);
-}
+
+  const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  function openLoginModal() { 
+    document.getElementById('fabMenu').classList.remove('active');
+    document.getElementById('modalMiniLogin').classList.add('active'); 
+  }
+  function toggleFabMenu() { document.getElementById('fabMenu').classList.toggle('active'); }
+
+  function triggerLaporModal() {
+    document.getElementById('fabMenu').classList.remove('active');
+    if (activeMode === 'pribadi') {
+      document.getElementById('modalLaporPribadi').classList.add('active');
+    } else {
+      document.getElementById('modalLaporLove').classList.add('active');
+    }
+  }
+
+  function switchMainTab(tab) {
+    if (activeMode === 'love') {
+      document.getElementById('dashboardLove').style.display = 'block';
+      document.getElementById('viewDetailLaporan').style.display = 'none';
+      return;
+    }
+    document.getElementById('dashboardPribadi').style.display = tab === 'dashboard' ? 'block' : 'none';
+    document.getElementById('viewDetailLaporan').style.display = tab === 'laporan' ? 'block' : 'none';
+    document.getElementById('btnNavDashboard').className = `nav-btn ${tab === 'dashboard' ? 'active' : ''}`;
+    document.getElementById('btnNavLaporan').className = `nav-btn ${tab === 'laporan' ? 'active' : ''}`;
+    if (tab === 'laporan') renderLaporanDetailTable();
+  }
+
+  function selectSystemMode(mode) {
+    activeMode = mode;
+    localStorage.setItem('hsm_v19_mode', mode);
+    closeModal('modalMiniLogin');
+    initApp();
+  }
+
+  // AMBIL DATA SPREADSHEET (MENANGANI REDIRECT GOOGLE SCRIPT)
+  async function fetchSpreadsheetData() {
+    const statusEl = document.getElementById('syncStatus');
+    const textEl = document.getElementById('syncText');
+
+    try {
+      textEl.innerText = "Menyingkronkan Google Sheets...";
+      statusEl.classList.remove('active');
+      
+      const res = await fetch(SCRIPT_URL + "?t=" + new Date().getTime(), { redirect: 'follow' });
+      const data = await res.json();
+      
+      txPribadi = data.txPribadi || [];
+      txLove = data.txLove || [];
+      
+      const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+      lastUpdatePribadi = now;
+      lastUpdateLove = now;
+
+      statusEl.classList.add('active');
+      textEl.innerText = `Terhubung dengan Spreadsheet (${now})`;
+
+      if (activeMode === 'pribadi') renderPribadi();
+      else renderLove();
+    } catch (err) {
+      statusEl.classList.remove('active');
+      textEl.innerText = "Gagal Mengambil Data Spreadsheet";
+    }
+  }
+
+  function initApp() {
+    const badge = document.getElementById('modeBadge');
+    const badgeName = document.getElementById('modeName');
+    const fabBtn = document.getElementById('fabMainBtn');
+    const bottomNav = document.getElementById('bottomNavBar');
+
+    if (activeMode === 'pribadi') {
+      badge.className = 'mode-badge';
+      badgeName.innerText = 'Pribadi';
+      fabBtn.className = 'fab-trigger';
+      bottomNav.style.display = 'flex';
+      document.getElementById('dashboardPribadi').style.display = 'block';
+      document.getElementById('dashboardLove').style.display = 'none';
+      document.getElementById('viewDetailLaporan').style.display = 'none';
+      renderPribadi();
+    } else {
+      badge.className = 'mode-badge love';
+      badgeName.innerText = 'With My Love ❤️';
+      fabBtn.className = 'fab-trigger love';
+      bottomNav.style.display = 'none';
+      document.getElementById('dashboardPribadi').style.display = 'none';
+      document.getElementById('dashboardLove').style.display = 'block';
+      document.getElementById('viewDetailLaporan').style.display = 'none';
+      renderLove();
+    }
+    lucide.createIcons();
+  }
+
+  function updateTargetPribadiVal(val) {
+    targetPribadi = parseFloat(val) || 0;
+    localStorage.setItem('hsm_v19_target_pribadi', targetPribadi);
+    renderPribadi();
+  }
+
+  function updateLoveSettings() {
+    targetLove = parseFloat(document.getElementById('inputTargetLove').value) || 0;
+    commitIjaa = parseFloat(document.getElementById('inputCommitIjaa').value) || 0;
+    commitKekoo = parseFloat(document.getElementById('inputCommitKekoo').value) || 0;
+    localStorage.setItem('hsm_v19_target_love', targetLove);
+    localStorage.setItem('hsm_v19_commit_ijaa', commitIjaa);
+    localStorage.setItem('hsm_v19_commit_kekoo', commitKekoo);
+    renderLove();
+  }
+
+  function renderPribadi() {
+    let inTotal = 0, outTotal = 0;
+    let accBalance = { 'Bank': 0, 'Cash': 0, 'Celengan': 0, 'QRIS/E-Wallet': 0 };
+
+    txPribadi.forEach(t => {
+      if (t.type === 'income') {
+        inTotal += t.amount;
+        if (accBalance[t.account] !== undefined) accBalance[t.account] += t.amount;
+      }
+      if (t.type === 'expense') {
+        outTotal += t.amount;
+        if (accBalance[t.account] !== undefined) accBalance[t.account] -= t.amount;
+      }
+    });
+
+    const net = inTotal - outTotal;
+    const pct = targetPribadi > 0 ? Math.min((net / targetPribadi) * 100, 100) : 0;
+
+    document.getElementById('valTotalSaldoPribadi').innerText = formatIDR(net);
+    document.getElementById('valTargetPctPribadi').innerText = `${pct.toFixed(1)}%`;
+    document.getElementById('valTargetSubPribadi').innerText = `Tercapai dari Target ${formatIDR(targetPribadi)}`;
+    document.getElementById('progressPribadi').style.width = `${pct}%`;
+    document.getElementById('inputTargetPribadi').value = targetPribadi;
+    document.getElementById('lblLastUpdatePribadi').innerText = `Diupdate: ${lastUpdatePribadi}`;
+
+    document.getElementById('valIncomePribadi').innerText = formatIDR(inTotal);
+    document.getElementById('valExpensePribadi').innerText = formatIDR(outTotal);
+
+    document.getElementById('accValBank').innerText = formatIDR(accBalance['Bank']);
+    document.getElementById('accValCash').innerText = formatIDR(accBalance['Cash']);
+    document.getElementById('accValCelengan').innerText = formatIDR(accBalance['Celengan']);
+    document.getElementById('accValEwallet').innerText = formatIDR(accBalance['QRIS/E-Wallet']);
+
+    renderChartPribadi();
+  }
+
+  function renderLove() {
+    let totalLove = txLove.reduce((s,t) => s + t.amount, 0);
+    const pct = targetLove > 0 ? Math.min((totalLove / targetLove) * 100, 100) : 0;
+
+    document.getElementById('valTotalLove').innerText = formatIDR(totalLove);
+    document.getElementById('valTargetPctLove').innerText = `${pct.toFixed(1)}%`;
+    document.getElementById('valTargetSubLove').innerText = `Tercapai dari Target ${formatIDR(targetLove)}`;
+    document.getElementById('progressLove').style.width = `${pct}%`;
+    document.getElementById('lblLastUpdateLove').innerText = `Diupdate: ${lastUpdateLove}`;
+
+    document.getElementById('inputTargetLove').value = targetLove;
+    document.getElementById('inputCommitIjaa').value = commitIjaa;
+    document.getElementById('inputCommitKekoo').value = commitKekoo;
+
+    renderLoveChecklistRotated();
+
+    const tbody = document.getElementById('tableLoveLog');
+    tbody.innerHTML = txLove.length === 0 ? '<tr><td colspan="5" style="text-align:center;">Belum ada setoran tabungan.</td></tr>' : '';
+
+    txLove.slice().reverse().forEach(t => {
+      tbody.innerHTML += `
+        <tr>
+          <td class="freeze-col">${t.date}</td>
+          <td><b>${t.penyetor}</b></td>
+          <td>${t.account}</td>
+          <td>${t.desc || '-'}</td>
+          <td style="color:var(--love-pink); font-weight:800;">${formatIDR(t.amount)}</td>
+        </tr>
+      `;
+    });
+
+    renderChartLove();
+  }
+
+  function renderLoveChecklistRotated() {
+    const selectedYear = parseInt(document.getElementById('selectLoveYear').value, 10);
+    const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const tbody = document.getElementById('bodyLoveChecklistRotated');
+
+    let isIjaa = new Array(12).fill(false);
+    let isKekoo = new Array(12).fill(false);
+
+    txLove.forEach(t => {
+      if (t.date) {
+        const parts = t.date.split('-');
+        if (parts.length === 3) {
+          const yr = parseInt(parts[0], 10);
+          const mIdx = parseInt(parts[1], 10) - 1;
+
+          if (yr === selectedYear && mIdx >= 0 && mIdx < 12) {
+            const penyetorLower = (t.penyetor || '').toLowerCase();
+            if (penyetorLower.includes('ijaa')) isIjaa[mIdx] = true;
+            if (penyetorLower.includes('kekoo')) isKekoo[mIdx] = true;
+          }
+        }
+      }
+    });
+
+    let rowBulan = `<tr><td class="freeze-col">Bulan</td>`;
+    monthsShort.forEach(m => { rowBulan += `<td style="font-weight:800; color:var(--text-sub); background:#f8fafc;">${m}</td>`; });
+    rowBulan += `</tr>`;
+
+    let rowIjaa = `<tr><td class="freeze-col" style="color:var(--primary);">Ijaa</td>`;
+    for (let i = 0; i < 12; i++) { rowIjaa += `<td>${isIjaa[i] ? '✅' : ''}</td>`; }
+    rowIjaa += `</tr>`;
+
+    let rowKekoo = `<tr><td class="freeze-col" style="color:var(--love-pink);">Kekoo</td>`;
+    for (let i = 0; i < 12; i++) { rowKekoo += `<td>${isKekoo[i] ? '✅' : ''}</td>`; }
+    rowKekoo += `</tr>`;
+
+    let rowStatus = `<tr><td class="freeze-col">Status</td>`;
+    for (let i = 0; i < 12; i++) {
+      let st = (isIjaa[i] && isKekoo[i]) ? '<span style="color:var(--success); font-weight:800;">Lengkap</span>' : (isIjaa[i] || isKekoo[i]) ? '<span style="color:#f59e0b; font-weight:800;">Sebagian</span>' : '<span style="color:var(--text-sub);">Belum</span>';
+      rowStatus += `<td>${st}</td>`;
+    }
+    rowStatus += `</tr>`;
+
+    tbody.innerHTML = rowBulan + rowIjaa + rowKekoo + rowStatus;
+  }
+
+  function toggleCatPribadi() {
+    const type = document.getElementById('txPribadiType').value;
+    document.getElementById('groupCatPribadi').style.display = type === 'expense' ? 'block' : 'none';
+  }
+
+  // KIRIM DATA DARI FORM KE GOOGLE SPREADSHEET (MENANGANI NO-CORS MODE)
+  document.getElementById('formLaporPribadi').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnSavePribadi');
+    btn.innerText = "Menyimpan ke Spreadsheet...";
+    btn.disabled = true;
+
+    const payload = {
+      action: "addPribadi",
+      type: document.getElementById('txPribadiType').value,
+      category: document.getElementById('txPribadiType').value === 'expense' ? document.getElementById('txPribadiCat').value : '-',
+      account: document.getElementById('txPribadiAccount').value,
+      amount: parseFloat(document.getElementById('txPribadiAmount').value),
+      desc: document.getElementById('txPribadiDesc').value || '-',
+      date: document.getElementById('txPribadiDate').value
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById('txPribadiAmount').value = '';
+      document.getElementById('txPribadiDesc').value = '';
+      closeModal('modalLaporPribadi');
+      setTimeout(fetchSpreadsheetData, 1500);
+    } catch (err) {
+      alert("Gagal menyimpan ke Google Sheets");
+    } finally {
+      btn.innerText = "Simpan ke Spreadsheet";
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('formLaporLove').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnSaveLove');
+    btn.innerText = "Menyimpan ke Spreadsheet...";
+    btn.disabled = true;
+
+    const payload = {
+      action: "addLove",
+      penyetor: document.getElementById('txLovePenyetor').value,
+      account: document.getElementById('txLoveAccount').value,
+      amount: parseFloat(document.getElementById('txLoveAmount').value),
+      desc: document.getElementById('txLoveDesc').value || '-',
+      date: document.getElementById('txLoveDate').value
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById('txLoveAmount').value = '';
+      document.getElementById('txLoveDesc').value = '';
+      closeModal('modalLaporLove');
+      setTimeout(fetchSpreadsheetData, 1500);
+    } catch (err) {
+      alert("Gagal menyimpan ke Google Sheets");
+    } finally {
+      btn.innerText = "Simpan ke Spreadsheet";
+      btn.disabled = false;
+    }
+  });
+
+  function renderChartPribadi() {
+    const cats = ['Belanja Bulanan', 'Makan dan Minum', 'Jajan', 'Wants', 'Needs'];
+    const dataExp = cats.map(c => txPribadi.filter(t => t.type === 'expense' && t.category === c).reduce((s, t) => s + t.amount, 0));
+
+    const ctxE = document.getElementById('chartExpensesPribadi').getContext('2d');
+    if (chartExpInstance) chartExpInstance.destroy();
+    chartExpInstance = new Chart(ctxE, {
+      type: 'doughnut',
+      data: { labels: cats, datasets: [{ data: dataExp, backgroundColor: ['#a78bfa', '#10b981', '#fbbf24', '#f43f5e', '#60a5fa'] }] },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  function renderChartLove() {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const monthlyData = new Array(12).fill(0);
+
+    txLove.forEach(t => {
+      if (t.date) {
+        const parts = t.date.split('-');
+        if (parts.length === 3) {
+          const mIdx = parseInt(parts[1], 10) - 1;
+          if (mIdx >= 0 && mIdx < 12) monthlyData[mIdx] += t.amount;
+        }
+      }
+    });
+
+    const ctxM = document.getElementById('chartMonthlyLove').getContext('2d');
+    if (chartMonthlyLoveInstance) chartMonthlyLoveInstance.destroy();
+    chartMonthlyLoveInstance = new Chart(ctxM, {
+      type: 'bar',
+      data: { labels: months, datasets: [{ label: 'Setoran Tabungan', data: monthlyData, backgroundColor: '#f472b6', borderRadius: 8 }] },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+
+  function renderLaporanDetailTable() {
+    const tbody = document.getElementById('tableLaporanDetail');
+    tbody.innerHTML = txPribadi.length === 0 ? '<tr><td colspan="6" style="text-align:center;">Belum ada histori laporan transaksi.</td></tr>' : '';
+
+    txPribadi.slice().reverse().forEach((t) => {
+      let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
+      tbody.innerHTML += `
+        <tr>
+          <td class="freeze-col">${t.date}</td>
+          <td><span style="color:${labelColor}; font-weight:800;">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
+          <td>${t.account}</td>
+          <td>${t.category || '-'}</td>
+          <td>${t.desc || '-'}</td>
+          <td style="font-weight:800;">${formatIDR(t.amount)}</td>
+        </tr>
+      `;
+    });
+    lucide.createIcons();
+  }
+
+  initApp();
+  fetchSpreadsheetData();
+  setInterval(fetchSpreadsheetData, 15000);
+</script>
+</body>
+</html>
