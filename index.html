@@ -486,6 +486,7 @@
 </div>
 
 <script>
+  // URL deployment Apps Script terbaru
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzAgwIxYiDdk5vfdF-2CtWZMmK7A-TsFpGXCueWkXe0wl0g59RUSynVjBCFsoK5Woe/exec";
 
   let activeMode = localStorage.getItem('hsm_v18_mode') || 'pribadi';
@@ -511,8 +512,9 @@
     return dStr;
   }
 
-  function getCurrentTimeString() {
-    return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  // Format tanggal singkat: Tanggal Bulan Tahun (tanpa jam)
+  function getCurrentDateString() {
+    return new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
   const yrSelect = document.getElementById('selectLoveYear');
@@ -586,12 +588,12 @@
       hasPribadiSetup = data.hasPribadiSetup;
       hasLoveSetup = data.hasLoveSetup;
 
-      const timeNow = getCurrentTimeString();
-      lastUpdatePribadiStr = timeNow;
-      lastUpdateLoveStr = timeNow;
+      const dateNow = getCurrentDateString();
+      lastUpdatePribadiStr = dateNow;
+      lastUpdateLoveStr = dateNow;
 
       statusEl.classList.add('active');
-      textEl.innerText = `Terhubung ke Spreadsheet (${timeNow})`;
+      textEl.innerText = `Terhubung ke Spreadsheet`;
 
       if (activeMode === 'pribadi' && !hasPribadiSetup) {
         document.getElementById('modalSetupPribadi').classList.add('active');
@@ -723,7 +725,6 @@
         if (accBalance[t.account] !== undefined) accBalance[t.account] -= amt;
       }
       if (t.type === 'transfer') {
-        // Transfer mengosongkan/mengisi akun tanpa mengganggu total kas global
         const accs = (t.account || '').split('->');
         if (accs.length === 2) {
           const fromAcc = accs[0].trim();
@@ -890,7 +891,7 @@
     document.getElementById('txPribadiDesc').value = '';
     closeModal('modalLaporPribadi');
     
-    lastUpdatePribadiStr = getCurrentTimeString();
+    lastUpdatePribadiStr = getCurrentDateString();
     renderPribadi();
 
     try {
@@ -918,7 +919,7 @@
     document.getElementById('txLoveDesc').value = '';
     closeModal('modalLaporLove');
 
-    lastUpdateLoveStr = getCurrentTimeString();
+    lastUpdateLoveStr = getCurrentDateString();
     renderLove();
 
     try {
@@ -996,7 +997,7 @@
 
   async function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
-    lastUpdatePribadiStr = getCurrentTimeString();
+    lastUpdatePribadiStr = getCurrentDateString();
     renderPribadi();
     renderLaporanDetailTable();
 
