@@ -382,18 +382,21 @@
   </div>
 </div>
 
-<!-- MODAL LAPOR -->
+<!-- MODAL LAPOR PRIBADI -->
 <div class="modal-overlay" id="modalLaporPribadi">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; margin-bottom:12px;">Lapor Transaksi Pribadi</h3>
     <form id="formLaporPribadi">
       <div class="form-group">
         <label>Jenis Transaksi</label>
-        <select id="txPribadiType" onchange="toggleCatPribadi()">
+        <select id="txPribadiType" onchange="toggleTypePribadi()">
           <option value="expense">Pengeluaran (Expenses)</option>
           <option value="income">Pemasukan</option>
+          <option value="transfer">Perpindahan Uang (Transfer)</option>
         </select>
       </div>
+      
+      <!-- Kategori Expenses -->
       <div class="form-group" id="groupCatPribadi">
         <label>Kategori Expenses</label>
         <select id="txPribadiCat">
@@ -404,7 +407,9 @@
           <option value="Needs">Needs</option>
         </select>
       </div>
-      <div class="form-group">
+
+      <!-- Akun Pemasukan / Pengeluaran Standar -->
+      <div class="form-group" id="groupAccountSingle">
         <label>Akun / Assets</label>
         <select id="txPribadiAccount">
           <option value="Bank">Bank</option>
@@ -413,9 +418,33 @@
           <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
         </select>
       </div>
+
+      <!-- Akun Perpindahan Uang (Transfer) -->
+      <div id="groupAccountTransfer" style="display:none;">
+        <div class="form-group">
+          <label>Akun Asal (Sumber Uang)</label>
+          <select id="txPribadiFromAccount">
+            <option value="Bank">Bank</option>
+            <option value="Cash">Cash</option>
+            <option value="Celengan">Celengan</option>
+            <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Akun Tujuan (Penerima Uang)</label>
+          <select id="txPribadiToAccount">
+            <option value="Cash">Cash</option>
+            <option value="Bank">Bank</option>
+            <option value="Celengan">Celengan</option>
+            <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="txPribadiAmount" placeholder="50000" required></div>
-      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Beli beras / Kopi..."></div>
+      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Beli beras / Transfer ke E-Wallet..."></div>
       <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
+      
       <div style="display:flex; gap:8px; margin-top:12px;">
         <button type="button" class="btn-submit-form" style="background:#e2e8f0; color:var(--text);" onclick="closeModal('modalLaporPribadi')">Batal</button>
         <button type="submit" class="btn-submit-form">Simpan</button>
@@ -457,7 +486,6 @@
 </div>
 
 <script>
-  // URL deployment Apps Script terbaru
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzAgwIxYiDdk5vfdF-2CtWZMmK7A-TsFpGXCueWkXe0wl0g59RUSynVjBCFsoK5Woe/exec";
 
   let activeMode = localStorage.getItem('hsm_v18_mode') || 'pribadi';
@@ -469,6 +497,7 @@
   let commitIjaa = parseFloat(localStorage.getItem('hsm_v18_commit_ijaa')) || 500000;
   let commitKekoo = parseFloat(localStorage.getItem('hsm_v18_commit_kekoo')) || 500000;
 
+  let lastUpdatePribadiStr = '-', lastUpdateLoveStr = '-';
   let chartExpInstance = null, chartMonthlyLoveInstance = null;
 
   lucide.createIcons();
@@ -480,6 +509,10 @@
     if (dStr.includes('T')) return dStr.split('T')[0];
     if (dStr.includes(' ')) return dStr.split(' ')[0];
     return dStr;
+  }
+
+  function getCurrentTimeString() {
+    return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   }
 
   const yrSelect = document.getElementById('selectLoveYear');
@@ -553,9 +586,12 @@
       hasPribadiSetup = data.hasPribadiSetup;
       hasLoveSetup = data.hasLoveSetup;
 
-      const now = new Date().toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+      const timeNow = getCurrentTimeString();
+      lastUpdatePribadiStr = timeNow;
+      lastUpdateLoveStr = timeNow;
+
       statusEl.classList.add('active');
-      textEl.innerText = `Terhubung ke Spreadsheet (${now})`;
+      textEl.innerText = `Terhubung ke Spreadsheet (${timeNow})`;
 
       if (activeMode === 'pribadi' && !hasPribadiSetup) {
         document.getElementById('modalSetupPribadi').classList.add('active');
@@ -677,13 +713,24 @@
     let accBalance = { 'Bank': 0, 'Cash': 0, 'Celengan': 0, 'QRIS/E-Wallet': 0 };
 
     txPribadi.forEach(t => {
+      const amt = Number(t.amount) || 0;
       if (t.type === 'income') {
-        inTotal += t.amount;
-        if (accBalance[t.account] !== undefined) accBalance[t.account] += t.amount;
+        inTotal += amt;
+        if (accBalance[t.account] !== undefined) accBalance[t.account] += amt;
       }
       if (t.type === 'expense') {
-        outTotal += t.amount;
-        if (accBalance[t.account] !== undefined) accBalance[t.account] -= t.amount;
+        outTotal += amt;
+        if (accBalance[t.account] !== undefined) accBalance[t.account] -= amt;
+      }
+      if (t.type === 'transfer') {
+        // Transfer mengosongkan/mengisi akun tanpa mengganggu total kas global
+        const accs = (t.account || '').split('->');
+        if (accs.length === 2) {
+          const fromAcc = accs[0].trim();
+          const toAcc = accs[1].trim();
+          if (accBalance[fromAcc] !== undefined) accBalance[fromAcc] -= amt;
+          if (accBalance[toAcc] !== undefined) accBalance[toAcc] += amt;
+        }
       }
     });
 
@@ -695,6 +742,7 @@
     document.getElementById('valTargetSubPribadi').innerText = `Tercapai dari Target ${formatIDR(targetPribadi)}`;
     document.getElementById('progressPribadi').style.width = `${pct}%`;
     document.getElementById('inputTargetPribadi').value = targetPribadi;
+    document.getElementById('lblLastUpdatePribadi').innerText = `Diupdate: ${lastUpdatePribadiStr}`;
 
     document.getElementById('valIncomePribadi').innerText = formatIDR(inTotal);
     document.getElementById('valExpensePribadi').innerText = formatIDR(outTotal);
@@ -708,13 +756,14 @@
   }
 
   function renderLove() {
-    let totalLove = txLove.reduce((s,t) => s + t.amount, 0);
+    let totalLove = txLove.reduce((s,t) => s + (Number(t.amount) || 0), 0);
     const pct = targetLove > 0 ? Math.min((totalLove / targetLove) * 100, 100) : 0;
 
     document.getElementById('valTotalLove').innerText = formatIDR(totalLove);
     document.getElementById('valTargetPctLove').innerText = `${pct.toFixed(1)}%`;
     document.getElementById('valTargetSubLove').innerText = `Tercapai dari Target ${formatIDR(targetLove)}`;
     document.getElementById('progressLove').style.width = `${pct}%`;
+    document.getElementById('lblLastUpdateLove').innerText = `Diupdate: ${lastUpdateLoveStr}`;
 
     document.getElementById('inputTargetLove').value = targetLove;
     document.getElementById('inputCommitIjaa').value = commitIjaa;
@@ -787,18 +836,51 @@
     tbody.innerHTML = rowBulan + rowIjaa + rowKekoo + rowStatus;
   }
 
-  function toggleCatPribadi() {
+  function toggleTypePribadi() {
     const type = document.getElementById('txPribadiType').value;
-    document.getElementById('groupCatPribadi').style.display = type === 'expense' ? 'block' : 'none';
+    const catGroup = document.getElementById('groupCatPribadi');
+    const singleAccGroup = document.getElementById('groupAccountSingle');
+    const transferAccGroup = document.getElementById('groupAccountTransfer');
+
+    if (type === 'expense') {
+      catGroup.style.display = 'block';
+      singleAccGroup.style.display = 'block';
+      transferAccGroup.style.display = 'none';
+    } else if (type === 'income') {
+      catGroup.style.display = 'none';
+      singleAccGroup.style.display = 'block';
+      transferAccGroup.style.display = 'none';
+    } else if (type === 'transfer') {
+      catGroup.style.display = 'none';
+      singleAccGroup.style.display = 'none';
+      transferAccGroup.style.display = 'block';
+    }
   }
 
   document.getElementById('formLaporPribadi').addEventListener('submit', async (e) => {
     e.preventDefault();
     const type = document.getElementById('txPribadiType').value;
-    const category = type === 'expense' ? document.getElementById('txPribadiCat').value : null;
-    const account = document.getElementById('txPribadiAccount').value;
+    let category = '-';
+    let account = '';
+
+    if (type === 'expense') {
+      category = document.getElementById('txPribadiCat').value;
+      account = document.getElementById('txPribadiAccount').value;
+    } else if (type === 'income') {
+      account = document.getElementById('txPribadiAccount').value;
+    } else if (type === 'transfer') {
+      const fromAcc = document.getElementById('txPribadiFromAccount').value;
+      const toAcc = document.getElementById('txPribadiToAccount').value;
+      if (fromAcc === toAcc) {
+        alert("Akun asal dan tujuan transfer tidak boleh sama!");
+        return;
+      }
+      account = `${fromAcc} -> ${toAcc}`;
+      category = 'Transfer Internal';
+    }
+
     const amount = parseFloat(document.getElementById('txPribadiAmount').value);
-    const desc = document.getElementById('txPribadiDesc').value;
+    const desc = document.getElementById('txPribadiDesc').value || '-';
     const date = cleanDate(document.getElementById('txPribadiDate').value);
 
     const newTx = { type, category, account, amount, desc, date };
@@ -807,6 +889,8 @@
     document.getElementById('txPribadiAmount').value = '';
     document.getElementById('txPribadiDesc').value = '';
     closeModal('modalLaporPribadi');
+    
+    lastUpdatePribadiStr = getCurrentTimeString();
     renderPribadi();
 
     try {
@@ -824,7 +908,7 @@
     const penyetor = document.getElementById('txLovePenyetor').value;
     const account = document.getElementById('txLoveAccount').value;
     const amount = parseFloat(document.getElementById('txLoveAmount').value);
-    const desc = document.getElementById('txLoveDesc').value;
+    const desc = document.getElementById('txLoveDesc').value || '-';
     const date = cleanDate(document.getElementById('txLoveDate').value);
 
     const newTx = { penyetor, account, amount, desc, date };
@@ -833,6 +917,8 @@
     document.getElementById('txLoveAmount').value = '';
     document.getElementById('txLoveDesc').value = '';
     closeModal('modalLaporLove');
+
+    lastUpdateLoveStr = getCurrentTimeString();
     renderLove();
 
     try {
@@ -847,7 +933,7 @@
 
   function renderChartPribadi() {
     const cats = ['Belanja Bulanan', 'Makan dan Minum', 'Jajan', 'Wants', 'Needs'];
-    const dataExp = cats.map(c => txPribadi.filter(t => t.type === 'expense' && t.category === c).reduce((s, t) => s + t.amount, 0));
+    const dataExp = cats.map(c => txPribadi.filter(t => t.type === 'expense' && t.category === c).reduce((s, t) => s + (Number(t.amount) || 0), 0));
 
     const ctxE = document.getElementById('chartExpensesPribadi').getContext('2d');
     if (chartExpInstance) chartExpInstance.destroy();
@@ -868,7 +954,7 @@
         const parts = formattedDate.split('-');
         if (parts.length === 3) {
           const mIdx = parseInt(parts[1], 10) - 1;
-          if (mIdx >= 0 && mIdx < 12) monthlyData[mIdx] += t.amount;
+          if (mIdx >= 0 && mIdx < 12) monthlyData[mIdx] += (Number(t.amount) || 0);
         }
       }
     });
@@ -888,11 +974,15 @@
 
     txPribadi.slice().reverse().forEach((t, idx) => {
       const realIdx = txPribadi.length - 1 - idx;
-      let labelColor = t.type === 'income' ? 'var(--success)' : 'var(--danger)';
+      let labelColor = 'var(--primary)';
+      let labelText = 'Transfer';
+      if (t.type === 'income') { labelColor = 'var(--success)'; labelText = 'Pemasukan'; }
+      if (t.type === 'expense') { labelColor = 'var(--danger)'; labelText = 'Pengeluaran'; }
+
       tbody.innerHTML += `
         <tr>
           <td class="freeze-col">${cleanDate(t.date)}</td>
-          <td><span style="color:${labelColor}; font-weight:800;">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span></td>
+          <td><span style="color:${labelColor}; font-weight:800;">${labelText}</span></td>
           <td>${t.account}</td>
           <td>${t.category || '-'}</td>
           <td>${t.desc || '-'}</td>
@@ -906,6 +996,7 @@
 
   async function deleteTxPribadi(idx) {
     txPribadi.splice(idx, 1);
+    lastUpdatePribadiStr = getCurrentTimeString();
     renderPribadi();
     renderLaporanDetailTable();
 
