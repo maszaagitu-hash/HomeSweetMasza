@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Home Sweet Maszaa - Financial Assistant</title>
   
-  <!-- Fitur PWA (Bisa di-download/install di HP) -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Maszaa Finance">
   <meta name="theme-color" content="#8b5cf6">
   
-  <!-- Manifest & App Icon Dynamic SVG (💸❤️🏦) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%238b5cf6'/><text y='65' x='12' font-size='45'>💸❤️🏦</text></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%238b5cf6'/><text y='65' x='12' font-size='45'>💸❤️🏦</text></svg>">
   
@@ -146,7 +144,6 @@
 <body>
 
 <div class="app-container">
-  <!-- Header Navbar -->
   <header class="nav-header">
     <div class="brand-title">Home Sweet Maszaa 🌸</div>
     <div class="mode-badge" id="modeBadge" onclick="openLoginModal()">
@@ -155,14 +152,12 @@
     </div>
   </header>
 
-  <!-- Sinkronisasi Bar Status -->
   <div style="text-align: center;">
     <div class="sync-status" id="syncStatus">
       <i data-lucide="refresh-cw" style="width:12px;"></i> <span id="syncText">Mengecek Google Sheets...</span>
     </div>
   </div>
 
-  <!-- DASHBOARD PRIBADI -->
   <main id="dashboardPribadi">
     <div class="card target-card">
       <div class="target-header">
@@ -223,7 +218,6 @@
     </div>
   </main>
 
-  <!-- DASHBOARD WITH MY LOVE -->
   <main id="dashboardLove" style="display:none;">
     <div class="card target-card love">
       <div class="target-header">
@@ -284,6 +278,7 @@
               <th>Metode</th>
               <th>Keterangan</th>
               <th>Setoran</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody id="tableLoveLog"></tbody>
@@ -292,7 +287,6 @@
     </div>
   </main>
 
-  <!-- TAB DETAIL LAPORAN -->
   <main id="viewDetailLaporan" style="display:none;">
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">DETAIL HISTORI LAPORAN TRANSAKSI</div>
@@ -316,7 +310,6 @@
   </main>
 </div>
 
-<!-- FLOATING ACTION BUTTON -->
 <div class="fab-wrapper">
   <div class="fab-popup-menu" id="fabMenu">
     <div class="fab-btn-option" onclick="triggerLaporModal()"><i data-lucide="plus-circle" style="width:16px;"></i> + Lapor Transaksi</div>
@@ -325,7 +318,6 @@
   <button class="fab-trigger" id="fabMainBtn" onclick="toggleFabMenu()"><i data-lucide="sparkles" style="width:22px;"></i></button>
 </div>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNavBar">
   <button class="nav-btn active" id="btnNavDashboard" onclick="switchMainTab('dashboard')">
     <i data-lucide="layout-dashboard" style="width:18px;"></i> Dashboard
@@ -335,7 +327,6 @@
   </button>
 </nav>
 
-<!-- POPUP MINI -->
 <div class="modal-overlay" id="modalMiniLogin">
   <div class="modal-mini-card">
     <div style="font-size:28px;">🌸</div>
@@ -352,7 +343,6 @@
   </div>
 </div>
 
-<!-- SETUP MODALS -->
 <div class="modal-overlay" id="modalSetupPribadi">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; margin-bottom:2px;">Kondisi Keuangan Saat Ini</h3>
@@ -375,14 +365,13 @@
     <form id="formSetupLove">
       <div class="form-group"><label>Target Tabungan Bersama (Rp)</label><input type="number" id="initTargetLove" value="20000000" required></div>
       <div class="form-group"><label>Total Tabungan Terkumpul Saat Ini (Rp)</label><input type="number" id="initCurrentLove" value="0" required></div>
-      <div class="form-group"><label>Komitmen Iuran Ijaa / Bulan (Rp)</label><input type="number" id="initCommitIjaa" value="500000" required></div>
-      <div class="form-group"><label>Komitmen Iuran Kekoo / Bulan (Rp)</label><input type="number" id="initCommitKekoo" value="500000" required></div>
+      <div class="form-group"><label>Komitmen Iuran Ijaa / Bulan (Rp)</label><input type="number" id="initCommitIjaa" value="75000" required></div>
+      <div class="form-group"><label>Komitmen Iuran Kekoo / Bulan (Rp)</label><input type="number" id="initCommitKekoo" value="50000" required></div>
       <button type="submit" class="btn-submit-form love">Simpan & Masuk</button>
     </form>
   </div>
 </div>
 
-<!-- MODAL LAPOR PRIBADI -->
 <div class="modal-overlay" id="modalLaporPribadi">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; margin-bottom:12px;">Lapor Transaksi Pribadi</h3>
@@ -396,7 +385,6 @@
         </select>
       </div>
       
-      <!-- Kategori Expenses -->
       <div class="form-group" id="groupCatPribadi">
         <label>Kategori Expenses</label>
         <select id="txPribadiCat">
@@ -408,7 +396,6 @@
         </select>
       </div>
 
-      <!-- Akun Pemasukan / Pengeluaran Standar -->
       <div class="form-group" id="groupAccountSingle">
         <label>Akun / Assets</label>
         <select id="txPribadiAccount">
@@ -419,7 +406,6 @@
         </select>
       </div>
 
-      <!-- Akun Perpindahan Uang (Transfer) -->
       <div id="groupAccountTransfer" style="display:none;">
         <div class="form-group">
           <label>Akun Asal (Sumber Uang)</label>
@@ -474,7 +460,7 @@
           <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
         </select>
       </div>
-      <div class="form-group"><label>Nominal Setoran (Rp)</label><input type="number" id="txLoveAmount" placeholder="500000" required></div>
+      <div class="form-group"><label>Nominal Setoran (Rp)</label><input type="number" id="txLoveAmount" placeholder="75000" required></div>
       <div class="form-group"><label>Keterangan Setoran (Opsional)</label><input type="text" id="txLoveDesc" placeholder="Iuran bulan ini..."></div>
       <div class="form-group"><label>Tanggal Setoran</label><input type="date" id="txLoveDate" required></div>
       <div style="display:flex; gap:8px; margin-top:12px;">
@@ -486,7 +472,7 @@
 </div>
 
 <script>
-  // URL deployment Apps Script terbaru
+  // Web Apps Deployment ID URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzAgwIxYiDdk5vfdF-2CtWZMmK7A-TsFpGXCueWkXe0wl0g59RUSynVjBCFsoK5Woe/exec";
 
   let activeMode = localStorage.getItem('hsm_v18_mode') || 'pribadi';
@@ -495,24 +481,28 @@
 
   let targetPribadi = parseFloat(localStorage.getItem('hsm_v18_target_pribadi')) || 10000000;
   let targetLove = parseFloat(localStorage.getItem('hsm_v18_target_love')) || 20000000;
-  let commitIjaa = parseFloat(localStorage.getItem('hsm_v18_commit_ijaa')) || 500000;
-  let commitKekoo = parseFloat(localStorage.getItem('hsm_v18_commit_kekoo')) || 500000;
+  let commitIjaa = parseFloat(localStorage.getItem('hsm_v18_commit_ijaa')) || 75000;
+  let commitKekoo = parseFloat(localStorage.getItem('hsm_v18_commit_kekoo')) || 50000;
 
   let lastUpdatePribadiStr = '-', lastUpdateLoveStr = '-';
   let chartExpInstance = null, chartMonthlyLoveInstance = null;
 
   lucide.createIcons();
-  document.getElementById('txPribadiDate').valueAsDate = new Date();
-  document.getElementById('txLoveDate').valueAsDate = new Date();
+  const getTodayISO = () => new Date().toISOString().split('T')[0];
+  document.getElementById('txPribadiDate').value = getTodayISO();
+  document.getElementById('txLoveDate').value = getTodayISO();
 
-  function cleanDate(dStr) {
-    if (!dStr) return '-';
-    if (dStr.includes('T')) return dStr.split('T')[0];
-    if (dStr.includes(' ')) return dStr.split(' ')[0];
-    return dStr;
+  // Format tanggal singkat YYYY-MM-DD
+  function cleanDate(dVal) {
+    if (!dVal || dVal === '-' || dVal === 'undefined' || dVal === 'null') {
+      return getTodayISO();
+    }
+    let str = String(dVal);
+    if (str.includes('T')) return str.split('T')[0];
+    if (str.includes(' ')) return str.split(' ')[0];
+    return str;
   }
 
-  // Format tanggal singkat: Tanggal Bulan Tahun (tanpa jam)
   function getCurrentDateString() {
     return new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
   }
@@ -616,7 +606,7 @@
     const ew = parseFloat(document.getElementById('initEwallet').value) || 0;
     targetPribadi = parseFloat(document.getElementById('initTargetPribadi').value) || 10000000;
 
-    const todayISO = cleanDate(new Date().toISOString());
+    const todayISO = getTodayISO();
     const initItems = [
       { type: 'income', category: 'Saldo Awal', account: 'Bank', amount: b, desc: 'Saldo Awal Bank', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'Cash', amount: c, desc: 'Saldo Awal Cash', date: todayISO },
@@ -643,8 +633,8 @@
     e.preventDefault();
     targetLove = parseFloat(document.getElementById('initTargetLove').value) || 20000000;
     const currentLove = parseFloat(document.getElementById('initCurrentLove').value) || 0;
-    commitIjaa = parseFloat(document.getElementById('initCommitIjaa').value) || 500000;
-    commitKekoo = parseFloat(document.getElementById('initCommitKekoo').value) || 500000;
+    commitIjaa = parseFloat(document.getElementById('initCommitIjaa').value) || 75000;
+    commitKekoo = parseFloat(document.getElementById('initCommitKekoo').value) || 50000;
 
     localStorage.setItem('hsm_v18_target_love', targetLove);
     localStorage.setItem('hsm_v18_commit_ijaa', commitIjaa);
@@ -655,7 +645,7 @@
       fetch(SCRIPT_URL, {
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ action: "addLove", penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: cleanDate(new Date().toISOString()) })
+        body: JSON.stringify({ action: "addLove", penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: getTodayISO() })
       });
     }
 
@@ -773,9 +763,10 @@
     renderLoveChecklistRotated();
 
     const tbody = document.getElementById('tableLoveLog');
-    tbody.innerHTML = txLove.length === 0 ? '<tr><td colspan="5" style="text-align:center;">Belum ada setoran tabungan.</td></tr>' : '';
+    tbody.innerHTML = txLove.length === 0 ? '<tr><td colspan="6" style="text-align:center;">Belum ada setoran tabungan.</td></tr>' : '';
 
-    txLove.slice().reverse().forEach(t => {
+    txLove.slice().reverse().forEach((t, idx) => {
+      const realIdx = txLove.length - 1 - idx;
       tbody.innerHTML += `
         <tr>
           <td class="freeze-col">${cleanDate(t.date)}</td>
@@ -783,11 +774,13 @@
           <td>${t.account}</td>
           <td>${t.desc || '-'}</td>
           <td style="color:var(--love-pink); font-weight:800;">${formatIDR(t.amount)}</td>
+          <td><button onclick="deleteTxLove(${realIdx})" style="background:none; border:none; color:var(--danger); cursor:pointer;"><i data-lucide="trash-2" style="width:16px;"></i></button></td>
         </tr>
       `;
     });
 
     renderChartLove();
+    lucide.createIcons();
   }
 
   function renderLoveChecklistRotated() {
@@ -882,7 +875,8 @@
 
     const amount = parseFloat(document.getElementById('txPribadiAmount').value);
     const desc = document.getElementById('txPribadiDesc').value || '-';
-    const date = cleanDate(document.getElementById('txPribadiDate').value);
+    const dateInput = document.getElementById('txPribadiDate').value;
+    const date = cleanDate(dateInput);
 
     const newTx = { type, category, account, amount, desc, date };
     txPribadi.push(newTx);
@@ -910,7 +904,8 @@
     const account = document.getElementById('txLoveAccount').value;
     const amount = parseFloat(document.getElementById('txLoveAmount').value);
     const desc = document.getElementById('txLoveDesc').value || '-';
-    const date = cleanDate(document.getElementById('txLoveDate').value);
+    const dateInput = document.getElementById('txLoveDate').value;
+    const date = cleanDate(dateInput);
 
     const newTx = { penyetor, account, amount, desc, date };
     txLove.push(newTx);
@@ -1006,6 +1001,20 @@
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ action: "deletePribadi", rowIndex: idx })
+      });
+    } catch(err) {}
+  }
+
+  async function deleteTxLove(idx) {
+    txLove.splice(idx, 1);
+    lastUpdateLoveStr = getCurrentDateString();
+    renderLove();
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: "deleteLove", rowIndex: idx })
       });
     } catch(err) {}
   }
