@@ -386,6 +386,8 @@
     <form id="formSetupPribadi">
       <div class="form-group"><label>Saldo BCA</label><input type="number" id="initBca" value="0" required></div>
       <div class="form-group"><label>Saldo Mandiri</label><input type="number" id="initMandiri" value="0" required></div>
+      <div class="form-group"><label>Saldo BNI</label><input type="number" id="initBni" value="0" required></div>
+      <div class="form-group"><label>Saldo BRI</label><input type="number" id="initBri" value="0" required></div>
       <div class="form-group"><label>Saldo SeaBank / Jago / Lainnya</label><input type="number" id="initSeabank" value="0" required></div>
       <div class="form-group"><label>Saldo Cash (Tunai)</label><input type="number" id="initCash" value="0" required></div>
       <div class="form-group"><label>Saldo Celengan</label><input type="number" id="initCelengan" value="0" required></div>
@@ -442,6 +444,8 @@
         <select id="txPribadiAccount">
           <option value="BCA">BCA</option>
           <option value="Mandiri">Mandiri</option>
+          <option value="BNI">BNI</option>
+          <option value="BRI">BRI</option>
           <option value="SeaBank">SeaBank</option>
           <option value="Jago">Jago</option>
           <option value="Cash">Cash (Tunai)</option>
@@ -457,6 +461,8 @@
           <select id="txPribadiFromAccount">
             <option value="BCA">BCA</option>
             <option value="Mandiri">Mandiri</option>
+            <option value="BNI">BNI</option>
+            <option value="BRI">BRI</option>
             <option value="SeaBank">SeaBank</option>
             <option value="Jago">Jago</option>
             <option value="Cash">Cash (Tunai)</option>
@@ -469,6 +475,8 @@
           <select id="txPribadiToAccount">
             <option value="Mandiri">Mandiri</option>
             <option value="BCA">BCA</option>
+            <option value="BNI">BNI</option>
+            <option value="BRI">BRI</option>
             <option value="SeaBank">SeaBank</option>
             <option value="Jago">Jago</option>
             <option value="Cash">Cash (Tunai)</option>
@@ -479,7 +487,7 @@
       </div>
 
       <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="txPribadiAmount" placeholder="50000" required></div>
-      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Transfer ke Mandiri / Beli beras..."></div>
+      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Transfer ke BNI / Beli beras..."></div>
       <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
       
       <div style="display:flex; gap:8px; margin-top:12px;">
@@ -507,6 +515,8 @@
         <select id="txLoveAccount">
           <option value="BCA">BCA</option>
           <option value="Mandiri">Mandiri</option>
+          <option value="BNI">BNI</option>
+          <option value="BRI">BRI</option>
           <option value="SeaBank">SeaBank</option>
           <option value="Cash">Cash</option>
           <option value="Celengan">Celengan</option>
@@ -540,7 +550,7 @@
   let chartExpInstance = null, chartMonthlyLoveInstance = null;
   let currentBankBalances = {};
 
-  const knownBanks = ['BCA', 'Mandiri', 'SeaBank', 'Jago', 'BNI', 'BRI'];
+  const knownBanks = ['BCA', 'Mandiri', 'BNI', 'BRI', 'SeaBank', 'Jago'];
 
   lucide.createIcons();
   const getTodayISO = () => new Date().toISOString().split('T')[0];
@@ -679,6 +689,8 @@
     e.preventDefault();
     const bca = parseFloat(document.getElementById('initBca').value) || 0;
     const mandiri = parseFloat(document.getElementById('initMandiri').value) || 0;
+    const bni = parseFloat(document.getElementById('initBni').value) || 0;
+    const bri = parseFloat(document.getElementById('initBri').value) || 0;
     const seabank = parseFloat(document.getElementById('initSeabank').value) || 0;
     const c = parseFloat(document.getElementById('initCash').value) || 0;
     const cel = parseFloat(document.getElementById('initCelengan').value) || 0;
@@ -689,6 +701,8 @@
     const initItems = [
       { type: 'income', category: 'Saldo Awal', account: 'BCA', amount: bca, desc: 'Saldo Awal BCA', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'Mandiri', amount: mandiri, desc: 'Saldo Awal Mandiri', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'BNI', amount: bni, desc: 'Saldo Awal BNI', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'BRI', amount: bri, desc: 'Saldo Awal BRI', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'SeaBank', amount: seabank, desc: 'Saldo Awal SeaBank', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'Cash', amount: c, desc: 'Saldo Awal Cash', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'Celengan', amount: cel, desc: 'Saldo Awal Celengan', date: todayISO },
