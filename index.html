@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Home Sweet Maszaa - Financial Assistant</title>
   
+  <!-- Fitur PWA (Bisa di-download/install di HP) -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Maszaa Finance">
   <meta name="theme-color" content="#8b5cf6">
   
+  <!-- Manifest & App Icon Dynamic SVG (💸❤️🏦) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%238b5cf6'/><text y='65' x='12' font-size='45'>💸❤️🏦</text></svg>">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%238b5cf6'/><text y='65' x='12' font-size='45'>💸❤️🏦</text></svg>">
   
@@ -93,9 +95,14 @@
     .inline-input { background: rgba(255, 255, 255, 0.2); border: none; color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; outline: none; width: 90px; text-align: center; }
 
     .account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .account-card-item { background: #f8fafc; border: 1.5px solid #f1f5f9; border-radius: 14px; padding: 10px 12px; }
-    .account-name { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; display: flex; align-items: center; gap: 4px; }
+    .account-card-item { background: #f8fafc; border: 1.5px solid #f1f5f9; border-radius: 14px; padding: 10px 12px; position: relative; }
+    .account-name { font-size: 10px; font-weight: 800; color: var(--text-sub); text-transform: uppercase; display: flex; align-items: center; justify-content: space-between; }
     .account-val { font-size: 14px; font-weight: 900; color: var(--text); margin-top: 2px; }
+    
+    .btn-detail-bank {
+      background: var(--primary-light); color: var(--primary); border: none; font-size: 9px; font-weight: 800;
+      padding: 2px 6px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px;
+    }
 
     .stat-row-parallel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; width: 100%; }
     .stat-box { background: white; border-radius: 18px; padding: 14px; box-shadow: var(--shadow); border: 2px solid #f8fafc; }
@@ -139,11 +146,17 @@
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 2px solid #f1f5f9; display: flex; justify-content: space-around; padding: 10px 0; z-index: 90; }
     .nav-btn { border: none; background: none; color: var(--text-sub); font-size: 10px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; width: 50%; }
     .nav-btn.active { color: var(--primary); }
+
+    .bank-list-item {
+      display: flex; justify-content: space-between; align-items: center; padding: 8px 12px;
+      border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 700;
+    }
   </style>
 </head>
 <body>
 
 <div class="app-container">
+  <!-- Header Navbar -->
   <header class="nav-header">
     <div class="brand-title">Home Sweet Maszaa 🌸</div>
     <div class="mode-badge" id="modeBadge" onclick="openLoginModal()">
@@ -152,12 +165,14 @@
     </div>
   </header>
 
+  <!-- Sinkronisasi Bar Status -->
   <div style="text-align: center;">
     <div class="sync-status" id="syncStatus">
       <i data-lucide="refresh-cw" style="width:12px;"></i> <span id="syncText">Mengecek Google Sheets...</span>
     </div>
   </div>
 
+  <!-- DASHBOARD PRIBADI -->
   <main id="dashboardPribadi">
     <div class="card target-card">
       <div class="target-header">
@@ -194,19 +209,22 @@
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">BREAKDOWN SISA SALDO PER AKUN</div>
       <div class="account-grid">
         <div class="account-card-item">
-          <div class="account-name"><i data-lucide="building-2" style="width:12px;"></i> Bank</div>
-          <div class="account-val" id="accValBank">Rp 0</div>
+          <div class="account-name">
+            <span><i data-lucide="building-2" style="width:12px;"></i> Bank</span>
+            <button class="btn-detail-bank" onclick="openBankDetailModal()">Detail <i data-lucide="chevron-right" style="width:10px;"></i></button>
+          </div>
+          <div class="account-val" id="accValBankTotal">Rp 0</div>
         </div>
         <div class="account-card-item">
-          <div class="account-name"><i data-lucide="wallet" style="width:12px;"></i> Cash (Tunai)</div>
+          <div class="account-name"><span><i data-lucide="wallet" style="width:12px;"></i> Cash (Tunai)</span></div>
           <div class="account-val" id="accValCash">Rp 0</div>
         </div>
         <div class="account-card-item">
-          <div class="account-name"><i data-lucide="piggy-bank" style="width:12px;"></i> Celengan</div>
+          <div class="account-name"><span><i data-lucide="piggy-bank" style="width:12px;"></i> Celengan</span></div>
           <div class="account-val" id="accValCelengan">Rp 0</div>
         </div>
         <div class="account-card-item">
-          <div class="account-name"><i data-lucide="qr-code" style="width:12px;"></i> QRIS / E-Wallet</div>
+          <div class="account-name"><span><i data-lucide="qr-code" style="width:12px;"></i> QRIS / E-Wallet</span></div>
           <div class="account-val" id="accValEwallet">Rp 0</div>
         </div>
       </div>
@@ -218,6 +236,7 @@
     </div>
   </main>
 
+  <!-- DASHBOARD WITH MY LOVE -->
   <main id="dashboardLove" style="display:none;">
     <div class="card target-card love">
       <div class="target-header">
@@ -287,6 +306,7 @@
     </div>
   </main>
 
+  <!-- TAB DETAIL LAPORAN -->
   <main id="viewDetailLaporan" style="display:none;">
     <div class="card">
       <div style="font-size:11px; font-weight:800; color:var(--text-sub); margin-bottom:10px;">DETAIL HISTORI LAPORAN TRANSAKSI</div>
@@ -310,6 +330,7 @@
   </main>
 </div>
 
+<!-- FLOATING ACTION BUTTON -->
 <div class="fab-wrapper">
   <div class="fab-popup-menu" id="fabMenu">
     <div class="fab-btn-option" onclick="triggerLaporModal()"><i data-lucide="plus-circle" style="width:16px;"></i> + Lapor Transaksi</div>
@@ -318,6 +339,7 @@
   <button class="fab-trigger" id="fabMainBtn" onclick="toggleFabMenu()"><i data-lucide="sparkles" style="width:22px;"></i></button>
 </div>
 
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bottomNavBar">
   <button class="nav-btn active" id="btnNavDashboard" onclick="switchMainTab('dashboard')">
     <i data-lucide="layout-dashboard" style="width:18px;"></i> Dashboard
@@ -327,6 +349,7 @@
   </button>
 </nav>
 
+<!-- POPUP MINI -->
 <div class="modal-overlay" id="modalMiniLogin">
   <div class="modal-mini-card">
     <div style="font-size:28px;">🌸</div>
@@ -343,12 +366,27 @@
   </div>
 </div>
 
+<!-- MODAL DETAIL BANK -->
+<div class="modal-overlay" id="modalBankDetail">
+  <div class="modal-form-card" style="max-width:340px;">
+    <div class="card-header-flex" style="margin-bottom:14px;">
+      <h3 style="font-size:15px; font-weight:900; color:var(--primary);">🏦 Rincian Saldo Bank</h3>
+      <button onclick="closeModal('modalBankDetail')" style="background:none; border:none; font-size:16px; cursor:pointer;">✕</button>
+    </div>
+    <div id="bankDetailList" style="max-height:250px; overflow-y:auto; border-radius:12px; border:1px solid var(--border); margin-bottom:12px;"></div>
+    <button type="button" class="btn-submit-form" onclick="closeModal('modalBankDetail')">Tutup</button>
+  </div>
+</div>
+
+<!-- SETUP MODALS -->
 <div class="modal-overlay" id="modalSetupPribadi">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; margin-bottom:2px;">Kondisi Keuangan Saat Ini</h3>
-    <p style="font-size:11px; color:var(--text-sub); font-weight:700; margin-bottom:12px;">Isi saldo awal per akun (Diisi sekali saja):</p>
+    <p style="font-size:11px; color:var(--text-sub); font-weight:700; margin-bottom:12px;">Isi saldo awal per akun/bank (Diisi sekali saja):</p>
     <form id="formSetupPribadi">
-      <div class="form-group"><label>Saldo Bank (Transfer)</label><input type="number" id="initBank" value="0" required></div>
+      <div class="form-group"><label>Saldo BCA</label><input type="number" id="initBca" value="0" required></div>
+      <div class="form-group"><label>Saldo Mandiri</label><input type="number" id="initMandiri" value="0" required></div>
+      <div class="form-group"><label>Saldo SeaBank / Jago / Lainnya</label><input type="number" id="initSeabank" value="0" required></div>
       <div class="form-group"><label>Saldo Cash (Tunai)</label><input type="number" id="initCash" value="0" required></div>
       <div class="form-group"><label>Saldo Celengan</label><input type="number" id="initCelengan" value="0" required></div>
       <div class="form-group"><label>Saldo QRIS / E-Wallet</label><input type="number" id="initEwallet" value="0" required></div>
@@ -372,6 +410,7 @@
   </div>
 </div>
 
+<!-- MODAL LAPOR PRIBADI -->
 <div class="modal-overlay" id="modalLaporPribadi">
   <div class="modal-form-card">
     <h3 style="font-size:15px; font-weight:900; margin-bottom:12px;">Lapor Transaksi Pribadi</h3>
@@ -385,6 +424,7 @@
         </select>
       </div>
       
+      <!-- Kategori Expenses -->
       <div class="form-group" id="groupCatPribadi">
         <label>Kategori Expenses</label>
         <select id="txPribadiCat">
@@ -396,31 +436,42 @@
         </select>
       </div>
 
+      <!-- Akun Pemasukan / Pengeluaran Standar -->
       <div class="form-group" id="groupAccountSingle">
-        <label>Akun / Assets</label>
+        <label>Akun / Bank / Assets</label>
         <select id="txPribadiAccount">
-          <option value="Bank">Bank</option>
-          <option value="Cash">Cash</option>
+          <option value="BCA">BCA</option>
+          <option value="Mandiri">Mandiri</option>
+          <option value="SeaBank">SeaBank</option>
+          <option value="Jago">Jago</option>
+          <option value="Cash">Cash (Tunai)</option>
           <option value="Celengan">Celengan</option>
           <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
         </select>
       </div>
 
+      <!-- Akun Perpindahan Uang Antar Bank / Dompet -->
       <div id="groupAccountTransfer" style="display:none;">
         <div class="form-group">
-          <label>Akun Asal (Sumber Uang)</label>
+          <label>Dari (Sumber Akun/Bank)</label>
           <select id="txPribadiFromAccount">
-            <option value="Bank">Bank</option>
-            <option value="Cash">Cash</option>
+            <option value="BCA">BCA</option>
+            <option value="Mandiri">Mandiri</option>
+            <option value="SeaBank">SeaBank</option>
+            <option value="Jago">Jago</option>
+            <option value="Cash">Cash (Tunai)</option>
             <option value="Celengan">Celengan</option>
             <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Akun Tujuan (Penerima Uang)</label>
+          <label>Ke (Tujuan Akun/Bank)</label>
           <select id="txPribadiToAccount">
-            <option value="Cash">Cash</option>
-            <option value="Bank">Bank</option>
+            <option value="Mandiri">Mandiri</option>
+            <option value="BCA">BCA</option>
+            <option value="SeaBank">SeaBank</option>
+            <option value="Jago">Jago</option>
+            <option value="Cash">Cash (Tunai)</option>
             <option value="Celengan">Celengan</option>
             <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
           </select>
@@ -428,7 +479,7 @@
       </div>
 
       <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="txPribadiAmount" placeholder="50000" required></div>
-      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Beli beras / Transfer ke E-Wallet..."></div>
+      <div class="form-group"><label>Keterangan Tambahan (Opsional)</label><input type="text" id="txPribadiDesc" placeholder="Transfer ke Mandiri / Beli beras..."></div>
       <div class="form-group"><label>Tanggal</label><input type="date" id="txPribadiDate" required></div>
       
       <div style="display:flex; gap:8px; margin-top:12px;">
@@ -454,7 +505,9 @@
       <div class="form-group">
         <label>Metode Setoran</label>
         <select id="txLoveAccount">
-          <option value="Bank">Bank</option>
+          <option value="BCA">BCA</option>
+          <option value="Mandiri">Mandiri</option>
+          <option value="SeaBank">SeaBank</option>
           <option value="Cash">Cash</option>
           <option value="Celengan">Celengan</option>
           <option value="QRIS/E-Wallet">QRIS / E-Wallet</option>
@@ -472,7 +525,6 @@
 </div>
 
 <script>
-  // Web Apps Deployment ID URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzAgwIxYiDdk5vfdF-2CtWZMmK7A-TsFpGXCueWkXe0wl0g59RUSynVjBCFsoK5Woe/exec";
 
   let activeMode = localStorage.getItem('hsm_v18_mode') || 'pribadi';
@@ -486,13 +538,15 @@
 
   let lastUpdatePribadiStr = '-', lastUpdateLoveStr = '-';
   let chartExpInstance = null, chartMonthlyLoveInstance = null;
+  let currentBankBalances = {};
+
+  const knownBanks = ['BCA', 'Mandiri', 'SeaBank', 'Jago', 'BNI', 'BRI'];
 
   lucide.createIcons();
   const getTodayISO = () => new Date().toISOString().split('T')[0];
   document.getElementById('txPribadiDate').value = getTodayISO();
   document.getElementById('txLoveDate').value = getTodayISO();
 
-  // Format tanggal singkat YYYY-MM-DD
   function cleanDate(dVal) {
     if (!dVal || dVal === '-' || dVal === 'undefined' || dVal === 'null') {
       return getTodayISO();
@@ -521,6 +575,30 @@
   function openLoginModal() { 
     document.getElementById('fabMenu').classList.remove('active');
     document.getElementById('modalMiniLogin').classList.add('active'); 
+  }
+
+  function openBankDetailModal() {
+    const listEl = document.getElementById('bankDetailList');
+    listEl.innerHTML = '';
+    
+    let hasBank = false;
+    for (let b in currentBankBalances) {
+      if (knownBanks.includes(b) || currentBankBalances[b] !== 0) {
+        hasBank = true;
+        listEl.innerHTML += `
+          <div class="bank-list-item">
+            <span><b>${b}</b></span>
+            <span style="color:var(--primary); font-weight:900;">${formatIDR(currentBankBalances[b])}</span>
+          </div>
+        `;
+      }
+    }
+
+    if (!hasBank) {
+      listEl.innerHTML = `<div style="text-align:center; padding:15px; color:var(--text-sub); font-size:11px;">Belum ada saldo bank tercatat.</div>`;
+    }
+
+    document.getElementById('modalBankDetail').classList.add('active');
   }
 
   function toggleFabMenu() { document.getElementById('fabMenu').classList.toggle('active'); }
@@ -563,7 +641,6 @@
     }
   }
 
-  // AMBIL DATA DARI GOOGLE SPREADSHEET SECARA REALTIME
   async function fetchSpreadsheetData() {
     const statusEl = document.getElementById('syncStatus');
     const textEl = document.getElementById('syncText');
@@ -600,7 +677,9 @@
 
   document.getElementById('formSetupPribadi').addEventListener('submit', (e) => {
     e.preventDefault();
-    const b = parseFloat(document.getElementById('initBank').value) || 0;
+    const bca = parseFloat(document.getElementById('initBca').value) || 0;
+    const mandiri = parseFloat(document.getElementById('initMandiri').value) || 0;
+    const seabank = parseFloat(document.getElementById('initSeabank').value) || 0;
     const c = parseFloat(document.getElementById('initCash').value) || 0;
     const cel = parseFloat(document.getElementById('initCelengan').value) || 0;
     const ew = parseFloat(document.getElementById('initEwallet').value) || 0;
@@ -608,7 +687,9 @@
 
     const todayISO = getTodayISO();
     const initItems = [
-      { type: 'income', category: 'Saldo Awal', account: 'Bank', amount: b, desc: 'Saldo Awal Bank', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'BCA', amount: bca, desc: 'Saldo Awal BCA', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'Mandiri', amount: mandiri, desc: 'Saldo Awal Mandiri', date: todayISO },
+      { type: 'income', category: 'Saldo Awal', account: 'SeaBank', amount: seabank, desc: 'Saldo Awal SeaBank', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'Cash', amount: c, desc: 'Saldo Awal Cash', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'Celengan', amount: cel, desc: 'Saldo Awal Celengan', date: todayISO },
       { type: 'income', category: 'Saldo Awal', account: 'QRIS/E-Wallet', amount: ew, desc: 'Saldo Awal E-Wallet', date: todayISO }
@@ -645,7 +726,7 @@
       fetch(SCRIPT_URL, {
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ action: "addLove", penyetor: 'Ijaa & Kekoo', account: 'Bank', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: getTodayISO() })
+        body: JSON.stringify({ action: "addLove", penyetor: 'Ijaa & Kekoo', account: 'BCA', amount: currentLove, desc: 'Saldo awal tabungan bersama', date: getTodayISO() })
       });
     }
 
@@ -702,28 +783,37 @@
 
   function renderPribadi() {
     let inTotal = 0, outTotal = 0;
-    let accBalance = { 'Bank': 0, 'Cash': 0, 'Celengan': 0, 'QRIS/E-Wallet': 0 };
+    let balances = { 'Cash': 0, 'Celengan': 0, 'QRIS/E-Wallet': 0 };
 
     txPribadi.forEach(t => {
       const amt = Number(t.amount) || 0;
       if (t.type === 'income') {
         inTotal += amt;
-        if (accBalance[t.account] !== undefined) accBalance[t.account] += amt;
+        balances[t.account] = (balances[t.account] || 0) + amt;
       }
       if (t.type === 'expense') {
         outTotal += amt;
-        if (accBalance[t.account] !== undefined) accBalance[t.account] -= amt;
+        balances[t.account] = (balances[t.account] || 0) - amt;
       }
       if (t.type === 'transfer') {
         const accs = (t.account || '').split('->');
         if (accs.length === 2) {
           const fromAcc = accs[0].trim();
           const toAcc = accs[1].trim();
-          if (accBalance[fromAcc] !== undefined) accBalance[fromAcc] -= amt;
-          if (accBalance[toAcc] !== undefined) accBalance[toAcc] += amt;
+          balances[fromAcc] = (balances[fromAcc] || 0) - amt;
+          balances[toAcc] = (balances[toAcc] || 0) + amt;
         }
       }
     });
+
+    currentBankBalances = {};
+    let totalBank = 0;
+    for (let acc in balances) {
+      if (!['Cash', 'Celengan', 'QRIS/E-Wallet'].includes(acc)) {
+        currentBankBalances[acc] = balances[acc];
+        totalBank += balances[acc];
+      }
+    }
 
     const net = inTotal - outTotal;
     const pct = targetPribadi > 0 ? Math.min((net / targetPribadi) * 100, 100) : 0;
@@ -738,10 +828,10 @@
     document.getElementById('valIncomePribadi').innerText = formatIDR(inTotal);
     document.getElementById('valExpensePribadi').innerText = formatIDR(outTotal);
 
-    document.getElementById('accValBank').innerText = formatIDR(accBalance['Bank']);
-    document.getElementById('accValCash').innerText = formatIDR(accBalance['Cash']);
-    document.getElementById('accValCelengan').innerText = formatIDR(accBalance['Celengan']);
-    document.getElementById('accValEwallet').innerText = formatIDR(accBalance['QRIS/E-Wallet']);
+    document.getElementById('accValBankTotal').innerText = formatIDR(totalBank);
+    document.getElementById('accValCash').innerText = formatIDR(balances['Cash'] || 0);
+    document.getElementById('accValCelengan').innerText = formatIDR(balances['Celengan'] || 0);
+    document.getElementById('accValEwallet').innerText = formatIDR(balances['QRIS/E-Wallet'] || 0);
 
     renderChartPribadi();
   }
@@ -866,7 +956,7 @@
       const fromAcc = document.getElementById('txPribadiFromAccount').value;
       const toAcc = document.getElementById('txPribadiToAccount').value;
       if (fromAcc === toAcc) {
-        alert("Akun asal dan tujuan transfer tidak boleh sama!");
+        alert("Akun/Bank asal dan tujuan transfer tidak boleh sama!");
         return;
       }
       account = `${fromAcc} -> ${toAcc}`;
